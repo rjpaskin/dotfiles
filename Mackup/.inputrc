@@ -1,0 +1,5 @@
+# avoid double-tabbing when > 1 match
+set show-all-if-ambiguous on
+
+# case-insensitive tab completion
+set completion-ignore-case on

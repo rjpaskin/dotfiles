@@ -1,0 +1,231 @@
+set nocompatible              " be iMproved, required
+filetype off                  " required for Vundle
+
+" -------------------------------------------------
+"  Leader and shortcuts
+" -------------------------------------------------
+let g:mapleader = "\<space>"
+nnoremap <silent><leader>q :quit<cr>
+nnoremap <silent><leader>w :write<cr>
+
+" zoom current window
+nnoremap <silent><leader>z :wincmd _<cr>:wincmd \|<cr>
+
+inoremap jj <esc>
+inoremap jk <esc>
+
+function! PreserveWindowState(command)
+  let w = winsaveview()
+  execute a:command
+  call winrestview(w)
+endfunction
+
+" Format entire file
+nmap <leader>= :call PreserveWindowState("normal gg=G")<CR>
+
+" -------------------------------------------------
+"  Vundle
+" -------------------------------------------------
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+
+" -------------------------------------------------
+"  Plugins
+" -------------------------------------------------
+" Sensible defaults
+Plugin 'tpope/vim-sensible'
+
+" Add commenting
+Plugin 'tpope/vim-commentary'
+" Add 'surround' motion
+Plugin 'tpope/vim-surround'
+" Enable `.` for additional commands
+Plugin 'tpope/vim-repeat'
+" Paired commands with ']' and `[`
+Plugin 'tpope/vim-unimpaired'
+" Asynchronously execute processes
+Plugin 'tpope/vim-dispatch'
+
+" Navigate between vim and tmux splits
+Plugin 'christoomey/vim-tmux-navigator'
+
+" Custom text objects
+Plugin 'kana/vim-textobj-user'
+" `(i|a)r` for Ruby blocks
+Plugin 'nelstrom/vim-textobj-rubyblock'
+" `(i|a)v` for underscored/camel-cased parts of words
+Plugin 'Julian/vim-textobj-variable-segment'
+
+" Autocomplete
+Plugin 'Valloric/YouCompleteMe'
+
+" Configurable status bar
+Plugin 'vim-airline/vim-airline'
+
+" Automatically add `end` to Ruby blocks
+Plugin 'tpope/vim-endwise'
+" Refactorings for Ruby
+Plugin 'ecomba/vim-ruby-refactoring'
+" Split/join lines of code
+Plugin 'AndrewRadev/splitjoin.vim'
+" Convert to Ruby 1.9 hash syntax, or between string/symbol keys
+Plugin 'rorymckinley/vim-rubyhash'
+
+" Project navigation
+Plugin 'Shougo/denite.nvim'
+Plugin 'scrooloose/nerdtree'
+Plugin 'jistr/vim-nerdtree-tabs'
+
+" Git integration
+Plugin 'tpope/vim-fugitive'
+
+Plugin 'editorconfig/editorconfig-vim'
+
+" Rails
+Plugin 'tpope/vim-rbenv'
+Plugin 'tpope/vim-bundler'
+Plugin 'tpope/vim-rails'
+Plugin 'thoughtbot/vim-rspec'
+
+" Bash
+Plugin 'markcornick/vim-bats'
+
+" Colour scheme
+Plugin 'rakr/vim-one'
+
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+filetype plugin indent on    " required
+
+syntax on                    " required for colorscheme modifications
+
+set encoding=utf-8           " use UTF-8 encoding
+set number                   " show line numbers
+set relativenumber           " relative line numbers
+set expandtab                " use spaces when <Tab> pressed
+set shiftwidth=2             " number of spaces used by (auto)indent
+set softtabstop=2            " how wide <Tab> is
+set nobackup                 " disable backups
+set nowritebackup            " disable backups
+"set noswapfile              " disable swapfiles
+set directory=~/.vim/swap    " location of swapfiles
+set shortmess+=I             " suppress intro message
+set splitright               " open vertical splits to the right
+set splitbelow               " open horizontal splits below
+set gdefault                 " replace all occurences on line without `g` flag, not just first one
+set shell=/usr/local/bin/zsh
+set colorcolumn=             " disable coloured line at 80 chars
+set showmatch                " show matching parentheses
+set textwidth=0              " disable wrapping of text in insert mode
+set autoread                 " refresh buffers when file changed outside Vim
+
+if has("termguicolors")
+  set termguicolors
+
+  if exists('$TMUX')
+    " Enable 24-bit ("true") colours
+    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+  endif
+endif
+
+" -------------------------------------------------
+" Colour scheme
+" -------------------------------------------------
+set background=light
+colorscheme one
+let g:airline_theme="one"
+
+" https://stackoverflow.com/questions/1467438/find-out-to-which-highlight-group-a-particular-keyword-symbol-belongs-in-vim
+call one#highlight('Normal',      '', 'ffffff', '')
+call one#highlight('ColorColumn', '', 'ffffff', '')
+
+" -------------------------------------------------
+" Denite
+" -------------------------------------------------
+nnoremap <silent><leader>uu               :Denite -buffer-name=file_rec
+      \ file_rec<cr>
+nnoremap <silent><leader>um               :Denite -buffer-name=models
+      \ -path=`getcwd()`/app/models
+      \ file_rec<cr>
+nnoremap <silent><leader>uc               :Denite -buffer-name=controllers
+      \ -path=`getcwd()`/app/controllers
+      \ file_rec<cr>
+nnoremap <silent><leader>uv               :Denite -buffer-name=views
+      \ -path=`getcwd()`/app/views
+      \ file_rec<cr>
+nnoremap <silent><leader>uj               :Denite -buffer-name=javascripts
+      \ -path=`getcwd()`/app/assets/javascripts
+      \ file_rec<cr>
+nnoremap <silent><leader>us               :Denite -buffer-name=specs
+      \ -path=`getcwd()`/spec
+      \ file_rec<cr>
+nnoremap <silent><leader>ub               :Denite -buffer-name=buffers
+      \ buffer<cr>
+
+nnoremap <silent><leader>ul :Denite -buffer-name=line    line<cr>
+nnoremap <silent><leader>uo :Denite -buffer-name=outline outline<cr>
+
+call denite#custom#option('_', {
+      \ 'highlight_matched_char': 'DiffDelete',
+      \ 'highlight_matched_range': 'Statement',
+      \ 'highlight_mode_insert': 'DiffAdd',
+      \ 'highlight_mode_normal': 'DiffText',
+      \ })
+
+" ------------------------------------------------
+" The Silver Searcher
+" ------------------------------------------------
+if executable("ag")
+  set grepprg=ag\ --nogroup\ --nocolor
+endif
+
+" bind K to grep word under cursor
+nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
+
+" ------------------------------------------------
+" NERDtree
+" ------------------------------------------------
+map <Leader>n <plug>NERDTreeTabsToggle<CR>
+map <Leader>nf :NERDTreeFind<CR>
+
+" ------------------------------------------------
+" EditorConfig
+" ------------------------------------------------
+" Prevent editorconfig interfering with fugitive
+let g:EditorConfig_exclude_patterns = ["fugitive://.*"]
+
+" Don't wrap over-long lines
+let g:EditorConfig_disable_rules = ["max_line_length"]
+
+" ------------------------------------------------
+" SplitJoin
+" ------------------------------------------------
+" Don't indent multi-line args in line with opening `(`
+let g:splitjoin_ruby_hanging_args = 0
+" Don't use `{}` when joining/spliting hashes as last argument
+let g:splitjoin_ruby_curly_braces = 0
+
+" ------------------------------------------------
+" RSpec.vim
+" ------------------------------------------------
+let g:rspec_command = "compiler rspec | Dispatch bin/rspec {spec}"
+
+map <Leader>t :call RunCurrentSpecFile()<CR>
+map <Leader>s :call RunNearestSpec()<CR>
+map <Leader>l :call RunLastSpec()<CR>
+map <Leader>a :call RunAllSpecs()<CR>
+
+" From https://github.com/jferris/dotfiles/blob/master/vimrc.local
+function! DockerSetup()
+  if filereadable("docker-compose.yml")
+    let g:rspec_command = "Dispatch docker-compose exec app bin/rspec {spec}"
+    let g:dispatch_compilers["docker-compose exec app"] = "rspec"
+  endif
+endfunction
+
+" Use `FileType ruby`?
+autocmd BufNewFile,BufRead * :call DockerSetup()

@@ -1,0 +1,11 @@
+hosts
+scratch
+
+Mackup/.vim/bundle/*
+
+Mackup/.tmuxinator/*
+!Mackup/.tmuxinator/default.yml
+
+Mackup/.*.old
+Mackup/.*.local
+Mackup/Library

@@ -1,0 +1,35 @@
+[core]
+  quotepath = false
+  autocrlf = input
+	excludesfile = ~/.gitignore_global
+	editor = vim
+[color]
+  ui = true
+	diff = auto
+	status = auto
+	branch = auto
+[alias]
+	stash-rename = "!_() { \
+			rev=$(git rev-parse $1) && git stash drop $1 || exit 1 ; \
+			git diff-index --quiet HEAD; s=$?; \
+			[ $s != 0 ] && git stash save \"tmp stash from stash-rename\"; \
+			git stash apply $rev && shift && git stash save \"$@\" && [ $s != 0 ] && git stash pop stash@{1}; \
+		}; \
+		_"
+	co = "!f() { \
+		git show-ref |\
+		sed \"s/.* refs\\///\" |\
+		sed \"s/heads\\///\" |\
+		fzf-tmux |\
+		sed \"s/remotes\\/origin\\///\" |\
+		sed \"s/tags\\///\"; \
+	}; \
+	git checkout $(f)"
+  branches = for-each-ref --sort=-committerdate --format=\"%(color:yellow)%(authordate:relative)\t%(color:blue)%(authorname)\t%(color:red)%(color:bold)%(refname:short)\" refs/remotes
+  fetch-base-branches= "!git fetch origin $(git branch --list --format '%(refname:short):%(refname:short)' | grep -v '/')"
+[filter "lfs"]
+	clean = git-lfs clean %f
+	smudge = git-lfs smudge %f
+	required = true
+[include]
+  path = ~/.gitconfig.local

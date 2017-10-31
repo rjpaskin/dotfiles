@@ -1,0 +1,23 @@
+"*":
+  "copy-with-style":
+    preset1:
+      background_color: "#fefdff"
+      font_family: "Monaco"
+      font_size: 12
+      name: "As HTML"
+    preset2:
+      background_color: "#ffffff"
+      font_family: "Monaco"
+      font_size: 12
+      format: "RTF"
+      name: "As RTF"
+  core:
+    telemetryConsent: "no"
+    themes: [
+      "atom-light-ui"
+      "atom-light-syntax"
+    ]
+  "exception-reporting":
+    userId: "5528a59f-5e34-4f1b-979b-f0084ba5e754"
+  welcome:
+    showOnStartup: false

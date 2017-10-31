@@ -1,0 +1,167 @@
+load File.join(
+  ENV["HOME"],
+  "Library/Mobile Documents/com~apple~CloudDocs",
+  "dotfiles/setup/brewfile_extensions.rb"
+)
+
+tap "homebrew/services" if tag?(:memcached) || tag?(:redis)
+tap "caskroom/cask"
+tap "caskroom/versions"
+
+#== Unix ==
+if tag? :ctags
+  tap "universal-ctags/universal-ctags"
+  brew "universal-ctags", args: ["HEAD"]
+end
+
+brew "git"
+brew_if_tagged "git-flow"
+brew "ncdu"
+brew "nmap"
+brew "openssl", pin: true
+brew "pidof"
+brew "reattach-to-user-namespace"
+brew "the_silver_searcher"
+brew "tmux"
+brew_if_tagged "tmate"
+brew "vim", args: ["with-python3"] # python3 required for Vim:denite
+brew "zsh"
+
+#== Compilers ==
+brew "gcc"
+brew "cmake" # required for Vim:YouCompleteMe
+
+if tag? :old_gcc
+  brew "apple-gcc42"
+  brew "gcc@4.8"
+end
+
+#== Heroku ==
+if tag? :heroku
+  brew "heroku"
+  brew "parity"
+end
+
+#== Utilities ==
+brew "dockutil"
+brew "hub"
+brew "mackup"
+brew "fzf" # used by `git co` alias
+
+#== Image manipulation ==
+brew_if_tagged "imagemagick", pin: true
+brew_if_tagged "batik"
+
+#== Testing ==
+brew "qt@5.5" if tag?(:qt) && MacOS::Xcode.installed?
+brew_if_tagged "phantomjs", pin: true
+brew "shellcheck"
+
+#== Programming languages and package managers ==
+brew "libyaml", pin: true # should come after openssl
+
+if tag? :ruby
+  brew "rbenv"
+  brew "ruby-build"
+  brew "rbenv-default-gems"
+end
+
+if tag? :node
+  brew "nodenv"
+  brew "yarn", args: ["without-node"] # node is provided by nodenv
+end
+
+cask "java"
+brew "python"
+
+brew_if_tagged "elixir"
+brew_if_tagged "go"
+
+if tag? :clojure
+  brew "leiningen"
+  brew "rlwrap"
+end
+
+#== Databases ==
+brew_if_tagged "sqlite", pin: true
+brew_if_tagged "mysql", pin: true
+
+if tag?(:postgres) || tag?(:postgresql)
+  tap "petere/postgresql"
+  brew "petere/postgresql/postgresql-9.4"
+  brew "pex"
+
+  cask "pgadmin3"
+end
+
+cask_if_tagged "sequel-pro"
+
+brew_if_tagged "memcached", pin: true
+brew_if_tagged "mongodb", service_restart: :changed, pin: true
+brew_if_tagged "redis", service_restart: :changed, pin: true
+
+#== DevOps ==
+brew_if_tagged "ansible", pin: true
+brew "awscli" if tag? :aws
+
+if tag? :linode
+  tap "linode/cli"
+  brew "linode-cli"
+end
+
+#== Browsers ==
+cask "google-chrome"
+cask "firefox"
+cask "flash-ppapi" # for Chromium/Opera
+# cask "flash-npapi" # for Safari/Firefox
+cask "silverlight"
+
+#== Programming ==
+cask "dash"
+cask "iterm2"
+cask "sublime-text2"
+cask "sourcetree"
+cask "virtualbox"
+cask "virtualbox-extension-pack"
+cask "xquartz"
+
+cask_if_tagged "cyberduck"
+cask_if_tagged "docker"
+cask_if_tagged "docker-toolbox" # should come after `docker` to ensure precedence of symlinks in `/usr/local/bin`
+cask_if_tagged "ngrok"
+
+#== Quicklook ==
+cask "qlcolorcode" # syntax highlighting
+cask "qlstephen" # files without extensions
+cask "qlcommonmark" # markdown files
+cask "quicklook-json"
+cask "quicklook-csv"
+cask "betterzipql"
+
+#== Other apps ==
+cask "imageoptim"
+cask "skype"
+# cask "superduper" # check out version for El Capitan
+cask "vlc"
+
+cask_if_tagged "1password"
+cask_if_tagged "alfred"
+cask_if_tagged "dropbox"
+cask_if_tagged "filedrop"
+cask_if_tagged "gimp"
+cask           "google-backup-and-sync" if tag? :google_drive
+cask_if_tagged "hipchat"
+cask_if_tagged "inkscape"
+# cask           "karabiner-elements" if tag? :karabiner
+cask_if_tagged "keepingyouawake"
+cask_if_tagged "lastpass"
+cask_if_tagged "logitech-control-center"
+cask           "music-manager" if tag? :itunes
+cask_if_tagged "postman"
+cask_if_tagged "screenhero"
+cask_if_tagged "seashore"
+cask_if_tagged "slack"
+
+mas "Keynote", id: 409183694
+mas "Numbers", id: 409203825
+mas "Pages",   id: 409201541
