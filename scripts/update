@@ -1,0 +1,140 @@
+#!/bin/sh
+
+set -e
+[ -n "$DEBUG" ] && set -x
+
+if [ "$1" = "--dry-run" ]; then
+  dry_run="true"
+  echo "Dry run mode\n"
+  section_format="Checking for updates to %s..."
+else
+  section_format="Installing updates for %s..."
+fi
+
+if [ -t 1 ]; then
+  section_format="$(tput setaf 2)$section_format$(tput sgr0)"
+fi
+
+section() {
+  printf "$section_format\n" "$1"
+}
+
+join_by() {
+  local IFS="$1"; shift
+
+  echo "$*"
+}
+
+show_repo_updates() {
+  local git_dir="$1"
+
+  git -C "$git_dir" fetch
+  diff=$(git -C "$git_dir" --no-pager diff --stat "HEAD..@{u}")
+
+  if [ -z "$diff" ]; then diff="No updates"; fi
+
+  echo "$diff"
+}
+
+repo_was_updated() {
+  local git_dir="$1"
+
+  [ "$(git -C "$git_dir" rev-parse HEAD ORIG_HEAD | uniq | wc -l)" -gt 1 ]
+}
+
+section "macOS"
+
+if [ -n "$dry_run" ]; then
+  softwareupdate --list
+else
+  softwareupdate --install --all
+fi
+
+section "Homebrew formulae"
+brew update --force # https://github.com/Homebrew/brew/issues/1151
+
+if [ -n "$dry_run" ]; then
+  brew outdated
+  section "Homebrew casks"
+  brew cask outdated
+  section "Mac App Store apps"
+  mas outdated
+else
+  brew upgrade
+  brew cleanup # separate step to preserve previous versions if above fails
+
+  section "Homebrew casks"
+  # `brew cask upgrade` isn't a thing (yet)
+  outdated_casks=$(brew cask outdated --quiet)
+
+  for cask in $outdated_casks; do
+    brew cask reinstall "$cask"
+  done
+  brew cask cleanup
+
+  section "Mac App Store apps"
+  mas upgrade
+fi
+
+if command -v rbenv > /dev/null; then
+  section "gems"
+
+  default_gems=( $(grep -vE '^(#|$)' "$(rbenv root)/default-gems") )
+  utility_gems=("tmuxinator" "hcl")
+
+  if [ -n "$dry_run" ]; then
+    gem outdated | grep -E "^($(join_by \| "${default_gems[@]}"))" || echo "No updates to default gems"
+
+    for utility_gem in $utility_gems; do
+      version=$(rbenv whence "$utility_gem")
+
+      RBENV_VERSION="$version" gem outdated  | grep -E "^$utility_gem" || echo "No updates for $utility_gem"
+    done
+  else
+    rbenv each -v gem update --system
+    rbenv each -v gem update "${default_gems[@]}"
+
+    for utility_gem in $utility_gems; do
+      version=$(rbenv whence "$utility_gem")
+
+      RBENV_VERSION="$version" gem update "$utility_gems"
+      RBENV_VERSION="$version" gem cleanup "$utility_gems"
+    done
+  fi
+fi
+
+if command -v circleci > /dev/null; then
+  section "CircleCI CLI"
+
+  if [ -n "$dry_run" ]; then
+    circleci version 2>/dev/null | grep --color=no "newer"
+  else
+    circleci update
+  fi
+fi
+
+section "Vim plugins"
+
+if [ -n "$dry_run" ]; then
+  for plugin_dir in "$HOME"/.vim/bundle/*; do
+    echo "$plugin_dir"
+    show_repo_updates "$plugin_dir"
+  done
+else
+  vim -i NONE -c PluginUpdate -c quitall
+
+  ycm_dir="$HOME/.vim/bundle/YouCompleteMe"
+
+  if repo_was_updated "$ycm_dir"; then
+    "$ycm_dir/install.py"
+  fi
+fi
+
+section "Oh My Zsh"
+
+if [ -n "$dry_run" ]; then
+  show_repo_updates "$HOME/.oh-my-zsh"
+else
+  # what `upgrade_oh_my_zsh` does
+  env ZSH="$HOME/.oh-my-zsh" sh "$HOME/.oh-my-zsh/tools/upgrade.sh"
+fi
