@@ -24,7 +24,7 @@ def cask_if_tagged(name, options = {})
 end
 
 
-if defined? Bundle::BrewInstaller
+if defined? ::Bundle::BrewInstaller
   ::Bundle::BrewInstaller.prepend Module.new {
     def initialize(name, options = {})
       super
