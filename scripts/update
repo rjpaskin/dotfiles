@@ -3,9 +3,9 @@
 set -e
 [ -n "$DEBUG" ] && set -x
 
-if [ "$1" = "--dry-run" ]; then
+if [ "$1" = "--dry-run" ] || [ "$1" = "-n" ]; then
   dry_run="true"
-  echo "Dry run mode\n"
+  printf "Dry run mode\n\n"
   section_format="Checking for updates to %s..."
 else
   section_format="Installing updates for %s..."
@@ -16,6 +16,7 @@ if [ -t 1 ]; then
 fi
 
 section() {
+  # shellcheck disable=SC2059
   printf "$section_format\n" "$1"
 }
 
@@ -28,7 +29,7 @@ join_by() {
 show_repo_updates() {
   local git_dir="$1"
 
-  git -C "$git_dir" fetch
+  git -C "$git_dir" fetch --quiet
   diff=$(git -C "$git_dir" --no-pager diff --stat "HEAD..@{u}")
 
   if [ -z "$diff" ]; then diff="No updates"; fi
@@ -107,7 +108,7 @@ if command -v circleci > /dev/null; then
   section "CircleCI CLI"
 
   if [ -n "$dry_run" ]; then
-    circleci version 2>/dev/null | grep --color=no "newer"
+    circleci version 2>/dev/null | grep --color=no "newer" || echo "No updates"
   else
     circleci update
   fi
@@ -117,7 +118,12 @@ section "Vim plugins"
 
 if [ -n "$dry_run" ]; then
   for plugin_dir in "$HOME"/.vim/bundle/*; do
+    if [ -t 1 ]; then
+      echo "$(tput setaf 4)$plugin_dir$(tput sgr0)"
+    else
     echo "$plugin_dir"
+    fi
+
     show_repo_updates "$plugin_dir"
   done
 else
