@@ -74,7 +74,7 @@ class GemHcl < Formula
     bash_completion.install completion_for_bash if completion_for_bash
 
     completion_for_zsh = Dir[
-                           "#{brew_gem_prefix}/completions/hcl.zsh",
+                           "#{brew_gem_prefix}/completion{s,}/hcl.zsh",
                            "#{brew_gem_prefix}/**/hcl{_,-}completion{s,}.zsh"
                          ].first
     zsh_completion.install completion_for_zsh if completion_for_zsh

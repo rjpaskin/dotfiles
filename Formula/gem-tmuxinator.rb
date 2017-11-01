@@ -74,7 +74,7 @@ class GemTmuxinator < Formula
     bash_completion.install completion_for_bash if completion_for_bash
 
     completion_for_zsh = Dir[
-                           "#{brew_gem_prefix}/completions/tmuxinator.zsh",
+                           "#{brew_gem_prefix}/completion{s,}/tmuxinator.zsh",
                            "#{brew_gem_prefix}/**/tmuxinator{_,-}completion{s,}.zsh"
                          ].first
     zsh_completion.install completion_for_zsh if completion_for_zsh
