@@ -158,7 +158,6 @@ cask_if_tagged "lastpass"
 cask_if_tagged "logitech-control-center"
 cask           "music-manager" if tag? :itunes
 cask_if_tagged "postman"
-cask_if_tagged "screenhero"
 cask_if_tagged "seashore"
 cask_if_tagged "slack"
 
