@@ -9,3 +9,7 @@ has_tag() {
 
   [[ " $SYSTEM_TAGS " == *" $tag_name "* ]]
 }
+
+host_from_tags() {
+  echo "$SYSTEM_TAGS" | awk '{ print $1 }'
+}

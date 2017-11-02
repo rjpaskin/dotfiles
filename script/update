@@ -142,13 +142,16 @@ if [ -n "$dry_run" ]; then
     if [ -t 1 ]; then
       echo "$(tput setaf 4)$plugin_dir$(tput sgr0)"
     else
-    echo "$plugin_dir"
+      echo "$plugin_dir"
     fi
 
     show_repo_updates "$plugin_dir"
   done
 else
+  # vim -i NONE -c "PluginUpdate" -c "call writefile(g:vundle#log, '<temp>/vundle.log')" -c quitall
   vim -i NONE -c PluginUpdate -c quitall
+  # cat <temp file>
+  # trap <rm temp file> EXIT
 
   ycm_dir="$HOME/.vim/bundle/YouCompleteMe"
 

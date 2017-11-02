@@ -1,0 +1,25 @@
+#!/bin/sh
+
+set -e
+
+script_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
+
+run_with_log() {
+  local dir="$script_dir/../setup"
+
+  "$dir/run_with_log" "$dir/$1"
+}
+
+# shellcheck source=has_tag.sh
+. "$script_dir/../has_tag.sh"
+
+run_with_log basics.sh
+
+host=$(host_from_tags)
+ln -siv "$script_dir/../hosts/$host/.system_tags" "$HOME/.system_tags"
+
+run_with_log bootstrap.sh
+
+run_with_log dock.sh
+
+run_with_log .macos
