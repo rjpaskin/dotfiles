@@ -75,12 +75,10 @@ class CheckBrewfile
 
   class EntryDecorator
     include Comparable
-    extend Forwardable
 
-    SORT_ORDER = [:tap, :brew, :cask, :mac_app_store].freeze
+    SORT_ORDER = %w[tap brew brew_gem cask mas].freeze
 
     attr_reader :original
-    def_delegators :original, :type, :name, :options
 
     def initialize(original)
       @original = original
@@ -91,17 +89,39 @@ class CheckBrewfile
     end
 
     def to_s
-      %Q{#{display_type} #{Tty.blue}"#{name}"#{Tty.reset}#{options_to_s}}
+      %Q{#{type} #{Tty.blue}"#{name}"#{Tty.reset}#{options_to_s}}
     end
 
     def sort_key
       [SORT_ORDER.index(type) || -1, name]
     end
 
+    def name
+      if brew_gem?
+        File.basename(original.name, ".rb").sub(/^gem-/, "")
+      else
+        original.name
+      end
+    end
+
+    def type
+      if original.type == :mac_app_store
+        "mas"
+      elsif brew_gem?
+        "brew_gem"
+      else
+        original.type.to_s
+      end
+    end
+
     private
 
-    def display_type
-      type == :mac_app_store ? "mas" : type.to_s
+    def brew_gem?
+      original.name.start_with? "/"
+    end
+
+    def options
+      original.options
     end
 
     def args
