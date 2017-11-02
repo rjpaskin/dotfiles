@@ -160,15 +160,6 @@ fancy_echo "Downloading/updating oh-my-zsh ..."
 github_clone_or_pull "robbyrussell/oh-my-zsh" "$HOME/.oh-my-zsh"
 
 if has_tag "ruby"; then
-  gem_install_or_update() {
-    if gem list "$1" --installed > /dev/null; then
-      gem update "$@"
-    else
-      gem install --no-ri --no-rdoc --no-document "$@"
-      rbenv rehash
-    fi
-  }
-
   fancy_echo "Configuring Ruby ..."
 
   if ! dir_is_in_path "$HOME/.rbenv/shims"; then
@@ -199,9 +190,6 @@ if has_tag "ruby"; then
   fi
 
   gem update --system
-  gem_install_or_update 'bundler'
-  gem_install_or_update 'suspenders'
-  gem_install_or_update 'tmuxinator'
 
   number_of_cores=$(sysctl -n hw.ncpu)
   bundle config --global jobs $((number_of_cores - 1))
