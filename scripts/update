@@ -15,6 +15,9 @@ if [ -t 1 ]; then
   section_format="$(tput setaf 2)$section_format$(tput sgr0)"
 fi
 
+script_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
+formulae_dir="$script_dir"/../Formula
+
 section() {
   # shellcheck disable=SC2059
   printf "$section_format\n" "$1"
@@ -43,6 +46,16 @@ repo_was_updated() {
   [ "$(git -C "$git_dir" rev-parse HEAD ORIG_HEAD | uniq | wc -l)" -gt 1 ]
 }
 
+brew_gem_outdated_file_names() {
+  local formulae="$formulae_dir/gem-*.rb"
+  local outdated
+  outdated=$(brew outdated --quiet "$formulae")
+
+  for formula in $outdated; do
+    echo "$formulae_dir/$formula.rb"
+  done
+}
+
 section "macOS"
 
 if [ -n "$dry_run" ]; then
@@ -56,10 +69,15 @@ brew update --force # https://github.com/Homebrew/brew/issues/1151
 
 if [ -n "$dry_run" ]; then
   brew outdated
+
   section "Homebrew casks"
   brew cask outdated
+
   section "Mac App Store apps"
   mas outdated
+
+  section "Brew gems"
+  brew outdated "$formulae_dir"/gem-*.rb || true
 else
   brew upgrade
   brew cleanup # separate step to preserve previous versions if above fails
@@ -75,32 +93,35 @@ else
 
   section "Mac App Store apps"
   mas upgrade
+
+  section "Brew gems"
+  outdated=$(brew_gem_outdated_file_names)
+
+  for formula in $outdated; do
+    brew upgrade "$formula"
+  done
+  brew cleanup
 fi
 
 if command -v rbenv > /dev/null; then
   section "gems"
 
   default_gems=( $(grep -vE '^(#|$)' "$(rbenv root)/default-gems") )
-  utility_gems=("tmuxinator" "hcl")
 
   if [ -n "$dry_run" ]; then
+    remote_version=$(gem list --remote "^rubygems-update$" | awk '{gsub(/[()]/, ""); print $2}')
+    current_version=$(gem -v)
+
+    if [ "$current_version" != "$remote_version" ]; then
+      echo "gem ($current_version) < $remote_version"
+    else
+      echo "No update to gem --system"
+    fi
+
     gem outdated | grep -E "^($(join_by \| "${default_gems[@]}"))" || echo "No updates to default gems"
-
-    for utility_gem in $utility_gems; do
-      version=$(rbenv whence "$utility_gem")
-
-      RBENV_VERSION="$version" gem outdated  | grep -E "^$utility_gem" || echo "No updates for $utility_gem"
-    done
   else
     rbenv each -v gem update --system
     rbenv each -v gem update "${default_gems[@]}"
-
-    for utility_gem in $utility_gems; do
-      version=$(rbenv whence "$utility_gem")
-
-      RBENV_VERSION="$version" gem update "$utility_gems"
-      RBENV_VERSION="$version" gem cleanup "$utility_gems"
-    done
   fi
 fi
 
