@@ -14,6 +14,9 @@ def tag?(tag_name)
 end
 
 def brew_gem(name, options = {})
+  # required to install the following formula file
+  @_brew_gem_entry ||= brew "brew-gem"
+
   brew File.join(MY_FORMULA_DIR, "gem-#{name}.rb"), options
 end
 

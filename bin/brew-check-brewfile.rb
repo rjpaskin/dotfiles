@@ -49,7 +49,12 @@ class CheckBrewfile
 
   def entries
     @entries ||= begin
-      brewfile.entries.map {|entry| EntryDecorator.new(entry) }.sort
+      brewfile.entries.map do |entry|
+        # implicit dependency, added by `brew_gem` DSL method
+        next if entry.name == "brew-gem"
+
+        EntryDecorator.new(entry)
+      end.compact.sort
     end
   end
 
