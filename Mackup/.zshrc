@@ -61,7 +61,7 @@ plugins=(git history-substring-search osx)
 if has_tag "git_flow"; then plugins+=(git-flow); fi
 # Don't use `rbenv` plugin as it messes up $PATH and $RBENV_ROOT,
 # and otherwise only provides prompt info, which we don't use
-if has_tag "ruby";     then plugins+=(bundler gem rails tmuxinator); fi
+if has_tag "ruby";     then plugins+=(bundler gem rails); fi
 if has_tag "node";     then plugins+=(node npm yarn); fi
 if has_tag "go";       then plugins+=(golang); fi
 if has_tag "heroku";   then plugins+=(heroku); fi
@@ -74,7 +74,6 @@ if has_tag "git_flow"; then alias gf="git flow"; fi # restore now-removed shortc
 
 if has_tag "ruby"; then
   local bcmd _eval
-  alias mux="RBENV_VERSION=\"$(rbenv global)\" tmuxinator"
 
   # Don't try to run bundled commands in docker projects
   for bcmd in $bundled_commands; do
@@ -109,6 +108,9 @@ fi
 
 # ssh
 # export SSH_KEY_PATH="~/.ssh/dsa_id"
+
+# Tmuxinator completions
+source /usr/local/share/zsh/site-functions/tmuxinator.zsh
 
 # rbenv setup
 if command -v rbenv >/dev/null; then
