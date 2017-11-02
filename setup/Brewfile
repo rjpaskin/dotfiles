@@ -134,6 +134,8 @@ cask_if_tagged "ngrok"
 
 brew_gem "tmuxinator"
 brew_gem "hcl" if tag? :harvest
+brew_gem_if_tagged "mailcatcher"
+brew_gem_if_tagged "ultrahook"
 
 #== Quicklook ==
 cask "qlcolorcode" # syntax highlighting
