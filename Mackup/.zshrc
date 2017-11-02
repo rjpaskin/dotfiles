@@ -165,14 +165,9 @@ if has_tag "docker-toolbox"; then
   fi
 fi
 
-if has_tag "ruby" && has_tag "harvest"; then
-  hcl() { # aliases don't propagate through to hcl's tab completion
-    # yaji-ruby doesn't compile on 2.4
-    RBENV_VERSION=2.2.4 command hcl "$@"
-  }
-
+if has_tag "harvest"; then
   autoload -U bashcompinit
   bashcompinit
 
-  source "$(RBENV_VERSION=2.2.4 ruby -e 'print File.dirname(Gem.bin_path *%w[hcl hcl])')/"_hcl_completions
+  source /usr/local/etc/bash_completion.d/_hcl_completions
 fi
