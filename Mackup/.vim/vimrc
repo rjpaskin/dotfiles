@@ -93,6 +93,9 @@ Plugin 'thoughtbot/vim-rspec'
 " Bash
 Plugin 'markcornick/vim-bats'
 
+" Applescript
+Plugin 'dearrrfish/vim-applescript'
+
 " Colour scheme
 Plugin 'rakr/vim-one'
 
