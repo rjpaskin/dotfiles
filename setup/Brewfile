@@ -132,6 +132,11 @@ cask_if_tagged "docker"
 cask_if_tagged "docker-toolbox" # should come after `docker` to ensure precedence of symlinks in `/usr/local/bin`
 cask_if_tagged "ngrok"
 
+if tag?(:docker) && tag?(:codeclimate)
+  tap "codeclimate/formulae"
+  brew "codeclimate"
+end
+
 brew_gem "tmuxinator"
 brew_gem "hcl" if tag? :harvest
 brew_gem_if_tagged "mailcatcher"
