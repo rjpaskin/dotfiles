@@ -23,6 +23,10 @@ endfunction
 " Format entire file
 nmap <leader>= :call PreserveWindowState("normal gg=G")<CR>
 
+command! W w
+command! Wq wq
+command! WQ wq
+
 " -------------------------------------------------
 "  Vundle
 " -------------------------------------------------
