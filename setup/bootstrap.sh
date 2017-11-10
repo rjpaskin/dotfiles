@@ -73,14 +73,14 @@ github_clone_or_pull() {
 }
 
 download_or_update_file() {
-  local filename="$1"
-  local url="$2"
-  local zflag="";
+  local filename="$1"; shift
+  local url="$1"; shift
+  local zflag=""
 
   if [ -e "$filename" ]; then zflag="-z $filename"; fi
 
   # shellcheck disable=SC2086
-  curl -fsSL $zflag "$url" -o "$filename"
+  curl -fsSL $zflag "$url" -o "$filename" "$@"
 }
 
 ensure_symlink() {
