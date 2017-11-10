@@ -47,9 +47,8 @@ repo_was_updated() {
 }
 
 brew_gem_outdated_file_names() {
-  local formulae="$formulae_dir/gem-*.rb"
   local outdated
-  outdated=$(brew outdated --quiet "$formulae")
+  outdated=$(brew outdated --quiet "$formulae_dir"/gem-*.rb)
 
   for formula in $outdated; do
     echo "$formulae_dir/$formula.rb"
