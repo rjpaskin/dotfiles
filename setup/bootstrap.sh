@@ -167,10 +167,6 @@ if has_tag "ruby"; then
     eval "$(rbenv init -)"
   fi
 
-  ensure_dir "$(rbenv root)/plugins"
-  # Not available in Homebrew (probably since it doesn't have a version)
-  github_clone_or_pull "rbenv/rbenv-each" "$(rbenv root)/plugins/rbenv-each"
-
   if [ -z "$SKIP_INSTALLS" ]; then
     find_latest_ruby() {
       rbenv install --list | grep -v '-' | tail -1 | sed -e 's/^ *//'

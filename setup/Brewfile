@@ -64,6 +64,7 @@ if tag? :ruby
   brew "rbenv"
   brew "ruby-build"
   brew "rbenv-default-gems"
+  brew "rbenv-each", args: ["HEAD"]
 end
 
 if tag? :node
