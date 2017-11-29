@@ -94,6 +94,14 @@ Plugin 'tpope/vim-bundler'
 Plugin 'tpope/vim-rails'
 Plugin 'thoughtbot/vim-rspec'
 
+" Javascript
+Plugin 'pangloss/vim-Javascript'
+Plugin 'mxw/vim-jsx'
+Plugin 'prettier/vim-prettier'
+"
+Plugin 'w0rp/ale'
+Plugin 'mattn/emmet-vim'
+
 " Bash
 Plugin 'markcornick/vim-bats'
 
@@ -238,3 +246,76 @@ endfunction
 
 " Use `FileType ruby`?
 autocmd BufNewFile,BufRead * :call DockerSetup()
+
+" ------------------------------------------------
+" vim-jsx
+" ------------------------------------------------
+let g:jsx_ext_required = 0
+
+" ------------------------------------------------
+" vim-prettier
+" ------------------------------------------------
+scriptencoding utf-32 " for vim-lint
+
+let g:prettier#autoformat = 0
+let g:prettier#exec_cmd_async = 1
+autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql PrettierAsync
+
+" max line length that prettier will wrap on
+let g:prettier#config#print_width = 80
+" number of spaces per indentation level
+let g:prettier#config#tab_width = 4
+" single quotes over double quotes
+let g:prettier#config#single_quote = 'true'
+" print spaces between brackets
+let g:prettier#config#bracket_spacing = 'true'
+" none|es5|all
+let g:prettier#config#trailing_comma = 'none'
+" flow|babylon|typescript|postcss|json|graphql
+let g:prettier#config#parser = 'flow'
+
+" ------------------------------------------------
+" ALE
+" ------------------------------------------------
+let g:ale_linters = {
+      \   'Dockerfile': ['hadolint'],
+      \   'haml': ['haml_lint'],
+      \   'javascript': ['eslint', 'flow'],
+      \   'jsx': ['eslint', 'flow'],
+      \   'ruby': ['rubocop'],
+      \   'vim': ['vint'],
+      \   'yaml': ['yamllint'],
+      \ }
+
+let g:ale_fixers = {
+      \   'ruby': ['rubocop'],
+      \ }
+
+nnoremap <silent><C-n> :ALENext<cr>
+nnoremap <silent><C-p> :ALEPrevious<cr>
+nnoremap <silent><localleader>f   :ALEFix<cr>
+
+let g:ale_sign_column_always = 1
+let g:ale_sign_error = '••'
+let g:ale_sign_warning = '••'
+
+highlight link ALEErrorSign DiffDelete
+highlight link ALEError DiffDelete
+
+highlight link ALEWarningSign Todo
+highlight link ALEWarning Todo
+
+let g:ale_echo_msg_format = '%linter%: %s'
+
+let g:ale_sh_shellcheck_exclusions = 'SC2039' " comma-separated -list
+
+" ------------------------------------------------
+" emmet-vim
+" ------------------------------------------------
+let g:user_emmet_leader_key='<c-e>'
+
+let g:user_emmet_settings = {
+\  'javascript.jsx' : {
+\      'extends' : 'jsx',
+\  },
+\}

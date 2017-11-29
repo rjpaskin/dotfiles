@@ -157,6 +157,14 @@ else
   if repo_was_updated "$ycm_dir"; then
     "$ycm_dir/install.py"
   fi
+
+  prettier_dir="$HOME/.vim/bundle/vim-prettier"
+
+  if repo_was_updated "$prettier_dir"; then
+    pushd "$prettier_dir" > /dev/null
+    yarn check || yarn install
+    popd > /dev/null
+  fi
 fi
 
 section "Oh My Zsh"

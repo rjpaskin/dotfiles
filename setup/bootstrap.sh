@@ -277,6 +277,12 @@ if ! [ -d "$vundle_dir" ]; then
     ./install.py # requires CMake
     popd > /dev/null
   fi
+
+  if ! [ -d "$vundle_dir/vim-prettier/node_modules/prettier" ]; then
+    pushd "$vundle_dir/vim-prettier" > /dev/null
+    yarn check || yarn install
+    popd > /dev/null
+  fi
 fi
 
 ensure_dir "$HOME/.vim/swap"
