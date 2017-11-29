@@ -22,7 +22,7 @@ end
 
 def method_missing(name, *args, &block)
   if name.to_s =~ /(.+)_if_tagged$/
-    send($1, name, options) if tag? $1
+    send($1, *args) if tag? args.first
   else
     super
   end
