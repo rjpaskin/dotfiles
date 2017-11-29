@@ -23,11 +23,11 @@ module SystemTags
 
   TAG_USAGE = %r{
     \b
-    (has_tag|tag\?|brew_if_tagged|cask_if_tagged) # method or function call
-    (\s+|\()                                      # spaces or open bracket
-    ["':]                                         # quote or colon
-    (?<tag_name>[A-Za-z0-9_-]+)                   # actual tag name
-    ["']?                                         # quote - not for symbols
+    (has_tag|tag\?|\S+_if_tagged) # method or function call
+    (\s+|\()                      # spaces or open bracket
+    ["':]                         # quote or colon
+    (?<tag_name>[A-Za-z0-9_-]+)   # actual tag name
+    ["']?                         # quote - not for symbols
   }x
 
   ALL_WHITESPACE = /^\s+$/
