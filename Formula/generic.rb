@@ -36,13 +36,13 @@ class RubyGemsDownloadStrategy < AbstractDownloadStrategy
 end
 
 module GenericBrewGem
-  def self.generate(filename)
+  def self.generate(filename, gem_version = nil)
     gem_name = File.basename(filename, ".rb").sub(/^gem-/, "")
     class_name = gem_name.capitalize.gsub(/[-_.\s]([a-zA-Z0-9])/) { $1.upcase }.gsub('+', 'x')
 
     Object.const_set("Gem#{class_name}", Class.new(Formula) do
       url gem_name, :using => RubyGemsDownloadStrategy
-      version RubyGemsDownloadStrategy.with_ruby_env { Brew::Gem::CLI.fetch_version(gem_name) }
+      version gem_version || RubyGemsDownloadStrategy.with_ruby_env { Brew::Gem::CLI.fetch_version(gem_name) }
 
       def gem_name
         stable.url
