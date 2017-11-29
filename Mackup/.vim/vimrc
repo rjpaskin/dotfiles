@@ -182,6 +182,9 @@ call denite#custom#option('_', {
       \ 'highlight_mode_normal': 'DiffText',
       \ })
 
+call denite#custom#var('file_rec', 'command',
+    \ ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
+
 " ------------------------------------------------
 " The Silver Searcher
 " ------------------------------------------------
