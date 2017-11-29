@@ -17,7 +17,9 @@ class CheckBrewfile
     end
 
     if tags.any?
-      log "Using these (normalised) tags:\n#{tags.join(" ")}\n"
+      heading "Using these (normalised) tags:"
+      log Formatter.columns(tags)
+      log "\n"
     else
       warn "No tags detected"
     end
@@ -31,6 +33,12 @@ class CheckBrewfile
       log second if index == entries.count - 2
       log "\n" if first.type != second.type
     end
+
+    log "\n"
+    heading "Summary"
+    log type_counts.map {|type, count|
+      "%-#{max_type_length + 1}s #{Tty.blue}%2d#{Tty.reset}" % [type, count]
+    }.join " " * (max_type_length / 2)
   end
 
   private
@@ -58,12 +66,26 @@ class CheckBrewfile
     end
   end
 
+  def type_counts
+    @type_counts ||= entries.each_with_object(Hash.new 0) do |entry, acc|
+      acc[entry.type] += 1
+    end
+  end
+
+  def max_type_length
+    @max_char_count ||= type_counts.keys.max_by(&:length).length
+  end
+
   def cask_arguments
     brewfile.cask_arguments
   end
 
   def log(message)
     $stdout.puts message
+  end
+
+  def heading(message)
+    $stdout.puts Formatter.headline(message)
   end
 
   def warn(message)
