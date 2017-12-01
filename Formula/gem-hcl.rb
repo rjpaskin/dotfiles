@@ -4,4 +4,4 @@ require File.join(
   "dotfiles/Formula/generic"
 )
 
-GenericBrewGem.generate(__FILE__)
+GenericBrewGem.generate(__FILE__, ruby_formula: "ruby@2.3")
