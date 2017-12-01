@@ -55,6 +55,10 @@ brew_gem_outdated_file_names() {
   done
 }
 
+# Ensure that Homebrew stuff (e.g. Ruby) is found first
+# when updating formulae (e.g. Vim)
+export PATH="/usr/local/bin:$PATH"
+
 section "macOS"
 
 if [ -n "$dry_run" ]; then

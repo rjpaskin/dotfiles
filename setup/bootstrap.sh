@@ -115,9 +115,11 @@ if ! command -v brew >/dev/null; then
   fancy_echo "Installing Homebrew ..."
   /usr/bin/ruby -e \
     "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-
-  export PATH="/usr/local/bin:$PATH"
 fi
+
+# Ensure that Homebrew stuff (e.g. Ruby) is found first
+# when installing formulae (e.g. Vim)
+export PATH="/usr/local/bin:$PATH"
 
 if [ -z "$SKIP_INSTALLS" ]; then
   fancy_echo "Updating Homebrew formulae ..."
