@@ -8,9 +8,11 @@ $LOAD_PATH.unshift Formula["brew-gem"].prefix/"lib"
 require 'brew/gem'
 
 class RubyGemsDownloadStrategy < AbstractDownloadStrategy
-  def self.with_ruby_env
+  def self.with_ruby_env(ruby_formula = nil)
+    formula_name = ruby_formula || "ruby"
+
     env = {
-      "PATH" => PATH.new(RUBY_BIN, ENV["HOMEBREW_PATH"]),
+      "PATH" => PATH.new(Formula[formula_name].bin, ENV["HOMEBREW_PATH"]),
       "GEM_SPEC_CACHE" => HOMEBREW_CACHE/"gem_spec_cache"
     }
 
@@ -19,8 +21,9 @@ class RubyGemsDownloadStrategy < AbstractDownloadStrategy
 
   def fetch
     ohai "Fetching #{resource.url} from gem source"
+
     HOMEBREW_CACHE.cd do
-      self.class.with_ruby_env do
+      self.class.with_ruby_env(ruby_formula) do
         safe_system "gem", "fetch", resource.url, "--version", resource.version
       end
     end
@@ -33,19 +36,32 @@ class RubyGemsDownloadStrategy < AbstractDownloadStrategy
   def clear_cache
     cached_location.unlink if cached_location.exist?
   end
+
+  private
+
+  def ruby_formula
+    @ruby_formula ||= resource.instance_variable_get(:@resource).owner.owner.ruby_formula_name
+  end
 end
 
 module GenericBrewGem
-  def self.generate(filename, gem_version = nil)
+  def self.generate(filename, gem_options = {})
     gem_name = File.basename(filename, ".rb").sub(/^gem-/, "")
     class_name = gem_name.capitalize.gsub(/[-_.\s]([a-zA-Z0-9])/) { $1.upcase }.gsub('+', 'x')
+    ruby_formula = gem_options.fetch(:ruby_formula, "ruby")
 
     Object.const_set("Gem#{class_name}", Class.new(Formula) do
       url gem_name, :using => RubyGemsDownloadStrategy
-      version gem_version || RubyGemsDownloadStrategy.with_ruby_env { Brew::Gem::CLI.fetch_version(gem_name) }
+      version gem_options.fetch(:version) { RubyGemsDownloadStrategy.with_ruby_env(ruby_formula) { Brew::Gem::CLI.fetch_version(gem_name) } }
+
+      depends_on ruby_formula
 
       def gem_name
         stable.url
+      end
+
+      def ruby_formula_name
+        deps.map(&:name).grep(/^ruby(@\d\.\d)?$/).first
       end
 
       def install
@@ -63,8 +79,10 @@ module GenericBrewGem
         ENV['GEM_HOME'] = prefix.to_s
         ENV['GEM_PATH'] = prefix.to_s
 
-        gem_path = RUBY_BIN/"gem"
-        ruby_path = RUBY_BIN/"ruby"
+        ruby_formula = Formula[ruby_formula_name]
+
+        gem_path = ruby_formula.bin/"gem"
+        ruby_path = ruby_formula.bin/"ruby"
         system gem_path, "install", cached_download,
                  "--no-ri",
                  "--no-rdoc",
