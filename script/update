@@ -40,12 +40,6 @@ show_repo_updates() {
   echo "$diff"
 }
 
-repo_was_updated() {
-  local git_dir="$1"
-
-  [ "$(git -C "$git_dir" rev-parse HEAD ORIG_HEAD | uniq | wc -l)" -gt 1 ]
-}
-
 brew_gem_outdated_file_names() {
   local outdated
   outdated=$(brew outdated --quiet "$formulae_dir"/gem-*.rb)
@@ -141,7 +135,7 @@ fi
 section "Vim plugins"
 
 if [ -n "$dry_run" ]; then
-  for plugin_dir in "$HOME"/.vim/bundle/*; do
+  for plugin_dir in "$HOME/.vim/bundle/"*; do
     if [ -t 1 ]; then
       echo "$(tput setaf 4)$plugin_dir$(tput sgr0)"
     else
@@ -151,24 +145,7 @@ if [ -n "$dry_run" ]; then
     show_repo_updates "$plugin_dir"
   done
 else
-  # vim -i NONE -c "PluginUpdate" -c "call writefile(g:vundle#log, '<temp>/vundle.log')" -c quitall
-  vim -i NONE -c PluginUpdate -c quitall
-  # cat <temp file>
-  # trap <rm temp file> EXIT
-
-  ycm_dir="$HOME/.vim/bundle/YouCompleteMe"
-
-  if repo_was_updated "$ycm_dir"; then
-    "$ycm_dir/install.py"
-  fi
-
-  prettier_dir="$HOME/.vim/bundle/vim-prettier"
-
-  if repo_was_updated "$prettier_dir"; then
-    pushd "$prettier_dir" > /dev/null
-    yarn check || yarn install
-    popd > /dev/null
-  fi
+  vim -i NONE -c PlugUpdate -c quitall
 fi
 
 section "Oh My Zsh"

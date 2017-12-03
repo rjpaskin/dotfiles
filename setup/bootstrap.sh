@@ -267,25 +267,12 @@ if ! [ -d "$sublime_dir"/Packages/Package\ Control ]; then
   killall "Sublime Text 2" &> /dev/null || true
 fi
 
-vundle_dir="$HOME/.vim/bundle"
+fancy_echo "Configuring Vim plugins ..."
 
-if ! [ -d "$vundle_dir" ]; then
-  fancy_echo "Configuring Vim plugins ..."
-  github_clone_or_pull "VundleVim/Vundle.vim" "$vundle_dir/Vundle.vim"
-  vim -i NONE -c PluginInstall -c quitall
+download_or_update_file "$HOME/.vim/autoload/plug.vim" \
+  "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" --create-dirs
 
-  if ! [ -e "$vundle_dir/YouCompleteMe/third_party/ycmd/ycm_core.so" ]; then
-    pushd "$vundle_dir/YouCompleteMe" > /dev/null
-    ./install.py # requires CMake
-    popd > /dev/null
-  fi
-
-  if ! [ -d "$vundle_dir/vim-prettier/node_modules/prettier" ]; then
-    pushd "$vundle_dir/vim-prettier" > /dev/null
-    yarn check || yarn install
-    popd > /dev/null
-  fi
-fi
+vim -i NONE -c PlugInstall -c quitall
 
 ensure_dir "$HOME/.vim/swap"
 
