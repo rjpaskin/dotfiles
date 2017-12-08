@@ -55,7 +55,17 @@ module SystemTags
     raise
   end
 
-  def print_tags(io = $stdout)
+  def has_tag?(tag_name)
+    @system_tags ||= begin
+      tag_file = ENV.fetch("SYSTEM_TAG_FILE") { File.join(ENV["HOME"], ".system_tags") }
+
+      File.read(tag_file).gsub("-", "_").chomp.split(/\s+/)
+    end
+
+    @system_tags.include? tag_name.to_s.gsub("-", "_")
+  end
+
+  def print_tags
     result = run.to_a
 
     output = if $stdout.stat.file? # being redirected to file
@@ -64,8 +74,25 @@ module SystemTags
       result.join("\n")
     end
 
-    io.puts output
+    $stdout.puts output
+  end
+
+  def print_usage
+    installed = $stdout.isatty ? "\e[32m✔\e[0m %s" : "Y %s"
+    not_installed = $stdout.isatty ? "  \e[37m%s\e[0m" : "N %s"
+
+    run.each do |tag|
+      format = has_tag?(tag) ? installed : not_installed
+
+      $stdout.puts(format % tag)
+    end
   end
 end
 
-SystemTags.print_tags if $0 == __FILE__
+if $0 == __FILE__
+  if ARGV.include?("--usage")
+    SystemTags.print_usage
+  else
+    SystemTags.print_tags
+  end
+end
