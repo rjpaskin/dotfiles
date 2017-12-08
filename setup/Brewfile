@@ -124,9 +124,12 @@ cask "dash"
 cask "iterm2"
 cask "sublime-text2"
 cask "sourcetree"
-cask "virtualbox"
-cask "virtualbox-extension-pack"
 cask "xquartz"
+
+if tag? :virtualbox
+  cask "virtualbox"
+  cask "virtualbox-extension-pack"
+end
 
 cask_if_tagged "cyberduck"
 cask_if_tagged "docker"
