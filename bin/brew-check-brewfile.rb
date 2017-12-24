@@ -161,11 +161,11 @@ class CheckBrewfile
 
     def options_to_s
       case type
-      when :brew, :mac_app_store
+      when "brew", "mac_app_store"
         ", #{Util.pretty_print options}" if options.any?
-      when :cask
+      when "cask"
         ", #{Util.pretty_print options}" if args.any?
-      when :tap
+      when "tap"
         ", #{clone_target.inspect}" if clone_target
       end
     end
