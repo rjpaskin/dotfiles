@@ -129,6 +129,10 @@ fi
 
 # Docker setup
 if has_tag "docker"; then
+  alias dup="docker-compose up"
+  alias bdup="BYEBUG=1 docker-compose up"
+  alias dkill="docker-compose kill"
+
   docker_compose_exec_when_up() {
     local service="$1"; shift
 
