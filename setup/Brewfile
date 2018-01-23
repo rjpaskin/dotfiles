@@ -17,6 +17,7 @@ end
 
 brew "git"
 brew_if_tagged "git-flow"
+brew "git-when-merged"
 brew "ncdu"
 brew "nmap"
 brew "openssl", pin: true
