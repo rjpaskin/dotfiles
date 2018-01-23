@@ -7,6 +7,7 @@ load File.join(
 tap "homebrew/services" if tag?(:memcached) || tag?(:redis)
 tap "caskroom/cask"
 tap "caskroom/versions"
+tap "beeftornado/rmtree" # remove formula and all its (orphaned) dependencies
 
 #== Unix ==
 if tag? :ctags
