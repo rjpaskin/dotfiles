@@ -13,6 +13,11 @@ nnoremap <silent><leader>z :wincmd _<cr>:wincmd \|<cr>
 inoremap jj <esc>
 inoremap jk <esc>
 
+" change to single quotes
+nnoremap <leader>' :call PreserveWindowState("normal cs\"'")<CR>
+" change to double quotes
+nnoremap <leader>" :call PreserveWindowState("normal cs'\"")<CR>
+
 function! PreserveWindowState(command)
   let w = winsaveview()
   execute a:command
