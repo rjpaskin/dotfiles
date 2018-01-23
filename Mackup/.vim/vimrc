@@ -60,6 +60,9 @@ Plug 'nelstrom/vim-textobj-rubyblock'
 " `(i|a)v` for underscored/camel-cased parts of words
 Plug 'Julian/vim-textobj-variable-segment'
 
+" https://github.com/adriaanzon/vim-textobj-matchit " more generic version of vim-textobj-rubyblock
+" https://github.com/tek/vim-textobj-ruby " can include blank after block
+
 " Autocomplete
 Plug 'Valloric/YouCompleteMe', { 'do': './install.py' } " installation requires CMake
 
