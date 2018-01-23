@@ -119,7 +119,6 @@ cask "google-chrome"
 cask "firefox"
 cask "flash-ppapi" # for Chromium/Opera
 # cask "flash-npapi" # for Safari/Firefox
-cask "silverlight"
 
 #== Programming ==
 cask "dash"
@@ -164,11 +163,9 @@ cask "skype"
 cask "vlc"
 
 cask_if_tagged "1password"
-cask_if_tagged "alfred"
 cask_if_tagged "dropbox"
 cask_if_tagged "filedrop"
 cask_if_tagged "gimp"
-cask           "google-backup-and-sync" if tag? :google_drive
 cask_if_tagged "hipchat"
 cask_if_tagged "inkscape"
 # cask           "karabiner-elements" if tag? :karabiner
