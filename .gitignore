@@ -2,6 +2,7 @@ hosts
 scratch
 
 Mackup/.vim/bundle/*
+Mackup/.vim/autoload/*
 
 Mackup/.tmuxinator/*.yml
 !Mackup/.tmuxinator/default.yml
