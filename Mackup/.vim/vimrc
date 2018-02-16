@@ -85,6 +85,7 @@ Plug 'jistr/vim-nerdtree-tabs'
 
 " Git integration
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-rhubarb'
 
 Plug 'editorconfig/editorconfig-vim'
 
