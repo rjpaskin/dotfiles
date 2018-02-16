@@ -24,7 +24,7 @@ on_project_first_start:
 # on_project_restart: command
 
 # Run on project exit ( detaching from tmux session )
-<%% @args.grep(/iterm/i).any? %>
+<%% if @args.grep(/iterm/i).any? %>
 on_project_exit: tmux -CC attach -t <%%= name %>
 <%% end %>
 

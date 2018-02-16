@@ -45,7 +45,7 @@ class DefaultHelper
     end
 
     cmds << kill_port(1025) if arg? :mailcatcher
-    cmds << brew(:stop, "mongodb" if arg? /^mongo/
+    cmds << brew(:stop, "mongodb") if arg? /^mongo/
     cmds << brew(:stop, "memcached") if arg? /^memcache/
     cmds << brew(:stop, "redis") if gem? "sidekiq"
     cmds << kill_port(9222) if arg? :elasticsearch
