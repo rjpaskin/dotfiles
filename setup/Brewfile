@@ -49,6 +49,7 @@ brew "dockutil"
 brew "hub"
 brew "mackup"
 brew "fzf" # used by `git co` alias
+cask "kdiff3"
 
 #== Image manipulation ==
 brew_if_tagged "imagemagick", pin: true
