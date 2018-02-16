@@ -29,6 +29,9 @@
   fetch-base-branches= "!git fetch origin $(git branch --list --format '%(refname:short):%(refname:short)' | grep -v '/')"
   local-branches = !git branch -vv | cut -c 3- | awk '$3 !~/\\[/ { print $1 }'
   oldest-ancestor = !zsh -c 'diff --old-line-format='' --new-line-format='' <(git rev-list --first-parent "${1:-master}") <(git rev-list --first-parent "${2:-HEAD}") | head -1' -
+  grep-branch        = "!f(){ git branch -a | sed -e 's/[ \\*]*//' | grep -v -e '\\->' | xargs git grep $@; };f "
+  grep-branch-remote = "!f(){ git branch -a | sed -e 's/[ \\*]*//' | grep -v -e '\\->' | grep '^remotes' | xargs git grep $@; };f"
+  grep-branch-local  = "!f(){ git branch -a | sed -e 's/[ \\*]*//' | grep -v -e '\\->' -e '^remotes' | xargs git grep $@;  };f "
 [filter "lfs"]
 	clean = git-lfs clean %f
 	smudge = git-lfs smudge %f
