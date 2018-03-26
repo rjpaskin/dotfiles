@@ -173,6 +173,9 @@ nnoremap <silent><leader>uc               :Denite -buffer-name=controllers
 nnoremap <silent><leader>uv               :Denite -buffer-name=views
       \ -path=`getcwd()`/app/views
       \ file_rec<cr>
+nnoremap <silent><leader>uh               :Denite -buffer-name=helpers
+      \ -path=`getcwd()`/app/helpers
+      \ file_rec<cr>
 nnoremap <silent><leader>uj               :Denite -buffer-name=javascripts
       \ -path=`getcwd()`/app/assets/javascripts
       \ file_rec<cr>
