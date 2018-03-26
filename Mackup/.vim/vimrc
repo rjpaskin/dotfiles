@@ -27,9 +27,13 @@ endfunction
 " Format entire file
 nmap <leader>= :call PreserveWindowState("normal gg=G")<CR>
 
+" Common typos
 command! W w
 command! Wq wq
 command! WQ wq
+
+" Aliases
+cnoreabbrev ag grep
 
 " -------------------------------------------------
 "  Plugins
