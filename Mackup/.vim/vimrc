@@ -80,6 +80,8 @@ Plug 'rorymckinley/vim-rubyhash'
 
 " Project navigation
 Plug 'Shougo/denite.nvim'
+" MRU files plugin for Denite
+Plug 'Shougo/neomru.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'jistr/vim-nerdtree-tabs'
 
@@ -180,8 +182,9 @@ nnoremap <silent><leader>us               :Denite -buffer-name=specs
 nnoremap <silent><leader>ub               :Denite -buffer-name=buffers
       \ buffer<cr>
 
-nnoremap <silent><leader>ul :Denite -buffer-name=line    line<cr>
-nnoremap <silent><leader>uo :Denite -buffer-name=outline outline<cr>
+nnoremap <silent><leader>uf :Denite -buffer-name=file_mru file_mru<cr>
+nnoremap <silent><leader>ul :Denite -buffer-name=line     line<cr>
+nnoremap <silent><leader>uo :Denite -buffer-name=outline  outline<cr>
 
 call denite#custom#option('_', {
       \ 'highlight_matched_char': 'DiffDelete',
