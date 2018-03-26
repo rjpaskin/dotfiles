@@ -76,7 +76,7 @@ if [ -n "$dry_run" ]; then
   section "Brew gems"
   brew outdated "$formulae_dir"/gem-*.rb || true
 else
-  brew upgrade
+  brew upgrade --ignore-pinned
   brew cleanup # separate step to preserve previous versions if above fails
 
   section "Homebrew casks"
