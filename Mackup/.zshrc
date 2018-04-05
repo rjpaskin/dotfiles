@@ -143,28 +143,3 @@ if has_tag "docker"; then
     docker-compose exec "$service" "$@"
   }
 fi
-
-if has_tag "docker-toolbox"; then
-  denv() {
-    eval "$(docker-machine env default)"
-  }
-
-  dunenv() {
-    unset DOCKER_TLS_VERIFY
-    unset DOCKER_CERT_PATH
-    unset DOCKER_MACHINE_NAME
-    unset DOCKER_HOST
-  }
-
-  if has_tag "docker"; then
-    local bin
-
-    for bin in "$HOME/Library/Group Containers/group.com.docker/bin/docker"*; do
-      alias "$(basename "$bin")-native"="dunenv && \"$bin\""
-    done
-  fi
-
-  if has_tag "docker-toolbox-by-default" && [ "$(docker-machine status)" = "Running" ]; then
-    denv
-  fi
-fi

@@ -135,7 +135,6 @@ end
 
 cask_if_tagged "cyberduck"
 cask_if_tagged "docker"
-cask_if_tagged "docker-toolbox" # should come after `docker` to ensure precedence of symlinks in `/usr/local/bin`
 cask_if_tagged "ngrok"
 
 if tag?(:docker) && tag?(:codeclimate)
