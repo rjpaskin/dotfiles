@@ -144,7 +144,6 @@ if tag?(:docker) && tag?(:codeclimate)
 end
 
 brew_gem "tmuxinator"
-brew_gem "hcl" if tag? :harvest
 brew_gem_if_tagged "mailcatcher"
 brew_gem_if_tagged "rubocop"
 brew_gem_if_tagged "ultrahook"

@@ -168,10 +168,3 @@ if has_tag "docker-toolbox"; then
     denv
   fi
 fi
-
-if has_tag "harvest"; then
-  autoload -U bashcompinit
-  bashcompinit
-
-  source /usr/local/etc/bash_completion.d/_hcl_completions
-fi
