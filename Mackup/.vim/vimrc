@@ -115,6 +115,10 @@ Plug 'markcornick/vim-bats'
 " Applescript
 Plug 'dearrrfish/vim-applescript'
 
+" Clojure
+Plug 'tpope/vim-salve'
+Plug 'tpope/vim-fireplace'
+
 " Colour scheme
 Plug 'rakr/vim-one'
 
