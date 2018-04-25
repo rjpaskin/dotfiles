@@ -170,8 +170,13 @@ call one#highlight('ColorColumn', '', 'ffffff', '')
 " -------------------------------------------------
 " Denite
 " -------------------------------------------------
-nnoremap <silent><leader>uu               :Denite -buffer-name=file_rec
-      \ file_rec<cr>
+nnoremap <silent><leader>uu :Denite -buffer-name=file_rec file_rec<cr>
+nnoremap <silent><leader>ub :Denite -buffer-name=buffers  buffer<cr>
+nnoremap <silent><leader>ul :Denite -buffer-name=line     line<cr>
+nnoremap <silent><leader>uo :Denite -buffer-name=outline  outline<cr>
+nnoremap <silent><leader>uf :Denite -buffer-name=file_mru file_mru<cr>
+
+" Rails-specific
 nnoremap <silent><leader>um               :Denite -buffer-name=models
       \ -path=`getcwd()`/app/models
       \ file_rec<cr>
@@ -190,12 +195,6 @@ nnoremap <silent><leader>uj               :Denite -buffer-name=javascripts
 nnoremap <silent><leader>us               :Denite -buffer-name=specs
       \ -path=`getcwd()`/spec
       \ file_rec<cr>
-nnoremap <silent><leader>ub               :Denite -buffer-name=buffers
-      \ buffer<cr>
-
-nnoremap <silent><leader>uf :Denite -buffer-name=file_mru file_mru<cr>
-nnoremap <silent><leader>ul :Denite -buffer-name=line     line<cr>
-nnoremap <silent><leader>uo :Denite -buffer-name=outline  outline<cr>
 
 call denite#custom#option('_', {
       \ 'highlight_matched_char': 'DiffDelete',
