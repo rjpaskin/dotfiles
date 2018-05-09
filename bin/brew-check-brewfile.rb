@@ -1,6 +1,6 @@
 $LOAD_PATH.unshift Tap.fetch("homebrew/bundle").path.join("lib").to_s
 require "forwardable"
-require "bundle/dsl"
+require "bundle"
 
 class CheckBrewfile
   attr_reader :brewfile
@@ -116,16 +116,20 @@ class CheckBrewfile
     end
 
     def to_s
-      %Q{#{type} #{Tty.blue}"#{name}"#{Tty.reset}#{options_to_s}}
+      %Q{#{installed_flag}#{type} #{Tty.blue}"#{display_name}"#{Tty.reset}#{options_to_s}}
     end
 
     def sort_key
-      [SORT_ORDER.index(type) || -1, name]
+      [SORT_ORDER.index(type) || -1, display_name]
+    end
+
+    def display_name
+      name.sub(/^gem-/, "")
     end
 
     def name
       if brew_gem?
-        File.basename(original.name, ".rb").sub(/^gem-/, "")
+        File.basename(original.name, ".rb")
       else
         original.name
       end
@@ -142,6 +146,31 @@ class CheckBrewfile
     end
 
     private
+
+    def installed_flag
+      return "" unless ARGV.flag?("--status")
+
+      if installed?
+        $stdout.isatty ? "#{Tty.bold}#{Formatter.success "✔"}#{Tty.reset} " : "Y "
+      else
+        $stdout.isatty ? "#{Tty.bold}#{Formatter.error "✘"}#{Tty.reset} " : "N "
+      end
+    end
+
+    def installed?
+      case original.type
+      when :brew
+        Bundle::BrewInstaller.formula_installed?(name)
+      when :cask
+        [original.name, "caskroom/versions/#{original.name}"].any? do |cask|
+          Bundle::CaskInstaller.cask_installed?(cask)
+        end
+      when :mac_app_store
+        Bundle::MacAppStoreInstaller.app_id_installed?(options[:id])
+      when :tap
+        Bundle::TapInstaller.installed_taps.include?(original.name)
+      end
+    end
 
     def brew_gem?
       original.name.start_with? "/"
