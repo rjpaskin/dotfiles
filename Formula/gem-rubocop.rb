@@ -4,4 +4,4 @@ require File.join(
   "dotfiles/Formula/generic"
 )
 
-GenericBrewGem.generate(__FILE__, version: "0.46.0")
+GenericBrewGem.generate(__FILE__, version: "0.55.0")
