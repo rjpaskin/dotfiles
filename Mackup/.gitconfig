@@ -1,14 +1,14 @@
 [core]
   quotepath = false
   autocrlf = input
-	excludesfile = ~/.gitignore_global
+  excludesfile = ~/.gitignore_global
   attributesFile = ~/.gitattributes
-	editor = vim
+  editor = vim
 [color]
   ui = true
-	diff = auto
-	status = auto
-	branch = auto
+  diff = auto
+  status = auto
+  branch = auto
 [alias]
   branches = for-each-ref --sort=-committerdate --format=\"%(color:yellow)%(authordate:relative)\t%(color:blue)%(authorname)\t%(color:red)%(color:bold)%(refname:short)\" refs/remotes
   local-branches = !git branch -vv | cut -c 3- | awk '$3 !~/\\[/ { print $1 }'
@@ -21,9 +21,9 @@
   # Recreate branch on top of master
   recreate-branch = "!f() { [[ -n $@ ]] && git checkout \"$@\" && git checkout master && git branch -D \"$@\" && git checkout -b \"$@\"; }; f"
 [filter "lfs"]
-	clean = git-lfs clean %f
-	smudge = git-lfs smudge %f
-	required = true
+  clean = git-lfs clean %f
+  smudge = git-lfs smudge %f
+  required = true
 [merge "railsschema"]
   name = newer Rails schema version
   driver = merge-rails-schema %O %A %B %L
