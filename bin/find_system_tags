@@ -9,7 +9,7 @@ module SystemTags
   DOTFILES = %w[.bash_profile .tmux.conf .zshrc .zlogin].map {|file| "Mackup/#{file}" }
 
   def run
-    root = Pathname(__FILE__).join("../..")
+    root = Pathname(__FILE__).realpath.join("../..")
     files = (SETUP_FILES + DOTFILES).map {|file| Pathname(file).expand_path(root) }
 
     files.inject(SortedSet.new) do |tags, file|

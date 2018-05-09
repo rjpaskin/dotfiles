@@ -174,6 +174,6 @@ end
 
 CheckBrewfile.new(
   ENV.fetch("BREWFILE") {
-    File.expand_path("../../setup/Brewfile", __FILE__)
+    File.expand_path("../../setup/Brewfile", File.realpath(__FILE__))
   }
 ).print_report
