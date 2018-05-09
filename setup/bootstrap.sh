@@ -283,4 +283,7 @@ ensure_symlink "$PWD/Mackup/.mackup" "$HOME/.mackup"
 
 mackup restore
 
+fancy_echo "Symlinking `bin` directory to \$HOME ..."
+ensure_symlink "$PWD/bin" "$HOME/.bin"
+
 fancy_echo "All done!"
