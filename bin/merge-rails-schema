@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+
+# Translated from shell script at https://gist.github.com/strax/c0dcbfa2f9bb54f95787
+
+ancestor_file, current_file, other_file, marker_size = ARGV # %O, %A, %B, %L
+
+system "git", "merge-file", "--marker-size=#{marker_size}", current_file, ancestor_file, other_file
+current_content = File.read(current_file)
+
+current_content.sub!(/^<+ .*\nActiveRecord::Schema\.define.version: (\d+). do\n=+\nActiveRecord::Schema\.define.version: (\d+). do\n>+ .*/) do
+  "ActiveRecord::Schema.define(version: #{[$1, $2].max}) do"
+end
+
+File.open(current_file, "w") {|f| f.write(current_content) }
+
+# Other conflicts in the file, signal this to Git by exiting with error status
+exit 1 if current_content.include?("<" * marker_size)
