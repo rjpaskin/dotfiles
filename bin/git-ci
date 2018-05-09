@@ -1,0 +1,31 @@
+#!/usr/bin/env ruby
+require "erb"
+
+args = ARGV.dup
+args.unshift("open") if args.length <= 1
+
+command = args.first
+
+def ci_url_template
+  if File.directory? ".circleci"
+    "https://circleci.com/gh/%{repo}/tree/%{branch}"
+  else
+    quit "Unable to determine CI service"
+  end
+end
+
+def quit(message)
+  STDERR.puts "Unknown command: #{command}"
+  exit 1
+end
+
+case command
+when "open", "browse"
+  branch = ARGV.first || `git symbolic-ref --short HEAD`.chomp
+  repo = `git remote get-url origin`.chomp.split(/:/).last.gsub(/\.git/, %{})
+  url = ci_url_template % { repo: repo, branch: ERB::Util.url_encode(branch) }
+
+  system "open #{url}"
+else
+  quit "Unknown command: #{command}"
+end
