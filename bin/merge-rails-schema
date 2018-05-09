@@ -3,6 +3,7 @@
 # Translated from shell script at https://gist.github.com/strax/c0dcbfa2f9bb54f95787
 
 ancestor_file, current_file, other_file, marker_size = ARGV # %O, %A, %B, %L
+marker_size = Integer(marker_size)
 
 system "git", "merge-file", "--marker-size=#{marker_size}", current_file, ancestor_file, other_file
 current_content = File.read(current_file)
