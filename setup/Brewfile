@@ -89,10 +89,8 @@ end
 #== Databases ==
 brew_if_tagged "sqlite", pin: true
 
-if tag? :mysql
-  brew "mysql", pin: true
-  cask "sequel-pro"
-end
+brew_if_tagged "mysql", pin: true
+cask_if_tagged "sequel-pro"
 
 if tag?(:postgres) || tag?(:postgresql)
   tap "petere/postgresql"
