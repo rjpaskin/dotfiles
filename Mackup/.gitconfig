@@ -20,6 +20,7 @@
   rename-branch = "!f() { git branch -m $1 $2; git push origin :$1; git push --set-upstream origin $2; }; f"
   # Recreate branch on top of master
   recreate-branch = "!f() { [[ -n $@ ]] && git checkout \"$@\" && git checkout master && git branch -D \"$@\" && git checkout -b \"$@\"; }; f"
+  up = "!echo 'Fetching from remotes...' && git fetch --all --quiet && git ffwd"
 [filter "lfs"]
   clean = git-lfs clean %f
   smudge = git-lfs smudge %f
