@@ -53,6 +53,8 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-unimpaired'
 " Asynchronously execute processes
 Plug 'tpope/vim-dispatch'
+" Shell command helpers
+Plug 'tpope/vim-eunuch'
 
 " Navigate between vim and tmux splits
 Plug 'christoomey/vim-tmux-navigator'
