@@ -60,7 +60,7 @@ Plug 'tpope/vim-eunuch'
 " Navigate between vim and tmux splits
 Plug 'christoomey/vim-tmux-navigator'
 
-" Custom text objects
+" Custom text objects (base for other plugins)
 Plug 'kana/vim-textobj-user'
 " `(i|a)r` for Ruby blocks
 Plug 'nelstrom/vim-textobj-rubyblock'
@@ -94,6 +94,7 @@ Plug 'jistr/vim-nerdtree-tabs'
 
 " Git integration
 Plug 'tpope/vim-fugitive'
+" GitHub extension for fugitive.vim
 Plug 'tpope/vim-rhubarb'
 
 Plug 'editorconfig/editorconfig-vim'
@@ -107,10 +108,11 @@ Plug 'thoughtbot/vim-rspec'
 " Javascript
 Plug 'pangloss/vim-Javascript'
 Plug 'mxw/vim-jsx'
-Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
-"
-Plug 'w0rp/ale'
 Plug 'mattn/emmet-vim'
+Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
+
+" Linting
+Plug 'w0rp/ale'
 
 " Bash
 Plug 'markcornick/vim-bats'
@@ -344,7 +346,7 @@ highlight link ALEWarning Todo
 
 let g:ale_echo_msg_format = '%linter%: %s'
 
-let g:ale_sh_shellcheck_exclusions = 'SC2039' " comma-separated -list
+let g:ale_sh_shellcheck_exclusions = 'SC2039' " comma-separated list
 
 " ------------------------------------------------
 " emmet-vim
