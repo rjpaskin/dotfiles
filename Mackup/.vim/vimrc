@@ -120,6 +120,8 @@ Plug 'dearrrfish/vim-applescript'
 " Clojure
 Plug 'tpope/vim-salve'
 Plug 'tpope/vim-fireplace'
+Plug 'guns/vim-sexp'
+Plug 'tpope/vim-sexp-mappings-for-regular-people'
 
 " Colour scheme
 Plug 'rakr/vim-one'
@@ -168,6 +170,20 @@ let g:airline_theme="one"
 " https://stackoverflow.com/questions/1467438/find-out-to-which-highlight-group-a-particular-keyword-symbol-belongs-in-vim
 call one#highlight('Normal',      '', 'ffffff', '')
 call one#highlight('ColorColumn', '', 'ffffff', '')
+
+" -------------------------------------------------
+" Syntax
+" -------------------------------------------------
+function ClojureSetup()
+  if g:clojure_special_indent_words !~ ",defui"
+    let g:clojure_special_indent_words .= ',defui'
+  endif
+  let g:clojure_syntax_keywords = {
+        \ 'clojureMacro': ["defproject", "defui", "deftest", "is", "testing"]
+        \ }
+endfunction
+
+autocmd FileType clojure :call ClojureSetup()
 
 " -------------------------------------------------
 " Denite
