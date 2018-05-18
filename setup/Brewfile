@@ -38,7 +38,7 @@ end
 
 #== Heroku ==
 if tag? :heroku
-  brew "heroku"
+  brew "heroku/brew/heroku"
   brew "parity"
 end
 
