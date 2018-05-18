@@ -6,13 +6,11 @@ load File.join(
 
 tap "homebrew/services" if tag?(:memcached) || tag?(:redis)
 tap "caskroom/cask"
-tap "caskroom/versions"
 tap "beeftornado/rmtree" # remove formula and all its (orphaned) dependencies
 
 #== Unix ==
 if tag? :ctags
-  tap "universal-ctags/universal-ctags"
-  brew "universal-ctags", args: ["HEAD"]
+  brew "universal-ctags/universal-ctags/universal-ctags", args: ["HEAD"]
 end
 
 brew "git"
@@ -93,7 +91,6 @@ brew_if_tagged "mysql", pin: true
 cask_if_tagged "sequel-pro"
 
 if tag?(:postgres) || tag?(:postgresql)
-  tap "petere/postgresql"
   brew "petere/postgresql/postgresql-9.4"
   brew "pex"
 
@@ -109,8 +106,7 @@ brew_if_tagged "ansible", pin: true
 brew "awscli" if tag? :aws
 
 if tag? :linode
-  tap "linode/cli"
-  brew "linode-cli"
+  brew "linode/cli/linode-cli"
 end
 
 #== Browsers ==
@@ -122,7 +118,7 @@ cask "flash-ppapi" # for Chromium/Opera
 #== Programming ==
 cask "dash"
 cask "iterm2"
-cask "sublime-text2"
+cask "caskroom/versions/sublime-text2"
 cask "sourcetree"
 cask "xquartz"
 
@@ -136,8 +132,7 @@ cask_if_tagged "docker"
 cask_if_tagged "ngrok"
 
 if tag?(:docker) && tag?(:codeclimate)
-  tap "codeclimate/formulae"
-  brew "codeclimate"
+  brew "codeclimate/formulae/codeclimate"
 end
 
 brew_gem "tmuxinator"
