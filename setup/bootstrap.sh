@@ -136,10 +136,6 @@ if has_tag "qt" && brew list | grep --silent "qt@5.5"; then
 fi
 
 if has_tag "heroku" && brew list | grep --silent "heroku"; then
-  fancy_echo "Update heroku binary..."
-  brew unlink heroku
-  brew link --force heroku
-
   for plugin in "heroku-repo" "heroku-accounts"; do
     if heroku plugin | grep --silent "$plugin"; then
       heroku plugin:install "$plugin"
