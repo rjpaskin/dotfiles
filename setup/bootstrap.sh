@@ -137,10 +137,12 @@ fi
 
 if has_tag "heroku" && brew list | grep --silent "heroku"; then
   for plugin in "heroku-repo" "heroku-accounts"; do
-    if heroku plugin | grep --silent "$plugin"; then
-      heroku plugin:install "$plugin"
+    if heroku plugins | grep --silent "$plugin"; then
+      heroku plugins:install "$plugin"
     fi
   done
+
+  fancy_echo "Setup Heroku with: heroku accounts:add <home|work>, then: heroku accounts:set <home|work>"
 fi
 
 case "$SHELL" in
