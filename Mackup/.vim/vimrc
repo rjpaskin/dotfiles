@@ -211,6 +211,9 @@ nnoremap <silent><leader>uv               :Denite -buffer-name=views
 nnoremap <silent><leader>uh               :Denite -buffer-name=helpers
       \ -path=`getcwd()`/app/helpers
       \ file_rec<cr>
+nnoremap <silent><leader>uw               :Denite -buffer-name=workers
+      \ -path=`getcwd()`/app/workers
+      \ file_rec<cr>
 nnoremap <silent><leader>uj               :Denite -buffer-name=javascripts
       \ -path=`getcwd()`/app/assets/javascripts
       \ file_rec<cr>
