@@ -177,7 +177,7 @@ call one#highlight('ColorColumn', '', 'ffffff', '')
 " -------------------------------------------------
 " Syntax
 " -------------------------------------------------
-function ClojureSetup()
+function! ClojureSetup()
   if g:clojure_special_indent_words !~ ",defui"
     let g:clojure_special_indent_words .= ',defui'
   endif
