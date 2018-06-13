@@ -1,31 +1,205 @@
 #!/usr/bin/env ruby
 require "erb"
+require "uri"
+require "net/http"
+require "json"
+require "ostruct"
+require "time"
+require "yaml"
 
-args = ARGV.dup
-args.unshift("open") if args.length <= 1
+module Tty
+  module_function
 
-command = args.first
+  def red;    bold 31; end
+  def green;  bold 32; end
+  def yellow; bold 33; end
+  def blue;   bold 34; end
+  def purple; bold 35; end
+  def cyan;   bold 36; end
+  def grey;   bold 37; end
 
-def ci_url_template
+  def reset; escape 0; end
+
+  def bold(n = 39)
+    escape "1;#{n}"
+  end
+
+  def underline
+    escape "4;39"
+  end
+
+  def escape(n)
+    "\e[#{n}m" if STDOUT.tty?
+  end
+end
+
+CircleCI = Struct.new(:repo) do
+  HTML_URL_TEMPLATE = "https://circleci.com/gh/%{repo}/tree/%{branch}".freeze
+
+  def html_url(branch:)
+    interpolate(HTML_URL_TEMPLATE, branch: branch)
+  end
+
+  def branch_builds(branch:)
+    get("project/github/%{repo}/tree/%{branch}", branch: branch, limit: 5)
+  end
+
+  def all_builds
+    get("project/github/%{repo}", branch: nil, limit: 15)
+  end
+
+  private
+
+  def get(path, branch:, **params)
+    response = Net::HTTP.get_response(build_url path, branch, params)
+    response.value # raise error if not 2xx status
+    JSON.parse(response.body, symbolize_names: true).map {|data| Build.new(data) }
+  end
+
+  def build_url(path, branch, **params)
+    params.merge! "circle-token" => config["circleci"]
+
+    URI::HTTPS.build(
+      host: "circleci.com",
+      path: interpolate("/api/v1.1/#{path}", branch: branch),
+      query: URI.encode_www_form(params)
+    )
+  end
+
+  def interpolate(template, branch:)
+    format(template, repo: repo, branch: ERB::Util.url_encode(branch))
+  end
+
+  def config
+    @config ||= begin
+      config_dir = ENV.fetch("XDG_CONFIG_HOME") { File.join(ENV["HOME"], ".config") }
+
+      YAML.load_file File.join(config_dir, "git-ci", "credentials.yml")
+    end
+  end
+
+  class Build
+    ACCESSORS = [:build_num, :status, :subject, :vcs_revision, :build_time_millis, :start_time].freeze
+    attr_reader :data, *ACCESSORS
+
+    alias_method :num, :build_num
+
+    def initialize(data)
+      # @data = data
+      ACCESSORS.each do |key|
+        instance_variable_set("@#{key}", data[key])
+      end
+    end
+
+    def status
+      case @status
+      when "fixed"    then "success"
+      when "canceled" then "cancelled"
+      when "not_run"  then "skipped"
+      else @status
+      end
+    end
+
+    def status_colour
+      case status
+      when "success" then Tty.green
+      when "running" then Tty.cyan
+      when "failed" then Tty.red
+      when "cancelled", "skipped" then Tty.grey
+      when "queued" then Tty.purple
+      end
+    end
+
+    def time
+      return "-- --" unless build_time_millis || start_time
+
+      seconds = if build_time_millis
+        build_time_millis / 1000
+      elsif start_time
+        Time.now.utc - Time.parse(start_time)
+      end
+
+      format "%2d'%02d", *seconds.divmod(60)
+    end
+
+    def sha
+      vcs_revision[0..6]
+    end
+
+    def commit_message
+      return "" unless subject
+
+      subject[0..77].tap do |str|
+        str << "..." if str != subject
+      end
+    end
+
+    def to_ary
+      [
+        coloured(status),
+        coloured("##{num}"),
+        "#{Tty.yellow}#{sha}#{Tty.reset}",
+        "#{Tty.grey}#{commit_message}#{Tty.reset}",
+        coloured(time)
+      ].map(&:to_s)
+    end
+
+    private
+
+    def coloured(text)
+      "#{status_colour}#{text}#{Tty.reset}"
+    end
+  end
+end
+
+def ci
   if File.directory? ".circleci"
-    "https://circleci.com/gh/%{repo}/tree/%{branch}"
+    repo = git("remote get-url origin").split(/:/).last.gsub(/\.git/, %{})
+
+    CircleCI.new(repo)
   else
     quit "Unable to determine CI service"
   end
 end
 
+def table(rows)
+  columns = rows.transpose
+
+  columns.map! do |column|
+    max_length = column.max_by(&:length).length
+    column.map {|cell| cell.ljust(max_length) }
+  end
+
+  puts columns.transpose.map {|row| row.join("    ") }
+end
+
 def quit(message)
-  STDERR.puts "Unknown command: #{command}"
+  warn message
   exit 1
 end
 
+def git(command)
+  `git #{command}`.chomp
+end
+
+
+args = ARGV.dup
+args.unshift("open") if args.none?
+
+command = args.first
+
+# common setup
+branch = ARGV[1] || git("symbolic-ref --short HEAD")
+
 case command
 when "open", "browse"
-  branch = ARGV.first || `git symbolic-ref --short HEAD`.chomp
-  repo = `git remote get-url origin`.chomp.split(/:/).last.gsub(/\.git/, %{})
-  url = ci_url_template % { repo: repo, branch: ERB::Util.url_encode(branch) }
-
-  system "open #{url}"
+  system "open #{ci.html_url branch: branch}"
+when "status"
+  if %w[--all -a].include? branch
+    table ci.all_builds
+  else
+    table ci.branch_builds(branch: branch)
+  end
 else
   quit "Unknown command: #{command}"
 end
