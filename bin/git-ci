@@ -105,8 +105,8 @@ CircleCI = Struct.new(:repo) do
       when "success" then Tty.green
       when "running" then Tty.cyan
       when "failed" then Tty.red
-      when "cancelled", "skipped" then Tty.grey
       when "queued" then Tty.purple
+      else Tty.grey
       end
     end
 
