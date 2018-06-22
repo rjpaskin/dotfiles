@@ -53,7 +53,9 @@ CircleCI = Struct.new(:repo) do
   def get(path, branch:, **params)
     response = Net::HTTP.get_response(build_url path, branch, params)
     response.value # raise error if not 2xx status
-    JSON.parse(response.body, symbolize_names: true).map {|data| Build.new(data) }
+    JSON.parse(response.body, symbolize_names: true).map do |data|
+      Build.new data, detail: (branch ? :commit_message : :branch)
+    end
   end
 
   def build_url(path, branch, **params)
@@ -79,13 +81,14 @@ CircleCI = Struct.new(:repo) do
   end
 
   class Build
-    ACCESSORS = [:build_num, :status, :subject, :vcs_revision, :build_time_millis, :start_time].freeze
+    ACCESSORS = [:build_num, :status, :subject, :branch, :vcs_revision, :build_time_millis, :start_time].freeze
     attr_reader :data, *ACCESSORS
 
     alias_method :num, :build_num
 
-    def initialize(data)
-      # @data = data
+    def initialize(data, detail: :commit_message)
+      @detail = detail
+
       ACCESSORS.each do |key|
         instance_variable_set("@#{key}", data[key])
       end
@@ -134,12 +137,19 @@ CircleCI = Struct.new(:repo) do
       end
     end
 
+    def detail
+      case @detail
+      when :commit_message then commit_message
+      when :branch then branch
+      end
+    end
+
     def to_ary
       [
         coloured(status),
         coloured("##{num}"),
         "#{Tty.yellow}#{sha}#{Tty.reset}",
-        "#{Tty.grey}#{commit_message}#{Tty.reset}",
+        "#{Tty.grey}#{detail}#{Tty.reset}",
         coloured(time)
       ].map(&:to_s)
     end
