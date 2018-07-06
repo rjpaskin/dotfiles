@@ -33,8 +33,6 @@ command! Wq wq
 command! WQ wq
 command! Qa qa
 
-" Aliases
-cnoreabbrev ag grep
 
 " -------------------------------------------------
 "  Plugins
@@ -56,6 +54,8 @@ Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-dispatch'
 " Shell command helpers
 Plug 'tpope/vim-eunuch'
+" Alias Ex commands
+Plug 'Konfekt/vim-alias'
 
 " Navigate between vim and tmux splits
 Plug 'christoomey/vim-tmux-navigator'
