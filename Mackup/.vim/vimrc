@@ -168,7 +168,6 @@ endif
 " -------------------------------------------------
 set background=light
 colorscheme one
-let g:airline_theme="one"
 
 " https://stackoverflow.com/questions/1467438/find-out-to-which-highlight-group-a-particular-keyword-symbol-belongs-in-vim
 call one#highlight('Normal',      '', 'ffffff', '')
@@ -233,6 +232,23 @@ call denite#custom#option('_', {
 
 call denite#custom#var('file_rec', 'command',
     \ ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
+
+" ------------------------------------------------
+" Airline
+" ------------------------------------------------
+let g:airline_theme="one"
+let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
+
+function! AirlineInit()
+  let g:airline_symbols.branch = ''
+  let g:airline_symbols.linenr = ''
+  let g:airline_symbols.maxlinenr = ''
+
+  let g:airline_section_z = substitute(g:airline_section_z, '%3p%% ', '', '')
+  let g:airline_section_z = substitute(g:airline_section_z, '%4l', '%l', '')
+endfunction
+
+autocmd User AirlineAfterInit call AirlineInit()
 
 " ------------------------------------------------
 " The Silver Searcher
