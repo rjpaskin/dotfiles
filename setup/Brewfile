@@ -29,7 +29,6 @@ brew "zsh"
 
 #== Compilers ==
 brew "gcc"
-brew "cmake" # required for Vim:YouCompleteMe
 
 if tag? :old_gcc
   brew "apple-gcc42"

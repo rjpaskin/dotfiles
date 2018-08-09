@@ -71,7 +71,9 @@ Plug 'Julian/vim-textobj-variable-segment'
 " https://github.com/tek/vim-textobj-ruby " can include blank after block
 
 " Autocomplete
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py' } " installation requires CMake
+Plug 'Shougo/deoplete.nvim'
+Plug 'roxma/nvim-yarp'
+Plug 'roxma/vim-hug-neovim-rpc'
 
 " Configurable status bar
 Plug 'vim-airline/vim-airline'
@@ -232,6 +234,33 @@ call denite#custom#option('_', {
 
 call denite#custom#var('file_rec', 'command',
     \ ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
+
+" ------------------------------------------------
+" Deoplete
+" ------------------------------------------------
+let g:deoplete#enable_at_startup = 1
+
+" Ensure Deoplete doesn't crash due to https://github.com/vim/vim/issues/3117
+if has('python3')
+  silent! python3 1
+endif
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+
+" Use <TAB> to cycle through completions
+inoremap <silent><expr> <TAB>
+  \ pumvisible() ?
+    \ "\<C-n>" :
+    \ <SID>check_back_space() ? "\<TAB>" : deoplete#mappings#manual_complete()
+
+" Use <shift-TAB> to cycle through completions
+inoremap <silent><expr> <S-TAB>
+  \ pumvisible() ? "\<C-p>" : "\<S-TAB>"
+
+" inoremap <silent><expr> <Esc>pumvisible() ? "\<C-e>" : "\<Esc>"
 
 " ------------------------------------------------
 " Airline
