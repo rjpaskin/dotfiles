@@ -393,11 +393,12 @@ let g:ale_sign_column_always = 1
 let g:ale_sign_error = '••'
 let g:ale_sign_warning = '••'
 
-highlight link ALEErrorSign DiffDelete
-highlight link ALEError DiffDelete
+call one#highlight('ALEErrorSign', 'ca1243', 'fafafa', '')
+call one#highlight('ALEError',     '',       'feeef2', '')
 
-highlight link ALEWarningSign Todo
-highlight link ALEWarning Todo
+call one#highlight('ALEWarningSign', 'c18401', 'fafafa', '')
+" lighter version of one's hue_5_2 (red 2)
+call one#highlight('ALEWarning',     '',       'fff6e4', '')
 
 let g:ale_echo_msg_format = '%linter%: %s'
 
