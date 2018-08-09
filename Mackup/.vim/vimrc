@@ -206,6 +206,10 @@ nnoremap <silent><leader>uo :Denite -buffer-name=outline  outline<cr>
 nnoremap <silent><leader>ur :Denite -buffer-name=register register<cr>
 nnoremap <silent><leader>uff :Denite -buffer-name=file_mru file_mru<cr>
 
+nnoremap <silent><leader>up               :Denite -buffer-name=current_directory
+      \ -path=`expand('%:p:h')`
+      \ file_rec<cr>
+
 " Rails-specific
 nnoremap <silent><leader>um               :Denite -buffer-name=models
       \ -path=`getcwd()`/app/models
