@@ -18,8 +18,6 @@
   grep-branch-local  = "!f(){ git branch -a | sed -e 's/[ \\*]*//' | grep -v -e '\\->' -e '^remotes' | xargs git grep $@;  };f "
   checkout-at = "!f() { rev=$(git rev-list -1 --before=\"$1\" ${2:-master}) && git checkout \"$rev\"; }; f"
   rename-branch = "!f() { git branch -m $1 $2; git push origin :$1; git push --set-upstream origin $2; }; f"
-  # Recreate branch on top of master
-  recreate-branch = "!f() { [[ -n $@ ]] && git checkout \"$@\" && git checkout master && git branch -D \"$@\" && git checkout -b \"$@\"; }; f"
   up = "!echo 'Fetching from remotes...' && git fetch --all --quiet && git ffwd"
 [filter "lfs"]
   clean = git-lfs clean %f
