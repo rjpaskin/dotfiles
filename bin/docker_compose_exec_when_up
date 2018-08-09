@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+main() {
+  local service="$1"; shift
+  local slept=0
+
+  trap "exit 0" INT
+  trap "exit 0" TERM
+
+  while true; do
+    until docker-compose ps "$service" 2> /dev/null | grep -i --silent "up"; do
+      [ "$slept" -eq 0 ] && echo "Waiting for $service service..."
+      sleep 1
+      slept=1
+    done
+
+    [ "$slept" -eq 1 ] && echo "Service $service running"
+    docker-compose exec "$service" "$@" <&0 &
+
+    wait "$!"
+
+    [ "$?" -eq 0 ] && break
+    echo "Service $service exited with code $?"
+    slept=0
+  done
+}
+
+main "$@"

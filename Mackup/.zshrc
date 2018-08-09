@@ -132,14 +132,4 @@ if has_tag "docker"; then
   alias dup="docker-compose up"
   alias bdup="BYEBUG=1 docker-compose up"
   alias dkill="docker-compose kill"
-
-  docker_compose_exec_when_up() {
-    local service="$1"; shift
-
-    until docker-compose ps "$service" 2> /dev/null | grep -i --silent "up"; do
-      sleep 1
-    done
-
-    docker-compose exec "$service" "$@"
-  }
 fi
