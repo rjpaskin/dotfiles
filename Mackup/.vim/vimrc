@@ -168,8 +168,8 @@ endif
 " -------------------------------------------------
 " Colour scheme
 " -------------------------------------------------
-set background=light
 colorscheme one
+set background=light
 
 " https://stackoverflow.com/questions/1467438/find-out-to-which-highlight-group-a-particular-keyword-symbol-belongs-in-vim
 call one#highlight('Normal',      '', 'ffffff', '')
