@@ -154,6 +154,7 @@ set shell=/usr/local/bin/zsh
 set colorcolumn=             " disable coloured line at 80 chars
 set showmatch                " show matching parentheses
 set textwidth=0              " disable wrapping of text in insert mode
+let &errorformat .=',%f'     " allow a list of (only) filenames to populate the quickfix list
 
 if has("termguicolors")
   set termguicolors
@@ -427,3 +428,9 @@ let g:user_emmet_settings = {
 \      'extends' : 'jsx',
 \  },
 \}
+
+" ------------------------------------------------
+" Commands
+" ------------------------------------------------
+command! -bar -nargs=0 LoadGitConflicts
+  \ cexpr system('git diff --name-only --diff-filter=U') | copen | wincmd p | normal '<Plug>unimpairedContextNext'
