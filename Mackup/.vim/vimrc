@@ -232,11 +232,20 @@ nnoremap <silent><leader>uf               :Denite -buffer-name=factories
       \ -path=`getcwd()`/spec/support/factories
       \ file_rec<cr>
 
+" Char that matches search query
+call one#highlight('rjp_denite_matched_char',  'c18401', 'fff6e4', '')
+" Range of non-matching chars between two matching chars
+call one#highlight('rjp_denite_matched_range', '222222', 'fff6e4', '')
+" Selected row in Denite's 'Insert' mode
+call one#highlight('rjp_denite_insert_mode',   'ffffff', '4078f2', '')
+" Selected row in Denite's 'Normal' mode
+call one#highlight('rjp_denite_normal_mode',   'ffffff', '50a14f', '')
+
 call denite#custom#option('_', {
-      \ 'highlight_matched_char': 'DiffDelete',
-      \ 'highlight_matched_range': 'Statement',
-      \ 'highlight_mode_insert': 'DiffAdd',
-      \ 'highlight_mode_normal': 'DiffText',
+      \ 'highlight_matched_char': 'rjp_denite_matched_char',
+      \ 'highlight_matched_range': 'rjp_denite_matched_range',
+      \ 'highlight_mode_insert': 'rjp_denite_insert_mode',
+      \ 'highlight_mode_normal': 'rjp_denite_normal_mode',
       \ })
 
 call denite#custom#var('file_rec', 'command',
