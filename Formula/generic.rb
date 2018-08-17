@@ -20,27 +20,21 @@ class RubyGemsDownloadStrategy < AbstractDownloadStrategy
   end
 
   def fetch
-    ohai "Fetching #{resource.url} from gem source"
+    ohai "Fetching #{@url} from gem source"
 
     HOMEBREW_CACHE.cd do
-      self.class.with_ruby_env(ruby_formula) do
-        safe_system "gem", "fetch", resource.url, "--version", resource.version
+      self.class.with_ruby_env(meta[:ruby_formula]) do
+        safe_system "gem", "fetch", @url, "--version", version
       end
     end
   end
 
   def cached_location
-    HOMEBREW_CACHE/"#{resource.url}-#{resource.version}.gem"
+    HOMEBREW_CACHE/"#{@url}-#{version}.gem"
   end
 
   def clear_cache
     cached_location.unlink if cached_location.exist?
-  end
-
-  private
-
-  def ruby_formula
-    @ruby_formula ||= resource.instance_variable_get(:@resource).owner.owner.ruby_formula_name
   end
 end
 
@@ -51,7 +45,7 @@ module GenericBrewGem
     ruby_formula = gem_options.fetch(:ruby_formula, "ruby")
 
     Object.const_set("Gem#{class_name}", Class.new(Formula) do
-      url gem_name, :using => RubyGemsDownloadStrategy
+      url gem_name, :using => RubyGemsDownloadStrategy, :ruby_formula => ruby_formula
       version gem_options.fetch(:version) { RubyGemsDownloadStrategy.with_ruby_env(ruby_formula) { Brew::Gem::CLI.fetch_version(gem_name) } }
 
       depends_on ruby_formula
