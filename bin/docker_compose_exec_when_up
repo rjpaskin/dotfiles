@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 main() {
   local service="$1"; shift
+
+  if [ "$service" = "kill" ]; then
+    docker-compose kill
+    pkill -f "$0"
+    exit 0
+  fi
+
   local slept=0
 
   trap "exit 0" INT
