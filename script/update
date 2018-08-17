@@ -40,15 +40,6 @@ show_repo_updates() {
   echo "$diff"
 }
 
-brew_gem_outdated_file_names() {
-  local outdated
-  outdated=$(brew outdated --quiet "$formulae_dir"/gem-*.rb)
-
-  for formula in $outdated; do
-    echo "$formulae_dir/$formula.rb"
-  done
-}
-
 # Ensure that Homebrew stuff (e.g. Ruby) is found first
 # when updating formulae (e.g. Vim)
 export PATH="/usr/local/bin:$PATH"
@@ -72,9 +63,6 @@ if [ -n "$dry_run" ]; then
 
   section "Mac App Store apps"
   mas outdated
-
-  section "Brew gems"
-  brew outdated "$formulae_dir"/gem-*.rb || true
 else
   brew upgrade --ignore-pinned
   brew cleanup # separate step to preserve previous versions if above fails
@@ -90,14 +78,6 @@ else
 
   section "Mac App Store apps"
   mas upgrade
-
-  section "Brew gems"
-  outdated=$(brew_gem_outdated_file_names)
-
-  for formula in $outdated; do
-    brew upgrade "$formula"
-  done
-  brew cleanup
 fi
 
 if command -v rbenv > /dev/null; then
