@@ -68,13 +68,8 @@ else
   brew cleanup # separate step to preserve previous versions if above fails
 
   section "Homebrew casks"
-  # `brew cask upgrade` isn't a thing (yet)
-  outdated_casks=$(brew cask outdated --quiet)
-
-  for cask in $outdated_casks; do
-    brew cask reinstall "$cask"
-  done
-  brew cask cleanup
+  brew cask upgrade
+  brew cleanup
 
   section "Mac App Store apps"
   mas upgrade
