@@ -428,9 +428,3 @@ let g:user_emmet_settings = {
 \      'extends' : 'jsx',
 \  },
 \}
-
-" ------------------------------------------------
-" Commands
-" ------------------------------------------------
-command! -bar -nargs=0 LoadGitConflicts
-  \ cexpr system('git diff --name-only --diff-filter=U') | copen | wincmd p | normal '<Plug>unimpairedContextNext'
