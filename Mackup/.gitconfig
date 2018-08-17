@@ -9,6 +9,8 @@
   diff = auto
   status = auto
   branch = auto
+[rebase]
+  autoStash = true
 [alias]
   branches = for-each-ref --sort=-committerdate --format=\"%(color:yellow)%(authordate:relative)\t%(color:blue)%(authorname)\t%(color:red)%(color:bold)%(refname:short)\" refs/remotes
   local-branches = !git branch -vv | cut -c 3- | awk '$3 !~/\\[/ { print $1 }'
@@ -28,3 +30,5 @@
   driver = merge-rails-schema %O %A %B %L
 [include]
   path = ~/.gitconfig.local
+[rerere]
+	enabled = true
