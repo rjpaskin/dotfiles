@@ -304,7 +304,7 @@ autocmd User AirlineAfterInit call AirlineInit()
 " The Silver Searcher
 " ------------------------------------------------
 if executable("ag")
-  set grepprg=ag\ --nogroup\ --nocolor
+  set grepprg=ag\ --vimgrep
 endif
 
 " bind K to grep word under cursor
