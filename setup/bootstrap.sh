@@ -259,6 +259,7 @@ download_or_update_file "$HOME/.vim/autoload/plug.vim" \
 vim -i NONE -c PlugInstall -c quitall
 
 ensure_dir "$HOME/.vim/swap"
+ensure_dir "$HOME/.vim/undo"
 
 fancy_echo "Restoring dotfiles with Mackup ..."
 # bootstrap Mackup config
