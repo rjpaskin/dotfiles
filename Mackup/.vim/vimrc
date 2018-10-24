@@ -80,6 +80,8 @@ Plug 'roxma/vim-hug-neovim-rpc'
 " Configurable status bar
 Plug 'vim-airline/vim-airline'
 
+" Latest runtime files for Ruby
+Plug 'vim-ruby/vim-ruby'
 " Automatically add `end` to Ruby blocks
 Plug 'tpope/vim-endwise'
 " Refactorings for Ruby
@@ -207,6 +209,14 @@ function! ClojureSetup()
 endfunction
 
 autocmd FileType clojure :call ClojureSetup()
+
+function! RubySetup()
+  if exists('g:ruby_indent_assignment_style')
+    let g:ruby_indent_assignment_style = 'variable'
+  endif
+endfunction
+
+autocmd FileType ruby :call RubySetup()
 
 " -------------------------------------------------
 " Denite
