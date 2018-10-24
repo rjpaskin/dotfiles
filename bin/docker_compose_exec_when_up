@@ -8,26 +8,36 @@ main() {
     exit 0
   fi
 
-  local slept=0
+  local sleep_time=0
+  local b=1
+  local acc=0
 
   trap "exit 0" INT
   trap "exit 0" TERM
 
   while true; do
     until docker-compose ps "$service" 2> /dev/null | grep -i --silent "up"; do
-      [ "$slept" -eq 0 ] && echo "Waiting for $service service..."
-      sleep 1
-      slept=1
+      [ "$sleep_time" -eq 0 ] && echo "Waiting for $service service..."
+
+      # Fibonacci
+      acc=$((sleep_time + b))
+      sleep_time=$b
+      b=$acc
+
+      sleep $sleep_time
     done
 
-    [ "$slept" -eq 1 ] && echo "Service $service running"
+    [ "$sleep_time" -gt 0 ] && echo "Service $service running"
     docker-compose exec "$service" "$@" <&0 &
 
     wait "$!"
 
+    # shellcheck disable=SC2181
     [ "$?" -eq 0 ] && break
     echo "Service $service exited with code $?"
-    slept=0
+    sleep_time=0
+    b=1
+    acc=0
   done
 }
 
