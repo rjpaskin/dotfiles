@@ -1,0 +1,10 @@
+# Matching text
+--colors=match:none
+--colors=match:bg:yellow
+
+# Line numbers
+--colors=line:fg:yellow
+
+# File path
+--colors=path:fg:green
+--colors=path:style:bold
