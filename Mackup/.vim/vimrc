@@ -209,6 +209,9 @@ autocmd FileType clojure :call ClojureSetup()
 " -------------------------------------------------
 " Denite
 " -------------------------------------------------
+" Prevent undo being triggered when we mess up the key sequence
+nnoremap <silent><leader>u  :Denite -buffer-name=file_rec file_rec<cr>
+
 nnoremap <silent><leader>uu :Denite -buffer-name=file_rec file_rec<cr>
 nnoremap <silent><leader>ub :Denite -buffer-name=buffers  buffer<cr>
 nnoremap <silent><leader>ul :Denite -buffer-name=line     line<cr>
