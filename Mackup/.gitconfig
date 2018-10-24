@@ -10,7 +10,10 @@
   status = auto
   branch = auto
 [rebase]
+  # stash changes before rebase
   autoStash = true
+[diff]
+  colorMoved = zebra
 [alias]
   branches = for-each-ref --sort=-committerdate --format=\"%(color:yellow)%(authordate:relative)\t%(color:blue)%(authorname)\t%(color:red)%(color:bold)%(refname:short)\" refs/remotes
   local-branches = !git branch -vv | cut -c 3- | awk '$3 !~/\\[/ { print $1 }'
@@ -25,10 +28,14 @@
   clean = git-lfs clean %f
   smudge = git-lfs smudge %f
   required = true
+# Merge driver for db/schema.rb
 [merge "railsschema"]
   name = newer Rails schema version
   driver = merge-rails-schema %O %A %B %L
 [include]
   path = ~/.gitconfig.local
 [rerere]
-	enabled = true
+  # record resolutions of merge conflicts
+  enabled = true
+  # stage rerere-resolved conflicts automatically
+  autoupdate = true
