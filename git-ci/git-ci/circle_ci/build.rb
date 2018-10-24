@@ -13,9 +13,10 @@ module GitCI
 
       def status
         case @status
-        when "fixed"    then "success"
-        when "canceled" then "cancelled"
-        when "not_run"  then "skipped"
+        when "fixed"       then "success"
+        when "canceled"    then "cancelled"
+        when "not_run"     then "skipped"
+        when "not_running" then "queued"
         else @status
         end
       end
