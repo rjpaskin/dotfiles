@@ -93,7 +93,7 @@ EOF
   done
 fi
 
-export PATH="$HOME/.bin:$PATH"
+export PATH=".git/safe/../../bin:$HOME/.bin:$PATH"
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # # Preferred editor for local and remote sessions
