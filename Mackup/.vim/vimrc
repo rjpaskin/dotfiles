@@ -372,10 +372,11 @@ let g:jsx_ext_required = 0
 " ------------------------------------------------
 scriptencoding utf-32 " for vim-lint
 
-let g:prettier#autoformat = 0
 let g:prettier#exec_cmd_async = 1
 " Don't format code on save
+let g:prettier#autoformat = 0
 " autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql PrettierAsync
+autocmd BufWritePre *.jsx PrettierAsync
 
 " max line length that prettier will wrap on
 let g:prettier#config#print_width = 80
