@@ -21,6 +21,7 @@ brew "nmap"
 brew "openssl", pin: true
 brew "pidof"
 brew "reattach-to-user-namespace"
+brew "ripgrep"
 brew "the_silver_searcher"
 brew "tmux"
 brew_if_tagged "tmate"
