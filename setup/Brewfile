@@ -7,6 +7,7 @@ load File.join(
 tap "homebrew/services" if tag?(:memcached) || tag?(:redis)
 tap "caskroom/cask"
 tap "beeftornado/rmtree" # remove formula and all its (orphaned) dependencies
+tap "burntsushi/ripgrep", "https://github.com/BurntSushi/ripgrep.git"
 
 #== Unix ==
 if tag? :ctags
@@ -21,7 +22,7 @@ brew "nmap"
 brew "openssl", pin: true
 brew "pidof"
 brew "reattach-to-user-namespace"
-brew "ripgrep"
+brew "burntsushi/ripgrep/ripgrep-bin"
 brew "the_silver_searcher"
 brew "tmux"
 brew_if_tagged "tmate"
