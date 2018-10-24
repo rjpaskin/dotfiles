@@ -154,6 +154,8 @@ set shell=/usr/local/bin/zsh
 set colorcolumn=             " disable coloured line at 80 chars
 set showmatch                " show matching parentheses
 set textwidth=0              " disable wrapping of text in insert mode
+set diffopt+=vertical        " open diffs side-by-side by default
+set diffopt+=iwhite          " ignore whitespace in diffs
 let &errorformat .=',%f'     " allow a list of (only) filenames to populate the quickfix list
 
 if has("termguicolors")
