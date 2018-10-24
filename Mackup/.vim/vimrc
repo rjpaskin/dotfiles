@@ -235,8 +235,9 @@ nnoremap <silent><leader>uw               :Denite -buffer-name=workers
       \ -path=`getcwd()`/app/workers
       \ file_rec<cr>
 nnoremap <silent><leader>uj               :Denite -buffer-name=javascripts
-      \ -path=`getcwd()`/app/assets/javascripts
-      \ file_rec<cr>
+      \ -source-names=hide
+      \ file_rec:`getcwd()`/app/javascript
+      \ file_rec:`getcwd()`/app/assets/javascripts<cr>
 nnoremap <silent><leader>us               :Denite -buffer-name=specs
       \ -path=`getcwd()`/spec
       \ file_rec<cr>
