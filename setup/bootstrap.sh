@@ -218,20 +218,6 @@ if has_tag "node"; then
   fi
 fi
 
-if has_tag "circleci"; then
-  fancy_echo "Configuring CircleCI ..."
-  circleci="/usr/local/bin/circleci"
-
-  if [ -f "$circleci" ]; then circleci_already_installed=1; fi
-
-  download_or_update_file "$circleci" "https://circle-downloads.s3.amazonaws.com/releases/build_agent_wrapper/circleci"
-  chmod +x "$circleci"
-
-  if [ ! "x$circleci_already_installed" = "x" ]; then
-    "$circleci" update
-  fi
-fi
-
 if ! [ -f "$HOME/.ssh/id_rsa" ]; then
   fancy_echo "Generating a new SSH key ..."
   ssh_password=$(openssl rand -base64 18 | tee "$HOME/Desktop/ssh_key.txt")

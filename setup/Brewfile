@@ -134,6 +134,8 @@ if tag?(:docker) && tag?(:codeclimate)
   brew "codeclimate/formulae/codeclimate"
 end
 
+brew_if_tagged "circleci"
+
 brew_gem "tmuxinator"
 brew_gem_if_tagged "mailcatcher"
 brew_gem_if_tagged "rubocop"
