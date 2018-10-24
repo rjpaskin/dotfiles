@@ -3,7 +3,7 @@
 require 'formula'
 require 'fileutils'
 
-$LOAD_PATH.unshift Formula["brew-gem"].prefix/"lib"
+$LOAD_PATH.unshift Formula["brew-gem"].installed_kegs.first.lib.to_s
 
 require 'brew/gem'
 
