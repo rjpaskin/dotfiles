@@ -8,7 +8,7 @@ echo "Moving $branch_to_move onto $base_branch"
 
 new_commits_count=$(git rev-list --count "$branch_to_move".."$base_branch")
 
-if [ "$new_commits_count" -eq 0]; then
+if [ "$new_commits_count" -eq 0 ]; then
   # move branch
   git checkout "$branch_to_move"
   git checkout "$base_branch"
