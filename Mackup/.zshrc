@@ -70,6 +70,8 @@ if has_tag "docker";   then plugins+=(docker docker-compose); fi
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
+alias ag="ag --hidden --path-to-ignore ~/.agignore"
+
 if has_tag "git_flow"; then alias gf="git flow"; fi # restore now-removed shortcut
 
 if has_tag "ruby"; then

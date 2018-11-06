@@ -1,0 +1,5 @@
+.git/
+vendor/assets/
+*/.vim/bundle/
+public/
+

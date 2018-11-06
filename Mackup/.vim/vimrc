@@ -281,8 +281,9 @@ call denite#custom#option('_', {
       \ 'highlight_mode_normal': 'rjp_denite_normal_mode',
       \ })
 
-call denite#custom#var('file_rec', 'command',
-    \ ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
+call denite#custom#var('file_rec', 'command', [
+    \ 'ag', '--follow', '--nocolor', '--nogroup',
+    \ '--hidden', '--path-to-ignore', '~/.agignore', '-g', ''])
 
 " ------------------------------------------------
 " Deoplete
@@ -332,7 +333,7 @@ autocmd User AirlineAfterInit call AirlineInit()
 " The Silver Searcher
 " ------------------------------------------------
 if executable("ag")
-  set grepprg=ag\ --vimgrep
+  set grepprg=ag\ --vimgrep\ --hidden\ --path-to-ignore\ ~/.agignore
 endif
 
 " bind K to grep word under cursor
