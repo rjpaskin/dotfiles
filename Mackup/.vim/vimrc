@@ -120,6 +120,9 @@ Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 " Linting
 Plug 'w0rp/ale'
 
+" YAML
+Plug 'lmeijvogel/vim-yaml-helper'
+
 " Bash
 Plug 'markcornick/vim-bats'
 
@@ -357,6 +360,11 @@ let g:EditorConfig_disable_rules = ["max_line_length"]
 let g:splitjoin_ruby_hanging_args = 0
 " Don't use `{}` when joining/spliting hashes as last argument
 let g:splitjoin_ruby_curly_braces = 0
+
+" ------------------------------------------------
+" vim-yaml-helper
+" ------------------------------------------------
+let g:vim_yaml_helper#auto_display_path = 1
 
 " ------------------------------------------------
 " RSpec.vim
