@@ -153,6 +153,7 @@ set nobackup                 " disable backups
 set nowritebackup            " disable backups
 "set noswapfile              " disable swapfiles
 set directory=~/.vim/swap    " location of swapfiles
+set history=1000             " number of entries in the command history
 set shortmess+=I             " suppress intro message
 set splitright               " open vertical splits to the right
 set splitbelow               " open horizontal splits below
