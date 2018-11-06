@@ -1,12 +1,12 @@
-hosts
-scratch
+hosts/
+scratch/
 
-Mackup/.vim/bundle/*
-Mackup/.vim/autoload/*
+Mackup/.vim/bundle/
+Mackup/.vim/autoload/
 
 Mackup/.tmuxinator/*.yml
 !Mackup/.tmuxinator/default.yml
 
 Mackup/.*.old
 Mackup/.*.local
-Mackup/Library
+Mackup/Library/
