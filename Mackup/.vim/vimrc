@@ -389,6 +389,16 @@ endfunction
 autocmd BufNewFile,BufRead * :call DockerSetup()
 
 " ------------------------------------------------
+" Rails.vim
+" ------------------------------------------------
+" Only set `eruby.yaml` filetype if file contains ERB tags
+" (means that comment character is set correctly for normal YAML files)
+autocmd FileType eruby.yaml
+  \ if filereadable(expand("%:p")) && match(readfile(expand("%:p")), "<%") == -1 |
+  \   set filetype=yaml |
+  \ endif
+
+" ------------------------------------------------
 " vim-jsx
 " ------------------------------------------------
 let g:jsx_ext_required = 0
