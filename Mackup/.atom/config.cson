@@ -9,5 +9,7 @@
       "atom-light-ui"
       "atom-light-syntax"
     ]
+  "linter-rubocop":
+    disableWhenNoConfigFile: true
   welcome:
     showOnStartup: false
