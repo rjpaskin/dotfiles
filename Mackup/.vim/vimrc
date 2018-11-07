@@ -33,6 +33,10 @@ command! Wq wq
 command! WQ wq
 command! Qa qa
 
+augroup RJP
+  " Clear out all existing autocmds in the augroup
+  autocmd!
+augroup END
 
 " -------------------------------------------------
 "  Plugins
@@ -212,15 +216,16 @@ function! ClojureSetup()
         \ }
 endfunction
 
-autocmd FileType clojure :call ClojureSetup()
-
 function! RubySetup()
   if exists('g:ruby_indent_assignment_style')
     let g:ruby_indent_assignment_style = 'variable'
   endif
 endfunction
 
-autocmd FileType ruby :call RubySetup()
+augroup RJP
+  autocmd FileType clojure :call ClojureSetup()
+  autocmd FileType ruby :call RubySetup()
+augroup END
 
 " -------------------------------------------------
 " Denite
@@ -328,7 +333,9 @@ function! AirlineInit()
   let g:airline_section_z = substitute(g:airline_section_z, '%4l', '%l', '')
 endfunction
 
-autocmd User AirlineAfterInit call AirlineInit()
+augroup RJP
+  autocmd User AirlineAfterInit call AirlineInit()
+augroup END
 
 " ------------------------------------------------
 " The Silver Searcher
@@ -387,17 +394,21 @@ function! DockerSetup()
 endfunction
 
 " Use `FileType ruby`?
-autocmd BufNewFile,BufRead * :call DockerSetup()
+augroup RJP
+  autocmd BufNewFile,BufRead * :call DockerSetup()
+augroup END
 
 " ------------------------------------------------
 " Rails.vim
 " ------------------------------------------------
 " Only set `eruby.yaml` filetype if file contains ERB tags
 " (means that comment character is set correctly for normal YAML files)
-autocmd FileType eruby.yaml
-  \ if filereadable(expand("%:p")) && match(readfile(expand("%:p")), "<%") == -1 |
-  \   set filetype=yaml |
-  \ endif
+augroup RJP
+  autocmd FileType eruby.yaml
+    \ if filereadable(expand("%:p")) && match(readfile(expand("%:p")), "<%") == -1 |
+    \   set filetype=yaml |
+    \ endif
+augroup END
 
 " ------------------------------------------------
 " vim-jsx
@@ -412,8 +423,11 @@ scriptencoding utf-32 " for vim-lint
 let g:prettier#exec_cmd_async = 1
 " Don't format code on save
 let g:prettier#autoformat = 0
-" autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql PrettierAsync
-autocmd BufWritePre *.jsx PrettierAsync
+
+augroup RJP
+  " autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql PrettierAsync
+  autocmd BufWritePre *.jsx,*/app/javascript/*.js PrettierAsync
+augroup END
 
 " max line length that prettier will wrap on
 let g:prettier#config#print_width = 80
