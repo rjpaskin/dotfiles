@@ -244,6 +244,13 @@ vim -i NONE -c PlugInstall -c quitall
 ensure_dir "$HOME/.vim/swap"
 ensure_dir "$HOME/.vim/undo"
 
+atom_packages="$dotfiles_dir/Mackup/.atom/packages-list.txt"
+
+if [ -f "$atom_packages" ]; then
+  fancy_echo "Installing Atom packages ..."
+  apm install --packages-file "$atom_packages"
+fi
+
 fancy_echo "Restoring dotfiles with Mackup ..."
 # bootstrap Mackup config
 ensure_symlink "$dotfiles_dir/Mackup/.mackup.cfg" "$HOME/.mackup.cfg"
