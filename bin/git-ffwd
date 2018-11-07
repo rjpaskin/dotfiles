@@ -51,7 +51,7 @@ main() {
           git merge -q $ARB;
         else
           echo " branch $LB was $NBEHIND commit(s) behind of $REMOTE/$RB. reseting local branch to remote";
-          git branch -l -f $LB -t $ARB >/dev/null;
+          git branch --create-reflog -f $LB -t $ARB >/dev/null;
         fi
       fi
     done
