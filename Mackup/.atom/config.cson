@@ -1,16 +1,4 @@
 "*":
-  "copy-with-style":
-    preset1:
-      background_color: "#fefdff"
-      font_family: "Monaco"
-      font_size: 12
-      name: "As HTML"
-    preset2:
-      background_color: "#ffffff"
-      font_family: "Monaco"
-      font_size: 12
-      format: "RTF"
-      name: "As RTF"
   core:
     telemetryConsent: "no"
     themes: [
