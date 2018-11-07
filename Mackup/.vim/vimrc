@@ -94,6 +94,8 @@ Plug 'ecomba/vim-ruby-refactoring'
 Plug 'AndrewRadev/splitjoin.vim'
 " Convert to Ruby 1.9 hash syntax, or between string/symbol keys
 Plug 'rorymckinley/vim-rubyhash'
+" Brewfile syntax
+Plug 'bfontaine/Brewfile.vim'
 
 " Project navigation
 Plug 'Shougo/denite.nvim'
