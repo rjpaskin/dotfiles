@@ -51,7 +51,6 @@ alias diff-brief='diff --brief'
 alias f='find . -iname'   # find a filename
 alias sqlite='sqlite3'
 alias vlc='open -a VLC'
-alias subl='/Applications/Sublime\ Text\ 2.app/Contents/SharedSupport/bin/subl'
 
 # Directory aliases
 alias desk='cd ~/Desktop'
