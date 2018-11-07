@@ -476,6 +476,10 @@ call one#highlight('ALEWarning',     '',       'fff6e4', '')
 
 let g:ale_echo_msg_format = '%linter%: %s'
 
+augroup RJP
+  autocmd FileType sh let b:ale_echo_msg_format = '%linter%%/code%: %s'
+augroup END
+
 let g:ale_sh_shellcheck_exclusions = 'SC2039' " comma-separated list
 
 " ------------------------------------------------
