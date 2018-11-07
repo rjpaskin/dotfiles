@@ -15,9 +15,10 @@ trap 'ret=$?; test $ret -ne 0 && printf "failed\n\n" >&2; exit $ret' EXIT
 set -e
 
 script_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
+dotfiles_dir="$script_dir/.."
 
-# shellcheck source=has_tag.sh
-. "$script_dir/../has_tag.sh"
+# shellcheck source=../has_tag.sh
+. "$dotfiles_dir/has_tag.sh"
 
 # set -x # for debugging
 
@@ -245,12 +246,12 @@ ensure_dir "$HOME/.vim/undo"
 
 fancy_echo "Restoring dotfiles with Mackup ..."
 # bootstrap Mackup config
-ensure_symlink "$PWD/Mackup/.mackup.cfg" "$HOME/.mackup.cfg"
-ensure_symlink "$PWD/Mackup/.mackup" "$HOME/.mackup"
+ensure_symlink "$dotfiles_dir/Mackup/.mackup.cfg" "$HOME/.mackup.cfg"
+ensure_symlink "$dotfiles_dir/Mackup/.mackup" "$HOME/.mackup"
 
 mackup restore
 
-fancy_echo "Symlinking `bin` directory to \$HOME ..."
-ensure_symlink "$PWD/bin" "$HOME/.bin"
+fancy_echo "Symlinking \`bin\` directory to \$HOME ..."
+ensure_symlink "$dotfiles_dir/bin" "$HOME/.bin"
 
 fancy_echo "All done!"
