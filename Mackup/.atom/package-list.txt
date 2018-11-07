@@ -1,0 +1,14 @@
+busy-signal@1.4.3
+editorconfig@2.2.2
+emmet@2.4.3
+intentions@1.1.5
+language-babel@2.85.0
+language-docker@1.1.8
+language-haml@0.31.1
+linter@2.2.0
+linter-eslint@8.4.1
+linter-hadolint@1.0.0
+linter-rubocop@2.2.3
+linter-shellcheck@1.5.0
+linter-ui-default@1.7.1
+
