@@ -1,6 +1,7 @@
 "*":
   core:
     disabledPackages: [
+      "whitespace"
       "exception-reporting"
     ]
     telemetryConsent: "no"
