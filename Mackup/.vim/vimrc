@@ -117,6 +117,7 @@ Plug 'editorconfig/editorconfig-vim'
 Plug 'tpope/vim-rbenv'
 Plug 'tpope/vim-bundler'
 Plug 'tpope/vim-rails'
+" Replace with janko-m/vim-test?
 Plug 'thoughtbot/vim-rspec'
 
 " Javascript
