@@ -117,7 +117,7 @@ cask "flash-ppapi" # for Chromium/Opera
 #== Programming ==
 cask "dash"
 cask "iterm2"
-cask "caskroom/versions/sublime-text2"
+cask "atom"
 cask "sourcetree"
 cask "xquartz"
 

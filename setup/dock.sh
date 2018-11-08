@@ -18,7 +18,7 @@ sleep 2 # give the dock time to process the above
 
 for app in "Launchpad" \
   "Google Chrome" \
-  "Sublime Text 2" \
+  "Atom" \
   "SourceTree" \
   "$(choose_terminal)" \
   "Utilities/Activity Monitor" \

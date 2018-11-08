@@ -15,9 +15,10 @@ trap 'ret=$?; test $ret -ne 0 && printf "failed\n\n" >&2; exit $ret' EXIT
 set -e
 
 script_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
+dotfiles_dir="$script_dir/.."
 
-# shellcheck source=has_tag.sh
-. "$script_dir/../has_tag.sh"
+# shellcheck source=../has_tag.sh
+. "$dotfiles_dir/has_tag.sh"
 
 # set -x # for debugging
 
@@ -233,24 +234,6 @@ if ! [ -f "$HOME/.ssh/id_rsa" ]; then
   fancy_echo 'Add your key to GitHub: pbcopy < ~/.ssh/id_rsa.pub'
 fi
 
-sublime_dir="$HOME"/Library/Application\ Support/Sublime\ Text\ 2
-sublime_package_control="$sublime_dir"/Installed\ Packages/Package\ Control.sublime-package
-
-if ! [ -d "$sublime_dir"/Packages/Package\ Control ]; then
-  fancy_echo "Configuring Sublime Text packages ..."
-  mkdir -p "$(dirname -- "$sublime_package_control")" &> /dev/null
-  curl -fsSL "https://packagecontrol.io/Package%20Control.sublime-package" -o "$sublime_package_control"
-
-  # `SideBarEnhancements` no longer supported for ST2 in Package Control
-  github_clone_or_pull "MattDMo/SideBarEnhancements-ST2" \
-    "$sublime_dir/Packages/SideBarEnhancements"
-
-  # Stop Package Control deleting the package
-  rm -f "$sublime_dir/Packages/SideBarEnhancements/package-metadata.json"
-
-  killall "Sublime Text 2" &> /dev/null || true
-fi
-
 fancy_echo "Configuring Vim plugins ..."
 
 download_or_update_file "$HOME/.vim/autoload/plug.vim" \
@@ -261,14 +244,21 @@ vim -i NONE -c PlugInstall -c quitall
 ensure_dir "$HOME/.vim/swap"
 ensure_dir "$HOME/.vim/undo"
 
+atom_packages="$dotfiles_dir/Mackup/.atom/packages-list.txt"
+
+if [ -f "$atom_packages" ]; then
+  fancy_echo "Installing Atom packages ..."
+  apm install --packages-file "$atom_packages"
+fi
+
 fancy_echo "Restoring dotfiles with Mackup ..."
 # bootstrap Mackup config
-ensure_symlink "$PWD/Mackup/.mackup.cfg" "$HOME/.mackup.cfg"
-ensure_symlink "$PWD/Mackup/.mackup" "$HOME/.mackup"
+ensure_symlink "$dotfiles_dir/Mackup/.mackup.cfg" "$HOME/.mackup.cfg"
+ensure_symlink "$dotfiles_dir/Mackup/.mackup" "$HOME/.mackup"
 
 mackup restore
 
-fancy_echo "Symlinking `bin` directory to \$HOME ..."
-ensure_symlink "$PWD/bin" "$HOME/.bin"
+fancy_echo "Symlinking \`bin\` directory to \$HOME ..."
+ensure_symlink "$dotfiles_dir/bin" "$HOME/.bin"
 
 fancy_echo "All done!"
