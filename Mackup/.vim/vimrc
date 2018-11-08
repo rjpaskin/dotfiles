@@ -222,6 +222,14 @@ function! RubySetup()
   if exists('g:ruby_indent_assignment_style')
     let g:ruby_indent_assignment_style = 'variable'
   endif
+
+  " Disable rubocop linting if not .rubocop.yml in $PWD
+  if !filereadable(".rubocop.yml")
+    let b:ale_linters = filter(
+      \ copy(g:ale_linters["ruby"]), "!(v:val ==? 'rubocop')"
+      \ )
+      \ | ALELint
+  endif
 endfunction
 
 augroup RJP
