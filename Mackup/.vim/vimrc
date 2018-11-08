@@ -62,6 +62,8 @@ Plug 'tpope/vim-eunuch'
 Plug 'Konfekt/vim-alias'
 " Delete hidden buffers
 Plug 'arithran/vim-delete-hidden-buffers'
+" Mkdir automatatically when saving
+Plug 'pbrisbin/vim-mkdir'
 
 " Navigate between vim and tmux splits
 Plug 'christoomey/vim-tmux-navigator'
