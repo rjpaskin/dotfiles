@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "html-differ": "^1.3.4"
+  }
+}
