@@ -135,3 +135,5 @@ if has_tag "docker"; then
   alias bdup="BYEBUG=1 docker-compose up"
   alias dkill="docker-compose kill"
 fi
+
+[[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
