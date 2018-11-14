@@ -11,5 +11,8 @@
     ]
   "linter-rubocop":
     disableWhenNoConfigFile: true
+  "prettier-atom":
+    formatOnSaveOptions:
+      enabled: true
   welcome:
     showOnStartup: false
