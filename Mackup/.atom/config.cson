@@ -9,8 +9,10 @@
       "atom-light-ui"
       "atom-light-syntax"
     ]
+  editor: {}
   "linter-rubocop":
     disableWhenNoConfigFile: true
+  "linter-ui-default": {}
   "prettier-atom":
     formatOnSaveOptions:
       enabled: true
