@@ -56,6 +56,8 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 " Paired commands with ']' and `[`
 Plug 'tpope/vim-unimpaired'
+" Case-aware substition and case transformations
+Plug 'tpope/vim-abolish'
 " Asynchronously execute processes
 Plug 'tpope/vim-dispatch'
 " Shell command helpers
