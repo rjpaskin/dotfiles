@@ -78,8 +78,7 @@ module GenericBrewGem
         gem_path = ruby_formula.bin/"gem"
         ruby_path = ruby_formula.bin/"ruby"
         system gem_path, "install", cached_download,
-                 "--no-ri",
-                 "--no-rdoc",
+                 "--no-doc",
                  "--no-wrapper",
                  "--no-user-install",
                  "--install-dir", prefix,
