@@ -31,6 +31,11 @@
   :config
   (evil-mode 1))
 
+(use-package one-themes
+  :ensure t
+  :config
+  (load-theme 'one-light t))
+
 (use-package paredit
   :ensure t)
 
