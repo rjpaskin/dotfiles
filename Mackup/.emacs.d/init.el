@@ -26,6 +26,11 @@
   (setq exec-path-from-shell-check-startup-files nil)
   (exec-path-from-shell-initialize))
 
+(use-package evil
+  :ensure t
+  :config
+  (evil-mode 1))
+
 (use-package paredit
   :ensure t)
 
