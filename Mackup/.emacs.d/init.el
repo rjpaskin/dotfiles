@@ -143,3 +143,8 @@
 (setq-default frame-title-format "%b (%f)")
 
 (ido-everywhere 1)
+
+
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+   (when (file-exists-p custom-file)
+       (load custom-file))
