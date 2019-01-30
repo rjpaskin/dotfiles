@@ -64,6 +64,14 @@
     "#FFFFFF")
   (load-theme 'one-light t))
 
+(use-package nlinum-relative
+  :ensure t
+  :hook (prog-mode . nlinum-relative-mode)
+  :config
+  ; display absolute line number for current line
+  (setq nlinum-relative-current-symbol "")
+  (nlinum-relative-setup-evil))
+
 (use-package powerline
   :ensure t
   :custom
