@@ -90,3 +90,15 @@
 
 (set-frame-font "Monaco 13" nil t)
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
+(setq inhibit-startup-screen t)
+
+;; No need for ~ files when editing
+(setq create-lockfiles nil)
+
+;; No cursor blinking
+(blink-cursor-mode 0)
+
+;; full path in title bar
+(setq-default frame-title-format "%b (%f)")
+
+(ido-everywhere 1)
