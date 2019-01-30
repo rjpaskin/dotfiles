@@ -60,3 +60,4 @@
 
 
 (set-frame-font "Monaco 13" nil t)
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
