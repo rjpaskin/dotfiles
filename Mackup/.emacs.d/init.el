@@ -40,6 +40,20 @@
     "#FFFFFF")
   (load-theme 'one-light t))
 
+(use-package powerline
+  :ensure t
+  :custom
+  (powerline-default-separator 'wave))
+
+(use-package spaceline
+  :ensure t
+  :after powerline
+  :config
+  (require 'spaceline-config)
+  (spaceline-spacemacs-theme)
+  ; Colour-code Evil state marker
+  (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state))
+
 (use-package paredit
   :ensure t)
 
