@@ -57,3 +57,6 @@
 
 (use-package magit
   :ensure t)
+
+
+(set-frame-font "Monaco 13" nil t)
