@@ -26,6 +26,13 @@
   (setq exec-path-from-shell-check-startup-files nil)
   (exec-path-from-shell-initialize))
 
+; Trim trailing whitespace (on edited lines) on save
+(use-package ws-butler
+  :ensure t
+  :hook (prog-mode . ws-butler-mode)
+  :config
+  (setq ws-butler-keep-whitespace-before-point nil))
+
 (use-package evil
   :ensure t
   :config
@@ -123,6 +130,8 @@
 (set-frame-font "Monaco 13" nil t)
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 (setq inhibit-startup-screen t)
+
+(setq require-final-newline t)
 
 ;; No need for ~ files when editing
 (setq create-lockfiles nil)
