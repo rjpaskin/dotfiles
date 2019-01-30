@@ -34,6 +34,10 @@
 (use-package one-themes
   :ensure t
   :config
+  ; Override background colour
+  (setcdr
+    (assoc 'background (cdr (assoc 'light one-themes-colors)))
+    "#FFFFFF")
   (load-theme 'one-light t))
 
 (use-package paredit
