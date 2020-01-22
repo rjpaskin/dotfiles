@@ -4,8 +4,11 @@ scratch/
 Mackup/.vim/bundle/
 Mackup/.vim/autoload/
 
-Mackup/.emacs.d/*
-!Mackup/.emacs.d/init.el
+Mackup/.emacs.d/auto-save-list/
+Mackup/.emacs.d/backups/
+Mackup/.emacs.d/elpa/
+Mackup/.emacs.d/quelpa/
+Mackup/.emacs.d/smex-items
 
 Mackup/.tmuxinator/*.yml
 !Mackup/.tmuxinator/default.yml
