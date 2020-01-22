@@ -104,7 +104,7 @@ Plug 'rorymckinley/vim-rubyhash'
 Plug 'bfontaine/Brewfile.vim'
 
 " Project navigation
-Plug 'Shougo/denite.nvim'
+Plug 'Shougo/denite.nvim', { 'tag': '2.1' }
 " MRU files plugin for Denite
 Plug 'Shougo/neomru.vim'
 Plug 'scrooloose/nerdtree'
