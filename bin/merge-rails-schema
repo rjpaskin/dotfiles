@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+#!/usr/bin/env RBENV_VERSION=system ruby
 
 # Translated from shell script at https://gist.github.com/strax/c0dcbfa2f9bb54f95787
 
