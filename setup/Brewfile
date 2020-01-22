@@ -5,7 +5,6 @@ load File.join(
 )
 
 tap "homebrew/services" if tag?(:memcached) || tag?(:redis)
-tap "caskroom/cask"
 tap "beeftornado/rmtree" # remove formula and all its (orphaned) dependencies
 
 #== Unix ==
@@ -41,7 +40,7 @@ end
 #== Heroku ==
 if tag? :heroku
   brew "heroku/brew/heroku"
-  brew "parity"
+  brew "thoughtbot/formulae/parity" if tag?(:postgres) || tag?(:postgresql)
 end
 
 #== Utilities ==
@@ -49,13 +48,15 @@ brew "dockutil"
 brew "hub"
 brew "mackup"
 brew "fzf" # used by `git co` alias
-cask "kdiff3"
+cask "betterzip"
+cask my_formula("kdiff3")
 
 #== Image manipulation ==
 brew_if_tagged "imagemagick", pin: true
 brew_if_tagged "batik"
 
 #== Testing ==
+cask_if_tagged my_formula("cypress")
 brew "qt@5.5" if tag?(:qt) && MacOS::Xcode.installed?
 brew_if_tagged "phantomjs", pin: true
 brew "shellcheck"
@@ -69,12 +70,12 @@ if tag? :ruby
   brew "rbenv"
   brew "ruby-build"
   brew "rbenv-default-gems"
-  brew "rbenv-each", args: ["HEAD"]
+  brew my_formula("rbenv-each"), args: ["HEAD"]
 end
 
 if tag? :node
   brew "nodenv"
-  brew "yarn", args: ["without-node"] # node is provided by nodenv
+  brew "yarn"
 end
 
 cask "java"
@@ -167,7 +168,6 @@ cask "qlstephen" # files without extensions
 cask "qlcommonmark" # markdown files
 cask "quicklook-json"
 cask "quicklook-csv"
-cask "betterzipql"
 
 #== Other apps ==
 cask "imageoptim"

@@ -112,7 +112,7 @@ export PATH=".git/safe/../../bin:$HOME/.bin:$PATH"
 # export SSH_KEY_PATH="~/.ssh/dsa_id"
 
 # Tmuxinator completions
-source /usr/local/share/zsh/site-functions/tmuxinator.zsh
+[[ -f /usr/local/share/zsh/site-functions/tmuxinator.zsh ]] && source /usr/local/share/zsh/site-functions/tmuxinator.zsh
 
 # rbenv setup
 if command -v rbenv >/dev/null; then

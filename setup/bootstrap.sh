@@ -110,7 +110,6 @@ HOMEBREW_PREFIX="/usr/local"
 
 sudo mkdir -p "$HOMEBREW_PREFIX"
 sudo chflags norestricted "$HOMEBREW_PREFIX"
-sudo chown -R "$LOGNAME:admin" "$HOMEBREW_PREFIX"
 
 if ! command -v brew >/dev/null; then
   fancy_echo "Installing Homebrew ..."
@@ -125,7 +124,7 @@ export PATH="/usr/local/bin:$PATH"
 if [ -z "$SKIP_INSTALLS" ]; then
   fancy_echo "Updating Homebrew formulae ..."
   brew update --force # https://github.com/Homebrew/brew/issues/1151
-  brew bundle check --no-upgrade --file=./Brewfile || brew bundle --verbose --file=./Brewfile
+  brew bundle check --no-upgrade --file="$script_dir/Brewfile" || brew bundle --verbose --file="$script_dir/Brewfile"
 else
   fancy_echo "Skipping brew install"
 fi
@@ -228,7 +227,7 @@ if ! [ -f "$HOME/.ssh/id_rsa" ]; then
 
   # Ensure default macOS program is used, so that the passphrase is stored in
   # the macOS Keychain
-  /usr/bin/ssh-add -K "HOME/.ssh/id_rsa"
+  /usr/bin/ssh-add -K "$HOME/.ssh/id_rsa"
 
   fancy_echo 'Add ~/Desktop/ssh_key.txt to your password manager (and delete the file)'
   fancy_echo 'Add your key to GitHub: pbcopy < ~/.ssh/id_rsa.pub'

@@ -20,6 +20,10 @@ def brew_gem(name, options = {})
   brew File.join(MY_FORMULA_DIR, "gem-#{name}.rb"), options
 end
 
+def my_formula(name)
+  File.join(MY_FORMULA_DIR, name)
+end
+
 def method_missing(name, *args, &block)
   if name.to_s =~ /(.+)_if_tagged$/
     send($1, *args) if tag? args.first
