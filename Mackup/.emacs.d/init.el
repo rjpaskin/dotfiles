@@ -183,6 +183,9 @@
 ;; No cursor blinking
 (blink-cursor-mode 0)
 
+; Don't pass --dired to `ls`
+(setq dired-use-ls-dired nil)
+
 ;; full path in title bar
 (setq-default frame-title-format "%b (%f)")
 
