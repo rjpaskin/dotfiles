@@ -227,7 +227,7 @@ if ! [ -f "$HOME/.ssh/id_rsa" ]; then
 
   # Ensure default macOS program is used, so that the passphrase is stored in
   # the macOS Keychain
-  /usr/bin/ssh-add -K "HOME/.ssh/id_rsa"
+  /usr/bin/ssh-add -K "$HOME/.ssh/id_rsa"
 
   fancy_echo 'Add ~/Desktop/ssh_key.txt to your password manager (and delete the file)'
   fancy_echo 'Add your key to GitHub: pbcopy < ~/.ssh/id_rsa.pub'
