@@ -183,7 +183,6 @@ cask_if_tagged "hipchat"
 cask_if_tagged "inkscape"
 # cask           "karabiner-elements" if tag? :karabiner
 cask_if_tagged "keepingyouawake"
-cask_if_tagged "lastpass"
 cask_if_tagged "logitech-control-center"
 cask           "music-manager" if tag? :itunes
 cask_if_tagged "postman"
