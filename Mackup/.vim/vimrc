@@ -443,7 +443,7 @@ let g:prettier#autoformat = 0
 
 augroup RJP
   " autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql PrettierAsync
-  autocmd BufWritePre *.jsx,*/app/javascript/*.js PrettierAsync
+  autocmd BufWritePre */app/javascript/*.jsx,*/app/javascript/*.js PrettierAsync
 augroup END
 
 " max line length that prettier will wrap on
