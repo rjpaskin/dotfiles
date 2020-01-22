@@ -68,6 +68,12 @@
   :config
   (global-evil-surround-mode 1))
 
+(use-package evil-unimpaired
+  :quelpa (evil-unimpaired :fetcher github :repo "zmaas/evil-unimpaired")
+  :after evil
+  :config
+  (evil-unimpaired-mode))
+
 (use-package one-themes
   :ensure t
   :config
