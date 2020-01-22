@@ -95,7 +95,10 @@
   (setcdr
     (assoc 'background (cdr (assoc 'light one-themes-colors)))
     "#FFFFFF")
-  (load-theme 'one-light t))
+  (load-theme 'one-light t)
+  :custom-face
+  (font-lock-comment-face ((t (:slant normal))))
+  (font-lock-comment-delimiter-face ((t (:slant normal)))))
 
 (use-package nlinum-relative
   :ensure t
