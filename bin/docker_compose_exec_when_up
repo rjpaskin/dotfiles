@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
 main() {
-  local service="$1"; shift
+  local arg="$1"; shift
 
-  if [ "$service" = "kill" ]; then
-    docker-compose kill
+  if [ "$arg" = "kill" ] || [ "$arg" = "stop" ]; then
+    docker-compose "$arg"
     pkill -f "$0"
     exit 0
   fi
 
+  local service="$arg";
   local sleep_time=0
   local b=1
   local acc=0
