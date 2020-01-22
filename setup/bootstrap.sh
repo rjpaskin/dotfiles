@@ -124,7 +124,7 @@ export PATH="/usr/local/bin:$PATH"
 if [ -z "$SKIP_INSTALLS" ]; then
   fancy_echo "Updating Homebrew formulae ..."
   brew update --force # https://github.com/Homebrew/brew/issues/1151
-  brew bundle check --no-upgrade --file=./Brewfile || brew bundle --verbose --file=./Brewfile
+  brew bundle check --no-upgrade --file="$script_dir/Brewfile" || brew bundle --verbose --file="$script_dir/Brewfile"
 else
   fancy_echo "Skipping brew install"
 fi
