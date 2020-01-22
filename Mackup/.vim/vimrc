@@ -81,7 +81,7 @@ Plug 'Julian/vim-textobj-variable-segment'
 " https://github.com/tek/vim-textobj-ruby " can include blank after block
 
 " Autocomplete
-Plug 'Shougo/deoplete.nvim'
+Plug 'Shougo/deoplete.nvim', { 'do': 'pip3 install --user pynvim' }
 Plug 'roxma/nvim-yarp'
 Plug 'roxma/vim-hug-neovim-rpc'
 
