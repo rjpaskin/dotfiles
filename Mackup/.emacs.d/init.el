@@ -41,8 +41,12 @@
 
 (use-package evil
   :ensure t
+  :after evil-leader ; this needs to load first to be enabled in all buffers
   :config
-  (evil-mode 1))
+  (evil-mode 1)
+  :bind (:map evil-motion-state-map
+         ; can just go into Emacs state to use prefix key
+         ("C-u" . evil-scroll-up)))
 
 (use-package evil-commentary
   :ensure t
@@ -52,9 +56,19 @@
 
 (use-package evil-leader
   :ensure t
-  :after evil
   :config
-  (global-evil-leader-mode))
+  (global-evil-leader-mode)
+  (evil-leader/set-leader "<SPC>")
+  (evil-leader/set-key
+    "w" 'save-buffer
+    "q" 'save-buffers-kill-emacs
+    ; "'" switch to single quotes
+    ; "\"" switch to double quotes
+    ; "=" align whole file
+    "uu" 'projectile-find-file
+    "ub" 'switch-to-buffer
+    "c"  'cider-jack-in-cljs
+    "x"  'smex:))
 
 (use-package evil-matchit
   :ensure t
@@ -156,6 +170,8 @@
 
 (ido-everywhere 1)
 
+;; Allow hash `#` to be entered
+(global-set-key (kbd "M-3") '(lambda () (interactive) (insert "#")))
 
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
    (when (file-exists-p custom-file)
