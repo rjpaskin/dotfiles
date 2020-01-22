@@ -1,7 +1,7 @@
 module GitCI
   class CircleCI
     class Build < JSONStruct
-      accessors :build_num, :status, :subject, :branch, :vcs_revision, :build_time_millis, :start_time
+      accessors :build_num, :status, :subject, :branch, :vcs_revision, :build_time_millis, :start_time, :build_parameters
 
       alias_method :num, :build_num
 
@@ -43,6 +43,12 @@ module GitCI
         format "%2d'%02d", *seconds.divmod(60)
       end
 
+      def job
+        return unless build_parameters
+
+        build_parameters.fetch(:CIRCLE_JOB) { 'build' }
+      end
+
       def sha
         vcs_revision[0..6]
       end
@@ -66,6 +72,7 @@ module GitCI
         [
           coloured(status),
           coloured("##{num}"),
+          *(coloured(job) if job),
           "#{Tty.yellow}#{sha}#{Tty.reset}",
           "#{Tty.grey}#{detail}#{Tty.reset}",
           coloured(time)
