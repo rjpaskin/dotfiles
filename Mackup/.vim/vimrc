@@ -64,8 +64,6 @@ Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-eunuch'
 " Alias Ex commands
 Plug 'Konfekt/vim-alias'
-" Delete hidden buffers
-Plug 'arithran/vim-delete-hidden-buffers'
 " Mkdir automatatically when saving
 Plug 'pbrisbin/vim-mkdir'
 
