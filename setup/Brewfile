@@ -171,7 +171,6 @@ cask "quicklook-csv"
 
 #== Other apps ==
 cask "imageoptim"
-cask "skype"
 cask "mollyguard"
 cask "superduper"
 cask "vlc"
@@ -189,6 +188,7 @@ cask_if_tagged "logitech-control-center"
 cask           "music-manager" if tag? :itunes
 cask_if_tagged "postman"
 cask_if_tagged "seashore"
+cask_if_tagged "skype"
 cask_if_tagged "slack"
 cask_if_tagged "whatsapp"
 
