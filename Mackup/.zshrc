@@ -1,6 +1,6 @@
 # Reset $PATH when we load tmux
 # Avoids rbenv, nodenv etc. entries being added twice
-if [ -n "$TMUX" ] && [ -x "/usr/libexec/path_helper" ]; then
+if ([ -n "$TMUX" ] || [ -n "$INSIDE_EMACS" ]) && [ -x "/usr/libexec/path_helper" ]; then
   eval "$(PATH="" /usr/libexec/path_helper -s)"
 fi
 
