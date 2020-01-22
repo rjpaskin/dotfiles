@@ -776,6 +776,17 @@ defaults write com.google.Chrome PMPrintingExpandedStateForPrint2 -bool true
 # defaults write com.google.Chrome.canary PMPrintingExpandedStateForPrint2 -bool true
 
 ###############################################################################
+# Shortcuts                                                                   #
+###############################################################################
+
+# Disable Ctrl+(Left,Right) shortcuts
+# - kSHKMoveLeftASpace  = 79 (Ctrl + Arrow Left)
+# - kSHKMoveRightASpace = 81 (Ctrl + Arrow Right)
+# See https://stackoverflow.com/questions/866056/how-do-i-programmatically-get-the-shortcut-keys-reserved-by-mac-os-x
+/usr/libexec/PlistBuddy -c "Set AppleSymbolicHotKeys:79:enabled false" ~/Library/Preferences/com.apple.symbolichotkeys.plist
+/usr/libexec/PlistBuddy -c "Set AppleSymbolicHotKeys:81:enabled false" ~/Library/Preferences/com.apple.symbolichotkeys.plist
+
+###############################################################################
 # Kill affected applications                                                  #
 ###############################################################################
 
