@@ -123,17 +123,31 @@
   (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state))
 
 (use-package paredit
-  :ensure t)
+  :ensure t
+  :hook (emacs-lisp-mode . paredit-mode))
 
 (use-package clojure-mode
-  :ensure t)
+  :ensure t
+  :hook ((clojure-mode . paredit-mode)
+         (clojure-mode . subword-mode)
+         (clojure-mode . aggressive-indent-mode)))
 
-(use-package clojure-mode-extra-font-locking
-  :ensure t)
+; Not recommended with Cider
+; (use-package clojure-mode-extra-font-locking
+;   :ensure t)
 
 (use-package cider
   :ensure t
-  :pin melpa-stable)
+  :pin melpa-stable
+  :hook ((cider-mode . eldoc-mode)
+         (cider-repl-mode . paredit-mode))
+  :config
+  (evil-set-initial-state 'cider-stacktrace-mode 'emacs)
+  (evil-set-initial-state 'cider-repl-mode 'emacs))
+
+(use-package aggressive-indent
+  :ensure t
+  :hook ((emacs-lisp-mode . aggressive-indent-mode)))
 
 ;; allow ido usage in as many contexts as possible
 (use-package ido-completing-read+
@@ -150,7 +164,8 @@
   :ensure t)
 
 (use-package rainbow-delimiters
-  :ensure t)
+  :ensure t
+  :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package magit
   :ensure t)
