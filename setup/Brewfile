@@ -49,12 +49,14 @@ brew "hub"
 brew "mackup"
 brew "fzf" # used by `git co` alias
 cask "betterzip"
+cask my_formula("kdiff3")
 
 #== Image manipulation ==
 brew_if_tagged "imagemagick", pin: true
 brew_if_tagged "batik"
 
 #== Testing ==
+cask_if_tagged my_formula("cypress")
 brew "qt@5.5" if tag?(:qt) && MacOS::Xcode.installed?
 brew_if_tagged "phantomjs", pin: true
 brew "shellcheck"
@@ -68,7 +70,7 @@ if tag? :ruby
   brew "rbenv"
   brew "ruby-build"
   brew "rbenv-default-gems"
-  brew "rbenv-each", args: ["HEAD"]
+  brew my_formula("rbenv-each"), args: ["HEAD"]
 end
 
 if tag? :node
