@@ -110,7 +110,6 @@ HOMEBREW_PREFIX="/usr/local"
 
 sudo mkdir -p "$HOMEBREW_PREFIX"
 sudo chflags norestricted "$HOMEBREW_PREFIX"
-sudo chown -R "$LOGNAME:admin" "$HOMEBREW_PREFIX"
 
 if ! command -v brew >/dev/null; then
   fancy_echo "Installing Homebrew ..."
