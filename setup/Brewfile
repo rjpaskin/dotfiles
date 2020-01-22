@@ -16,6 +16,8 @@ end
 brew "git"
 brew_if_tagged "git-flow"
 brew "git-when-merged"
+brew_if_tagged "git-standup"
+brew "jq"
 brew "ncdu"
 brew "nmap"
 brew "openssl", pin: true
@@ -26,6 +28,7 @@ brew "tmux"
 brew_if_tagged "tmate"
 brew "vim"
 brew "zsh"
+cask "emacs"
 
 #== Compilers ==
 brew "gcc"
@@ -56,6 +59,8 @@ brew_if_tagged "batik"
 brew "qt@5.5" if tag?(:qt) && MacOS::Xcode.installed?
 brew_if_tagged "phantomjs", pin: true
 brew "shellcheck"
+brew "hadolint"
+brew_if_tagged "bats"
 
 #== Programming languages and package managers ==
 brew "libyaml", pin: true # should come after openssl
@@ -107,7 +112,11 @@ brew_if_tagged "redis", service_restart: :changed, pin: true
 
 #== DevOps ==
 brew_if_tagged "ansible", pin: true
-brew "awscli" if tag? :aws
+
+if tag? :aws
+  brew "awscli"
+  cask "session-manager-plugin"
+end
 
 if tag? :linode
   brew "linode/cli/linode-cli"
@@ -141,10 +150,16 @@ end
 
 brew_if_tagged "circleci"
 
+brew_gem "autoterm"
 brew_gem "tmuxinator"
 brew_gem_if_tagged "mailcatcher"
 brew_gem_if_tagged "rubocop"
 brew_gem_if_tagged "ultrahook"
+
+if tag?(:createk)
+  brew_gem "relsr"
+  brew_gem "flight_plan_cli"
+end
 
 #== Quicklook ==
 cask "qlcolorcode" # syntax highlighting
@@ -157,7 +172,8 @@ cask "betterzipql"
 #== Other apps ==
 cask "imageoptim"
 cask "skype"
-# cask "superduper" # check out version for El Capitan
+cask "mollyguard"
+cask "superduper"
 cask "vlc"
 
 cask_if_tagged "1password"
@@ -174,6 +190,7 @@ cask           "music-manager" if tag? :itunes
 cask_if_tagged "postman"
 cask_if_tagged "seashore"
 cask_if_tagged "slack"
+cask_if_tagged "whatsapp"
 
 mas "Keynote", id: 409183694
 mas "Numbers", id: 409203825
