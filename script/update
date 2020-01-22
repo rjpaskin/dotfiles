@@ -32,10 +32,14 @@ join_by() {
 show_repo_updates() {
   local git_dir="$1"
 
-  git -C "$git_dir" fetch --quiet
-  diff=$(git -C "$git_dir" --no-pager diff --stat --color=always "HEAD..@{u}")
+  if git -C "$git_dir" symbolic-ref HEAD > /dev/null 2>&1; then
+    git -C "$git_dir" fetch --quiet
+    diff=$(git -C "$git_dir" --no-pager diff --stat --color=always "HEAD..@{u}")
 
-  if [ -z "$diff" ]; then diff="No updates"; fi
+    if [ -z "$diff" ]; then diff="No updates"; fi
+  else
+    diff="Not on a branch"
+  fi
 
   echo "$diff"
 }
