@@ -17,6 +17,12 @@
 (eval-when-compile
   (require 'use-package))
 
+; Install packages from GitHub
+(use-package quelpa-use-package
+  :ensure t
+  :custom
+  (quelpa-update-melpa-p nil))
+
 (use-package better-defaults
   :ensure t)
 
