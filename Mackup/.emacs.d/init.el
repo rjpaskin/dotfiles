@@ -194,6 +194,9 @@
 ;; Allow hash `#` to be entered
 (global-set-key (kbd "M-3") '(lambda () (interactive) (insert "#")))
 
+;; Automatically `tail -f` log files
+(add-to-list 'auto-mode-alist '("\\.log\\'" . auto-revert-tail-mode))
+
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
    (when (file-exists-p custom-file)
        (load custom-file))
