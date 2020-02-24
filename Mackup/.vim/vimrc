@@ -304,7 +304,7 @@ call denite#custom#option('_', {
 
 call denite#custom#var('file/rec', 'command', [
     \ 'ag', '--follow', '--nocolor', '--nogroup',
-    \ '--hidden', '--path-to-ignore', '~/.agignore', '-g', ''])
+    \ '--hidden', '--path-to-ignore', '~/.config/silver_searcher/ignore', '-g', ''])
 
 " ------------------------------------------------
 " Deoplete
@@ -356,7 +356,7 @@ augroup END
 " The Silver Searcher
 " ------------------------------------------------
 if executable("ag")
-  set grepprg=ag\ --vimgrep\ --hidden\ --path-to-ignore\ ~/.agignore
+  set grepprg=ag\ --vimgrep\ --hidden\ --path-to-ignore\ ~/.config/silver_searcher/ignore
 endif
 
 " bind K to grep word under cursor
