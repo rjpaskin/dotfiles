@@ -4,38 +4,38 @@ load File.join(
   "dotfiles/setup/brewfile_extensions.rb"
 )
 
-tap "homebrew/services" if tag?(:memcached) || tag?(:redis)
 tap "beeftornado/rmtree" # remove formula and all its (orphaned) dependencies
+
+#== Basics ==
+brew "zsh"
+
+brew "git"
+brew_if_tagged "git-flow"
+brew "git-when-merged"
+brew_if_tagged "git-standup"
+
+brew "neovim"
+cask "emacs"
 
 #== Unix ==
 if tag? :ctags
   brew "universal-ctags/universal-ctags/universal-ctags", args: ["HEAD"]
 end
 
-brew "git"
-brew_if_tagged "git-flow"
-brew "git-when-merged"
-brew_if_tagged "git-standup"
 brew "jq"
 brew "ncdu"
-brew "nmap"
 brew "openssl", pin: true
-brew "pidof"
-brew "reattach-to-user-namespace"
 brew "the_silver_searcher"
-brew "tmux"
-brew_if_tagged "tmate"
-brew "vim"
-brew "zsh"
-cask "emacs"
+
+if tag? :tmux
+  brew "reattach-to-user-namespace"
+  brew "tmux"
+  brew_gem "tmuxinator"
+  brew_if_tagged "tmate"
+end
 
 #== Compilers ==
 brew "gcc"
-
-if tag? :old_gcc
-  brew "apple-gcc42"
-  brew "gcc@4.8"
-end
 
 #== Heroku ==
 if tag? :heroku
@@ -51,17 +51,10 @@ brew "fzf" # used by `git co` alias
 cask "betterzip"
 cask my_formula("kdiff3")
 
-#== Image manipulation ==
-brew_if_tagged "imagemagick", pin: true
-brew_if_tagged "batik"
-
 #== Testing ==
 cask_if_tagged my_formula("cypress")
-brew "qt@5.5" if tag?(:qt) && MacOS::Xcode.installed?
-brew_if_tagged "phantomjs", pin: true
 brew "shellcheck"
 brew "hadolint"
-brew_if_tagged "bats"
 
 #== Programming languages and package managers ==
 brew "libyaml", pin: true # should come after openssl
@@ -96,20 +89,11 @@ end
 
 #== Databases ==
 brew_if_tagged "sqlite", pin: true
-
-brew_if_tagged "mysql", pin: true
 cask_if_tagged "sequel-pro"
 
 if tag?(:postgres) || tag?(:postgresql)
-  brew "petere/postgresql/postgresql-9.4"
-  brew "pex"
-
   cask "pgadmin3"
 end
-
-brew_if_tagged "memcached", pin: true
-brew_if_tagged "mongodb", service_restart: :changed, pin: true
-brew_if_tagged "redis", service_restart: :changed, pin: true
 
 #== DevOps ==
 brew_if_tagged "ansible", pin: true
@@ -126,8 +110,6 @@ end
 #== Browsers ==
 cask "google-chrome"
 cask "firefox"
-cask "flash-ppapi" # for Chromium/Opera
-# cask "flash-npapi" # for Safari/Firefox
 
 #== Programming ==
 cask "dash"
@@ -152,7 +134,6 @@ end
 brew_if_tagged "circleci"
 
 brew_gem "autoterm"
-brew_gem "tmuxinator"
 brew_gem_if_tagged "mailcatcher"
 brew_gem_if_tagged "rubocop"
 brew_gem_if_tagged "ultrahook"
@@ -170,23 +151,18 @@ cask "quicklook-json"
 cask "quicklook-csv"
 
 #== Other apps ==
+cask "1password"
 cask "imageoptim"
+cask "keepingyouawake"
 cask "mollyguard"
 cask "superduper"
 cask "vlc"
 
-cask_if_tagged "1password"
 cask_if_tagged "dropbox"
 cask_if_tagged "filedrop"
 cask_if_tagged "gimp"
-cask_if_tagged "hipchat"
 cask_if_tagged "inkscape"
-# cask           "karabiner-elements" if tag? :karabiner
-cask_if_tagged "keepingyouawake"
-cask_if_tagged "logitech-control-center"
-cask           "music-manager" if tag? :itunes
 cask_if_tagged "postman"
-cask_if_tagged "seashore"
 cask_if_tagged "skype"
 cask_if_tagged "slack"
 cask_if_tagged "whatsapp"
