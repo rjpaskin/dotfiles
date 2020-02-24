@@ -72,8 +72,3 @@ if ! command -v rbenv >/dev/null; then
   export PATH="$HOME/.rbenv/bin:$PATH"
   eval "$(rbenv init -)"
 fi
-
-if ! command -v heroku >/dev/null; then
-  ### Added by the Heroku Toolbelt
-  export PATH="/usr/local/heroku/bin:$PATH"
-fi
