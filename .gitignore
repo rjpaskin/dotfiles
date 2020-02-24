@@ -15,4 +15,5 @@ Mackup/.tmuxinator/*.yml
 
 Mackup/.*.old
 Mackup/.*.local
+Mackup/.config/*/*.local
 Mackup/Library/

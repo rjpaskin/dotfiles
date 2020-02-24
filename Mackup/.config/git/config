@@ -1,8 +1,6 @@
 [core]
   quotepath = false
   autocrlf = input
-  excludesfile = ~/.gitignore_global
-  attributesFile = ~/.gitattributes
   editor = vim
 [color]
   ui = true
@@ -33,7 +31,7 @@
   name = newer Rails schema version
   driver = merge-rails-schema %O %A %B %L
 [include]
-  path = ~/.gitconfig.local
+  path = ./config.local
 [rerere]
   # record resolutions of merge conflicts
   enabled = true
