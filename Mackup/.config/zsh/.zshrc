@@ -4,6 +4,8 @@ if ([ -n "$TMUX" ] || [ -n "$INSIDE_EMACS" ]) && [ -x "/usr/libexec/path_helper"
   eval "$(PATH="" /usr/libexec/path_helper -s)"
 fi
 
+export HISTFILE="${XDG_DATA_HOME:-"$HOME/.local/share"}/zsh/history"
+
 hash -d iCloud="$HOME/Library/Mobile Documents/com~apple~CloudDocs"
 hash -d dotfiles=~iCloud/dotfiles
 
@@ -141,4 +143,4 @@ if has_tag "react-native"; then
   export PATH="$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools"
 fi
 
-[[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
+[[ -f "$ZDOTDIR/.zshrc.local" ]] && source "$ZDOTDIR/.zshrc.local"
