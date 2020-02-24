@@ -1,13 +1,5 @@
 #!/bin/sh
 
-choose_terminal() {
-  if [ -e "/Applications/iTerm.app" ]; then
-    echo "iTerm"
-  else
-    echo "Utilities/Terminal"
-  fi
-}
-
 # Uncomment for debugging
 # dockutil() { echo "dockutil $@" }
 
@@ -18,9 +10,8 @@ sleep 2 # give the dock time to process the above
 
 for app in "Launchpad" \
   "Google Chrome" \
-  "Atom" \
   "SourceTree" \
-  "$(choose_terminal)" \
+  "iTerm" \
   "Utilities/Activity Monitor" \
   "Pages" \
   "Numbers" \
