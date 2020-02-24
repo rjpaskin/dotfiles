@@ -36,35 +36,9 @@ alias srm='srm -iv'
 alias cp='cp -i'
 alias mv='mv -i'
 
-alias finder_hidden_show='defaults write com.apple.finder AppleShowAllFiles TRUE; killall Finder'
-alias finder_hidden_hide='defaults write com.apple.finder AppleShowAllFiles FALSE; killall Finder'
-
-alias b='edit ~/.bash_profile'
-alias reload='source ~/.bash_profile'
-
-alias size='du -hsc'    # display human-readable filesize, with entry for each file and a grand total at the end
-alias size-af='du -hca' # display human-readable filesizes (including directories) recursively, with a grand total at the end
-alias size-ad='du -hc'  # display human-readable directory sizes recursively, with a grand total at the end
-
-# Program aliases
-alias diff-brief='diff --brief'
-alias f='find . -iname'   # find a filename
-alias sqlite='sqlite3'
-alias vlc='open -a VLC'
-
-# Directory aliases
-alias desk='cd ~/Desktop'
-alias doc='cd ~/Documents'
-alias sites='cd ~/Sites'
-
-# Prefer MAMP executables
-#export PATH="/Applications/MAMP/Library/bin:/Applications/MAMP/bin/php/php5.3.14/bin:$PATH"
-
-alias cdb='cd ~/Documents/Projects/cdb && edit . && open -a Safari http://cdb.dev'
-
 # Git completion (requires Homebrew)
-if [ -f `brew --prefix`/etc/bash_completion.d/git-completion.bash ]; then
-  . `brew --prefix`/etc/bash_completion.d/git-completion.bash
+if [ -f "$(brew --prefix)/etc/bash_completion.d/git-completion.bash" ]; then
+  . "$(brew --prefix)/etc/bash_completion.d/git-completion.bash"
 fi
 
 # Setup rbenv
