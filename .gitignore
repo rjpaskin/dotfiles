@@ -1,9 +1,6 @@
 hosts/
 scratch/
 
-Mackup/.vim/bundle/
-Mackup/.vim/autoload/
-
 Mackup/.emacs.d/auto-save-list/
 Mackup/.emacs.d/backups/
 Mackup/.emacs.d/elpa/

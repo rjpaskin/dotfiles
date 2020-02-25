@@ -45,7 +45,7 @@ show_repo_updates() {
 }
 
 # Ensure that Homebrew stuff (e.g. Ruby) is found first
-# when updating formulae (e.g. Vim)
+# when updating formulae (e.g. Neovim)
 export PATH="/usr/local/bin:$PATH"
 
 section "macOS"
@@ -111,10 +111,10 @@ if command -v circleci > /dev/null; then
   fi
 fi
 
-section "Vim plugins"
+section "Neovim plugins"
 
 if [ -n "$dry_run" ]; then
-  for plugin_dir in "$HOME/.vim/bundle/"*; do
+  for plugin_dir in "$HOME/.config/nvim/plugged/"*; do
     if [ -t 1 ]; then
       echo "$(tput setaf 4)$plugin_dir$(tput sgr0)"
     else
@@ -124,7 +124,7 @@ if [ -n "$dry_run" ]; then
     show_repo_updates "$plugin_dir"
   done
 else
-  vim -i NONE -c PlugUpdate -c quitall
+  nvim -i NONE -c PlugUpdate -c quitall
 fi
 
 section "Oh My Zsh"

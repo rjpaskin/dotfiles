@@ -74,6 +74,9 @@ source $ZSH/oh-my-zsh.sh
 # User configuration
 alias ag="ag --hidden --path-to-ignore ~/.config/silver_searcher/ignore"
 
+alias vim="nvim"
+alias vi="nvim"
+
 if has_tag "git_flow"; then alias gf="git flow"; fi # restore now-removed shortcut
 
 if has_tag "ruby"; then

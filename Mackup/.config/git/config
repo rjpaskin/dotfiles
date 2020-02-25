@@ -1,7 +1,7 @@
 [core]
   quotepath = false
   autocrlf = input
-  editor = vim
+  editor = nvim
 [color]
   ui = true
   diff = auto

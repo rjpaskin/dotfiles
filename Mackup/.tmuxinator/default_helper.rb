@@ -100,7 +100,7 @@ class DefaultHelper
 
   def base_windows
     {
-      editor: "vim",
+      editor: "nvim",
       shell: ""
     }
   end

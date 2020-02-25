@@ -93,14 +93,6 @@ ensure_symlink() {
   fi
 }
 
-ensure_dir() {
-  local name="$1"
-
-  if ! [ -d "$name" ]; then
-    mkdir -p "$name"
-  fi
-}
-
 get_user_email() {
   security find-generic-password -s com.apple.account.IdentityServices.token 2>/dev/null \
     | awk -F\" '{if ($2 == "acct") {print $4}}'
@@ -233,15 +225,12 @@ if ! [ -f "$HOME/.ssh/id_rsa" ]; then
   fancy_echo 'Add your key to GitHub: pbcopy < ~/.ssh/id_rsa.pub'
 fi
 
-fancy_echo "Configuring Vim plugins ..."
+fancy_echo "Configuring Neovim plugins ..."
 
-download_or_update_file "$HOME/.vim/autoload/plug.vim" \
+download_or_update_file "$HOME/.local/share/nvim/site/autoload/plug.vim" \
   "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" --create-dirs
 
-vim -i NONE -c PlugInstall -c quitall
-
-ensure_dir "$HOME/.vim/swap"
-ensure_dir "$HOME/.vim/undo"
+nvim -i NONE -c PlugInstall -c quitall
 
 atom_packages="$dotfiles_dir/Mackup/.atom/packages-list.txt"
 
