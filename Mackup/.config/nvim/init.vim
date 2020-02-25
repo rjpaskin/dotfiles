@@ -81,7 +81,7 @@ Plug 'Julian/vim-textobj-variable-segment'
 " https://github.com/tek/vim-textobj-ruby " can include blank after block
 
 " Autocomplete
-Plug 'Shougo/deoplete.nvim', { 'do': [':UpdateRemotePlugins', 'pip3 install --user msgpack'] }
+Plug 'Shougo/deoplete.nvim', { 'tag': '5.1', 'do': ':UpdateRemotePlugins \| !pip3 install --user \"msgpack=0.6.2\"' }
 
 " Configurable status bar
 Plug 'vim-airline/vim-airline'
