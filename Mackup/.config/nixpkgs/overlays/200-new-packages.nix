@@ -1,6 +1,10 @@
 self: super:
 
-{
+let
+  ruby = super.ruby_2_6;
+
+in {
+  autoterm = super.callPackage ../pkgs/autoterm.nix { inherit ruby; };
   dockutil = super.callPackage ../pkgs/dockutil.nix {};
   git-when-merged = super.callPackage ../pkgs/git-when-merged.nix {};
   mackup = super.python38.pkgs.callPackage ../pkgs/mackup.nix {};

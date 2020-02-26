@@ -11,6 +11,7 @@ self: super:
 
     #==== Packages ====
     inherit (self)
+      autoterm
       dockutil
       fzf
       git-when-merged
