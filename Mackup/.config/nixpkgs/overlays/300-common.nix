@@ -19,6 +19,7 @@ self: super:
       mackup
       ncdu
       universal-ctags
+      heroku-with-plugins
       ;
   };
 }
