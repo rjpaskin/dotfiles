@@ -18,6 +18,7 @@ self: super:
       jq
       mackup
       ncdu
+      ultrahook
       universal-ctags
       heroku-with-plugins
       ;
