@@ -2,11 +2,19 @@ self: super:
 
 {
   userPackages = super.userPackages or {} // {
-    # Default packages:
-    inherit (self) cacert nix;
+    #==== Nix stuff ====
+    inherit (self)
+      cacert      # required to fetch from cache.nixos.org
+      nix         # so that we have all the nix-* commands available
+      ;
 
-    # Packages
-    inherit (self) ncdu;
+    #==== Packages ====
+    inherit (self)
+      fzf
+      jq
+      ncdu
+      universal-ctags
+      ;
 
     nix-rebuild = super.callPackage ../pkgs/nix-rebuild.nix {};
   };
