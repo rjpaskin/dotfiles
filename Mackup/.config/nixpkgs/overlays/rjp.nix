@@ -8,13 +8,6 @@ self: super:
     # Packages
     inherit (self) ncdu;
 
-    nix-rebuild = super.writeScriptBin "nix-rebuild" ''
-      #!${super.stdenv.shell}
-      if ! command -v nix-env &>/dev/null; then
-          echo "warning: nix-env was not found in PATH, add nix to userPackages" >&2
-          PATH=${self.nix}/bin:$PATH
-      fi
-      exec nix-env -f '<nixpkgs>' -r -iA userPackages "$@"
-    '';
+    nix-rebuild = super.callPackage ../pkgs/nix-rebuild.nix {};
   };
 }
