@@ -15,6 +15,7 @@ self: super:
       fzf
       git-when-merged
       jq
+      mackup
       ncdu
       universal-ctags
       ;
