@@ -66,6 +66,8 @@ Plug 'tpope/vim-eunuch'
 Plug 'Konfekt/vim-alias'
 " Mkdir automatatically when saving
 Plug 'pbrisbin/vim-mkdir'
+" Better search highlight behaviour
+Plug 'junegunn/vim-slash'
 
 " Navigate between vim and tmux splits
 Plug 'christoomey/vim-tmux-navigator'
