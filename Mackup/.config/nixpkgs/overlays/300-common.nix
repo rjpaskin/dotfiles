@@ -14,12 +14,25 @@ self: super:
       autoterm
       dockutil
       fzf
+      git
       git-when-merged
+      hadolint
       jq
       mackup
       ncdu
+      nodejs
+      oh-my-zsh
+      reattach-to-user-namespace
+      rlwrap
+      ruby
+      shellcheck
+      silver-searcher
+      tmux
       ultrahook
       universal-ctags
+      yarn
+      zsh
+
       heroku-with-plugins
       ;
   };
