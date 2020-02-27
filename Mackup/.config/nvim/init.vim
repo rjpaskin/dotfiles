@@ -140,6 +140,9 @@ Plug 'tpope/vim-fireplace'
 Plug 'guns/vim-sexp'
 Plug 'tpope/vim-sexp-mappings-for-regular-people'
 
+" Nix
+Plug 'LnL7/vim-nix'
+
 " Colour scheme
 Plug 'rakr/vim-one'
 
