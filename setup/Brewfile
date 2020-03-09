@@ -92,7 +92,7 @@ brew_if_tagged "sqlite", pin: true
 cask_if_tagged "sequel-pro"
 
 if tag?(:postgres) || tag?(:postgresql)
-  cask "pgadmin3"
+  cask "pgadmin4"
 end
 
 #== DevOps ==
@@ -101,10 +101,6 @@ brew_if_tagged "ansible", pin: true
 if tag? :aws
   brew "awscli"
   cask "session-manager-plugin"
-end
-
-if tag? :linode
-  brew "linode/cli/linode-cli"
 end
 
 #== Browsers ==
