@@ -13,6 +13,7 @@ self: super:
     inherit (self)
       autoterm
       dockutil
+      flight_plan_cli
       fzf
       git
       git-when-merged

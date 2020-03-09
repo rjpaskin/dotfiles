@@ -6,6 +6,7 @@ let
 in {
   autoterm = super.callPackage ../pkgs/autoterm.nix { inherit ruby; };
   dockutil = super.callPackage ../pkgs/dockutil.nix {};
+  flight_plan_cli = super.callPackage ../pkgs/flight_plan_cli { inherit ruby; };
   git-when-merged = super.callPackage ../pkgs/git-when-merged.nix {};
   heroku-with-plugins = super.callPackage ../pkgs/heroku-with-plugins.nix {};
   mackup = super.python38.pkgs.callPackage ../pkgs/mackup.nix {};
