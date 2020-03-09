@@ -1,6 +1,0 @@
-#!/usr/bin/env ruby
-$LOAD_PATH << File.expand_path("../git-ci", __dir__)
-
-require "git-ci"
-
-GitCI::CLI.new(ARGV).run
