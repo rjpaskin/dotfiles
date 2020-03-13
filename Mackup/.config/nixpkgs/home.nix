@@ -18,5 +18,6 @@
 
   imports = [
     ./modules/roles.nix
+    ./modules/host
   ];
 }
