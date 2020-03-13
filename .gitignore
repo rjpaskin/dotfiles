@@ -1,16 +1,16 @@
-hosts/
-scratch/
+/hosts/
+/scratch/
 
-Mackup/.emacs.d/auto-save-list/
-Mackup/.emacs.d/backups/
-Mackup/.emacs.d/elpa/
-Mackup/.emacs.d/quelpa/
-Mackup/.emacs.d/smex-items
+/Mackup/.emacs.d/auto-save-list/
+/Mackup/.emacs.d/backups/
+/Mackup/.emacs.d/elpa/
+/Mackup/.emacs.d/quelpa/
+/Mackup/.emacs.d/smex-items
 
-Mackup/.tmuxinator/*.yml
-!Mackup/.tmuxinator/default.yml
+/Mackup/.tmuxinator/*.yml
+!/Mackup/.tmuxinator/default.yml
 
-Mackup/.*.old
-Mackup/.*.local
-Mackup/.config/*/*.local
-Mackup/Library/
+/Mackup/.*.old
+/Mackup/.*.local
+/Mackup/.config/*/*.local
+/Mackup/Library/
