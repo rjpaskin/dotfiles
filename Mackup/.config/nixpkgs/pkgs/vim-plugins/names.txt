@@ -1,0 +1,13 @@
+AndrewRadev/splitjoin.vim
+Julian/vim-textobj-variable-segment
+Konfekt/vim-alias
+ecomba/vim-ruby-refactoring
+lmeijvogel/vim-yaml-helper
+mxw/vim-jsx
+nelstrom/vim-textobj-rubyblock
+pbrisbin/vim-mkdir
+prettier/vim-prettier
+rorymckinley/vim-rubyhash
+thoughtbot/vim-rspec
+tpope/vim-bundler
+tpope/vim-rails
