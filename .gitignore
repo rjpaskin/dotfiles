@@ -13,4 +13,5 @@
 /Mackup/.*.old
 /Mackup/.*.local
 /Mackup/.config/*/*.local
+/Mackup/.config/nixpkgs/hosts/
 /Mackup/Library/
