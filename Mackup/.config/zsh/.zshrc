@@ -4,6 +4,10 @@ if ([ -n "$TMUX" ] || [ -n "$INSIDE_EMACS" ]) && [ -x "/usr/libexec/path_helper"
   eval "$(PATH="" /usr/libexec/path_helper -s)"
 fi
 
+maybe_source() {
+  [ -f "$1" ] && source "$1"
+}
+
 export HISTFILE="${XDG_DATA_HOME:-"$HOME/.local/share"}/zsh/history"
 
 hash -d iCloud="$HOME/Library/Mobile Documents/com~apple~CloudDocs"
@@ -117,7 +121,7 @@ export PATH=".git/safe/../../bin:$HOME/.bin:$PATH"
 # export SSH_KEY_PATH="~/.ssh/dsa_id"
 
 # Tmuxinator completions
-[[ -f /usr/local/share/zsh/site-functions/tmuxinator.zsh ]] && source /usr/local/share/zsh/site-functions/tmuxinator.zsh
+maybe_source "/usr/local/share/zsh/site-functions/tmuxinator.zsh"
 
 # rbenv setup
 if command -v rbenv >/dev/null; then
@@ -146,4 +150,7 @@ if has_tag "react-native"; then
   export PATH="$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools"
 fi
 
-[[ -f "$ZDOTDIR/.zshrc.local" ]] && source "$ZDOTDIR/.zshrc.local"
+maybe_source "$ZDOTDIR/.zshrc.local"
+
+# Cleanup
+unfunction maybe_source
