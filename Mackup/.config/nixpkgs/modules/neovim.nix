@@ -50,15 +50,6 @@ in {
       viAlias = true;
       vimAlias = true;
 
-      # FIXME:
-      # - https://github.com/NixOS/nixpkgs/issues/81206
-      # - https://github.com/NixOS/nixpkgs/pull/80528
-      package = (import (builtins.fetchTarball {
-        name = "nixpkgs-neovim-0.4.2";
-        url = https://github.com/nixos/nixpkgs-channels/archive/44465d3480ad6f87024874842f2acb1185a350b1.tar.gz;
-        sha256 = "0vrhmjbvh41mhbjqmv2lc0166y9h69ikxvs392b2b732288iz7xl";
-      }) {}).pkgs.neovim-unwrapped;
-
       configure = {
         plug.plugins = cfg.plugs;
 
