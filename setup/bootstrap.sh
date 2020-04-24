@@ -225,13 +225,6 @@ if ! [ -f "$HOME/.ssh/id_rsa" ]; then
   fancy_echo 'Add your key to GitHub: pbcopy < ~/.ssh/id_rsa.pub'
 fi
 
-fancy_echo "Configuring Neovim plugins ..."
-
-download_or_update_file "$HOME/.local/share/nvim/site/autoload/plug.vim" \
-  "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" --create-dirs
-
-nvim -i NONE -c PlugInstall -c quitall
-
 atom_packages="$dotfiles_dir/Mackup/.atom/packages-list.txt"
 
 if [ -f "$atom_packages" ]; then
