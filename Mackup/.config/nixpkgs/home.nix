@@ -1,4 +1,6 @@
-{ config, ... }:
+{ config, lib, ... }:
+
+with lib;
 
 {
   config = {
@@ -21,5 +23,5 @@
     ./modules/host
 
     ./modules/neovim
-  ];
+  ] ++ optional (builtins.getEnv("NO_HM_HOME_LINKS") != "") ./modules/preserve_home.nix;
 }
