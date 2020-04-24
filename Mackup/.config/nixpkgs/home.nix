@@ -18,6 +18,11 @@ with lib;
     home.stateVersion = "19.09";
 
     news.display = "silent";
+
+    # Disable `man` so that we don't get `pkgs.man` and all its accompanying executables,
+    # but still add `man` to `extraOutputsToInstall` as the `man` module does
+    programs.man.enable = false;
+    home.extraOutputsToInstall = [ "man" ];
   };
 
   imports = [
