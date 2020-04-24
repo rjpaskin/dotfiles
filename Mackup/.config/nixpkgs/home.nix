@@ -20,6 +20,6 @@
     ./modules/roles.nix
     ./modules/host
 
-    ./modules/neovim.nix
+    ./modules/neovim
   ];
 }

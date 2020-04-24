@@ -21,7 +21,7 @@ let
     };
   };
 
-  myPlugins = pkgs.callPackage ../pkgs/vim-plugins {};
+  myPlugins = pkgs.callPackage ../../pkgs/vim-plugins {};
 
   generateOneColours = colours: let
     genLine = name: attrs: ''
@@ -54,20 +54,28 @@ in {
         plug.plugins = cfg.plugs;
 
         customRC = ''
+          " -------------------------------------------------
+          "  Colour scheme
+          " -------------------------------------------------
           colorscheme one
           set background=light
           ${generateOneColours cfg.colours}
+          ${readFile ./init.vim}
         '';
       };
 
       colours = let
         white = "ffffff";
       in {
+        # https://stackoverflow.com/questions/1467438/find-out-to-which-highlight-group-a-particular-keyword-symbol-belongs-in-vim
         Normal.background = white;
         ColorColumn.background = white;
+
+        # Replace grey background with lighter version of foreground (http://www.0to255.com)
         DiffAdded.background = "f5faf5";
         DiffRemoved.background = "fcedec";
         DiffLine.background = "eff4fe";
+
         DiffNewFile = { background = white; modifier = "bold"; };
         DiffFile = { background = white; modifier = "bold"; };
       };
@@ -131,6 +139,13 @@ in {
         # Tmux
         vim-tmux-navigator
       ];
+    };
+
+    xdg.configFile = {
+      "nvim/reference.vim".source = pkgs.vimUtils.vimrcFile cfg.configure;
+      "nvim/after/plugin/alias.vim".text = ''
+        :Alias ag grep
+      '';
     };
   };
 }

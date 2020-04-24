@@ -1,5 +1,3 @@
-set nocompatible
-
 " -------------------------------------------------
 "  Leader and shortcuts
 " -------------------------------------------------
@@ -41,114 +39,6 @@ augroup RJP
 augroup END
 
 " -------------------------------------------------
-"  Plugins
-" -------------------------------------------------
-call plug#begin()
-
-" Sensible defaults
-Plug 'tpope/vim-sensible'
-
-" Add commenting
-Plug 'tpope/vim-commentary'
-" Add 'surround' motion
-Plug 'tpope/vim-surround'
-" Enable `.` for additional commands
-Plug 'tpope/vim-repeat'
-" Paired commands with ']' and `[`
-Plug 'tpope/vim-unimpaired'
-" Case-aware substition and case transformations
-Plug 'tpope/vim-abolish'
-" Asynchronously execute processes
-Plug 'tpope/vim-dispatch'
-" Shell command helpers
-Plug 'tpope/vim-eunuch'
-" Alias Ex commands
-Plug 'Konfekt/vim-alias'
-" Mkdir automatatically when saving
-Plug 'pbrisbin/vim-mkdir'
-" Better search highlight behaviour
-Plug 'junegunn/vim-slash'
-
-" Navigate between vim and tmux splits
-Plug 'christoomey/vim-tmux-navigator'
-
-" Custom text objects (base for other plugins)
-Plug 'kana/vim-textobj-user'
-" `(i|a)r` for Ruby blocks
-Plug 'nelstrom/vim-textobj-rubyblock'
-" `(i|a)v` for underscored/camel-cased parts of words
-Plug 'Julian/vim-textobj-variable-segment'
-
-" https://github.com/adriaanzon/vim-textobj-matchit " more generic version of vim-textobj-rubyblock
-" https://github.com/tek/vim-textobj-ruby " can include blank after block
-
-" Autocomplete
-Plug 'Shougo/deoplete.nvim', { 'tag': '5.1', 'do': ':UpdateRemotePlugins \| !pip3 install --user \"msgpack=0.6.2\"' }
-
-" Configurable status bar
-Plug 'vim-airline/vim-airline'
-
-" Latest runtime files for Ruby
-Plug 'vim-ruby/vim-ruby'
-" Automatically add `end` to Ruby blocks
-Plug 'tpope/vim-endwise'
-" Refactorings for Ruby
-Plug 'ecomba/vim-ruby-refactoring'
-" Split/join lines of code
-Plug 'AndrewRadev/splitjoin.vim'
-" Convert to Ruby 1.9 hash syntax, or between string/symbol keys
-Plug 'rorymckinley/vim-rubyhash'
-" Brewfile syntax
-Plug 'bfontaine/Brewfile.vim'
-
-" Project navigation
-Plug 'Shougo/denite.nvim', { 'tag': '2.1' }
-" MRU files plugin for Denite
-Plug 'Shougo/neomru.vim'
-Plug 'scrooloose/nerdtree'
-Plug 'jistr/vim-nerdtree-tabs'
-
-" Git integration
-Plug 'tpope/vim-fugitive'
-" GitHub extension for fugitive.vim
-Plug 'tpope/vim-rhubarb'
-
-Plug 'editorconfig/editorconfig-vim'
-
-" Rails
-Plug 'tpope/vim-rbenv'
-Plug 'tpope/vim-bundler'
-Plug 'tpope/vim-rails'
-" Replace with janko-m/vim-test?
-Plug 'thoughtbot/vim-rspec'
-
-" Javascript
-Plug 'pangloss/vim-Javascript'
-Plug 'mxw/vim-jsx'
-Plug 'mattn/emmet-vim'
-Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
-
-" Linting
-Plug 'w0rp/ale'
-
-" YAML
-Plug 'lmeijvogel/vim-yaml-helper'
-
-" Clojure
-Plug 'tpope/vim-salve'
-Plug 'tpope/vim-fireplace'
-Plug 'guns/vim-sexp'
-Plug 'tpope/vim-sexp-mappings-for-regular-people'
-
-" Nix
-Plug 'LnL7/vim-nix'
-
-" Colour scheme
-Plug 'rakr/vim-one'
-
-call plug#end()
-
-" -------------------------------------------------
 "  Core Settings
 " -------------------------------------------------
 set encoding=utf-8           " use UTF-8 encoding
@@ -187,25 +77,6 @@ endif
 if has("persistent_undo")
   set undofile
 endif
-
-let g:ruby_host_prog = '~/.rbenv/versions/2.7.0/bin/neovim-ruby-host'
-
-" -------------------------------------------------
-" Colour scheme
-" -------------------------------------------------
-colorscheme one
-set background=light
-
-" https://stackoverflow.com/questions/1467438/find-out-to-which-highlight-group-a-particular-keyword-symbol-belongs-in-vim
-call one#highlight('Normal',      '', 'ffffff', '')
-call one#highlight('ColorColumn', '', 'ffffff', '')
-" Replace grey background with lighter version of foreground (http://www.0to255.com)
-call one#highlight('DiffAdded',   '', 'f5faf5', '')
-call one#highlight('DiffRemoved', '', 'fcedec', '')
-call one#highlight('DiffLine',    '', 'eff4fe', '')
-
-call one#highlight('DiffNewFile', '', 'ffffff', 'bold')
-call one#highlight('DiffFile',    '', 'ffffff', 'bold')
 
 " -------------------------------------------------
 " Syntax
