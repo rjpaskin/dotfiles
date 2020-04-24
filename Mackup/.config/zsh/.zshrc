@@ -151,6 +151,7 @@ if has_tag "react-native"; then
 fi
 
 maybe_source "$ZDOTDIR/.zshrc.local"
+maybe_source "$HOME/.nix-profile/etc/profile.d/nix.sh"
 
 # Cleanup
 unfunction maybe_source
