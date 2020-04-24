@@ -19,5 +19,7 @@
   imports = [
     ./modules/roles.nix
     ./modules/host
+
+    ./modules/neovim
   ];
 }
