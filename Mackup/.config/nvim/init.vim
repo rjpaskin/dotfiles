@@ -321,7 +321,7 @@ endfunction
 inoremap <silent><expr> <TAB>
   \ pumvisible() ?
     \ "\<C-n>" :
-    \ <SID>check_back_space() ? "\<TAB>" : deoplete#mappings#manual_complete()
+    \ <SID>check_back_space() ? "\<TAB>" : deoplete#manual_complete()
 
 " Use <shift-TAB> to cycle through completions
 inoremap <silent><expr> <S-TAB>
