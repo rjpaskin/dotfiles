@@ -12,4 +12,6 @@ in {
   mackup = super.python38.pkgs.callPackage ../pkgs/mackup.nix {};
   nix-rebuild = super.callPackage ../pkgs/nix-rebuild.nix {};
   ultrahook = super.callPackage ../pkgs/ultrahook.nix { inherit ruby; };
+
+  vimPlugins = super.vimPlugins // super.callPackage ../pkgs/vim-plugins {};
 }

@@ -21,8 +21,6 @@ let
     };
   };
 
-  myPlugins = pkgs.callPackage ../../pkgs/vim-plugins {};
-
   generateOneColours = colours: let
     genLine = name: attrs: ''
       call one#highlight('${name}', '${attrs.foreground}', '${attrs.background}', '${attrs.modifier}')
@@ -90,15 +88,15 @@ in {
         vim-abolish
         vim-dispatch
         vim-eunuch
-        myPlugins.vim-alias
-        myPlugins.vim-mkdir
+        vim-alias
+        vim-mkdir
         vim-slash
         editorconfig-vim
 
         vim-textobj-user
         vim-textobj-variable-segment
 
-        myPlugins.deoplete-nvim
+        deoplete-nvim
         ale
         vim-nix
 
@@ -107,30 +105,30 @@ in {
         vim-airline
 
         # Project navigation
-        myPlugins.denite-nvim
+        denite-nvim
         neomru-vim
         nerdtree
         vim-nerdtree-tabs
 
         # Javascript
         vim-javascript
-        myPlugins.vim-jsx
+        vim-jsx
         emmet-vim
-        myPlugins.vim-prettier
+        vim-prettier
 
         # Ruby
-        myPlugins.vim-textobj-rubyblock
+        vim-textobj-rubyblock
         vim-ruby
         vim-endwise
-        myPlugins.vim-ruby-refactoring
-        myPlugins.splitjoin-vim
-        myPlugins.vim-rubyhash
+        vim-ruby-refactoring
+        splitjoin-vim
+        vim-rubyhash
 
         # Rails
-        myPlugins.vim-bundler
-        myPlugins.vim-rails
-        myPlugins.vim-rspec
-        myPlugins.vim-yaml-helper # Pretty much only used for i18n YAML files
+        vim-bundler
+        vim-rails
+        vim-rspec
+        vim-yaml-helper # Pretty much only used for i18n YAML files
 
         # Git
         vim-fugitive
