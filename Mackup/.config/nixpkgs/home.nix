@@ -29,6 +29,7 @@ with lib;
     ./modules/roles.nix
     ./modules/host
 
+    ./modules/symlinks.nix
     ./modules/neovim
   ] ++ optional (builtins.getEnv("NO_HM_HOME_LINKS") != "") ./modules/preserve_home.nix;
 }
