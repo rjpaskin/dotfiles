@@ -13,4 +13,10 @@
     vim-textobj-rubyblock
     vim-yaml-helper # Pretty much only used for i18n YAML files
   ];
+
+  home.symlinks = config.lib.mackup.mackupFiles [
+    ".gemrc"
+    ".irbrc"
+    ".rbenv/default-gems"
+  ];
 }

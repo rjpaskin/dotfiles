@@ -26,6 +26,8 @@ let
     ${toString file}.source = "${mackupRoot}/${toString file}";
   };
 
+  mackupFiles = files: mkMerge (map mackupFile files);
+
 in
 
   attrsets.recursiveUpdate original {
@@ -45,12 +47,14 @@ in
       '';
     });
 
+    config.lib.mackup = { inherit mackupFiles; };
+
     # Generated with:
     # mackup uninstall --dry-run | \
     #  ag reverting | \
     #  sed -e 's/Reverting //' -e 's/\.\.\.//' -e 's/^/"/' -e 's/ $/"/'
     # TODO: `.config/nix` and `.config/nixpkgs` need to be symlinked separately
-    config.home.symlinks = mkMerge (map mackupFile [
+    config.home.symlinks = mackupFiles [
       # Apps
       "Library/Preferences/com.agilebits.onepassword4.plist"
       "Library/Preferences/com.kapeli.dashdoc.plist"
@@ -79,35 +83,10 @@ in
       ".editorconfig"
       ".ssh/config"
 
-      # ZSH
-      ".config/zsh/.zshrc"
-      ".config/zsh/.zshrc.local"
-      ".zshenv"
-
       # Emacs
       ".emacs.d"
 
-      # Git and tools
-      ".config/git/attributes"
-      ".config/git/ignore"
-      ".config/git/config"
-      ".config/git/config.local"
-      "Library/Application Support/SourceTree/sourcetree.license"
-
       # Clojure
       ".lein"
-
-      # Ruby
-      ".gemrc"
-      ".irbrc"
-      ".rbenv/default-gems"
-
-      # Tmux
-      ".tmux.conf"
-      ".tmuxinator"
-
-      # Javascript
-      ".config/yarn/global/package.json"
-      ".config/yarn/global/yarn.lock"
-    ]);
+    ];
   }

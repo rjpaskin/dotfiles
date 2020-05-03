@@ -34,5 +34,7 @@ with lib;
     ./modules/neovim
     ./modules/ruby.nix
     ./modules/symlinks.nix
+    ./modules/tmux.nix
+    ./modules/zsh.nix
   ] ++ optional (builtins.getEnv("NO_HM_HOME_LINKS") != "") ./modules/preserve_home.nix;
 }
