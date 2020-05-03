@@ -45,7 +45,6 @@ end
 #== Utilities ==
 brew "dockutil"
 brew "hub"
-brew "mackup"
 brew "fzf" # used by `git co` alias
 cask "betterzip"
 cask my_formula("kdiff3")

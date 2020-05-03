@@ -9,7 +9,6 @@ in {
   flight_plan_cli = super.callPackage ../pkgs/flight_plan_cli { inherit ruby; };
   git-when-merged = super.callPackage ../pkgs/git-when-merged.nix {};
   heroku-with-plugins = super.callPackage ../pkgs/heroku-with-plugins.nix {};
-  mackup = super.python38.pkgs.callPackage ../pkgs/mackup.nix {};
   nix-rebuild = super.callPackage ../pkgs/nix-rebuild.nix {};
   ultrahook = super.callPackage ../pkgs/ultrahook.nix { inherit ruby; };
 
