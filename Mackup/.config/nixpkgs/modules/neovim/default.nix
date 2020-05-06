@@ -79,7 +79,7 @@ in {
       };
 
       # Default packages to always use
-      plugs = with pkgs.vimPlugins; [
+      plugs = with pkgs.vimPlugins; mkBefore [
         vim-sensible
         vim-commentary
         vim-surround
@@ -93,6 +93,9 @@ in {
         vim-slash
         editorconfig-vim
 
+        # although this is a Tmux plugin, it works without Tmux and defines useful Ctrl+h/j/k/l window-switching keymaps
+        vim-tmux-navigator
+
         vim-textobj-user
         vim-textobj-variable-segment
 
@@ -101,7 +104,7 @@ in {
         vim-nix
 
         # UI
-        vim-one
+        vim-one # colour scheme
         vim-airline
 
         # Project navigation
@@ -109,33 +112,6 @@ in {
         neomru-vim
         nerdtree
         vim-nerdtree-tabs
-
-        # Javascript
-        vim-javascript
-        vim-jsx
-        emmet-vim
-        vim-prettier
-
-        # Ruby
-        vim-textobj-rubyblock
-        vim-ruby
-        vim-endwise
-        vim-ruby-refactoring
-        splitjoin-vim
-        vim-rubyhash
-
-        # Rails
-        vim-bundler
-        vim-rails
-        vim-rspec
-        vim-yaml-helper # Pretty much only used for i18n YAML files
-
-        # Git
-        vim-fugitive
-        vim-rhubarb
-
-        # Tmux
-        vim-tmux-navigator
       ];
     };
 

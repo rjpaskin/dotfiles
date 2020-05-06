@@ -19,7 +19,6 @@ self: super:
       git-when-merged
       hadolint
       jq
-      mackup
       ncdu
       nodejs
       oh-my-zsh

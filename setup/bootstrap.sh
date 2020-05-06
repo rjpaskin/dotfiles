@@ -232,13 +232,6 @@ if [ -f "$atom_packages" ]; then
   apm install --packages-file "$atom_packages"
 fi
 
-fancy_echo "Restoring dotfiles with Mackup ..."
-# bootstrap Mackup config
-ensure_symlink "$dotfiles_dir/Mackup/.mackup.cfg" "$HOME/.mackup.cfg"
-ensure_symlink "$dotfiles_dir/Mackup/.mackup" "$HOME/.mackup"
-
-mackup restore
-
 fancy_echo "Symlinking \`bin\` directory to \$HOME ..."
 ensure_symlink "$dotfiles_dir/bin" "$HOME/.bin"
 
