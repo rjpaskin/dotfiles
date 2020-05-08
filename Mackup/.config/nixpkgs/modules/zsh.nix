@@ -75,4 +75,21 @@ in {
     ];
   };
 
+  home.activation.setShellToZSH = dag.entryAfter ["installPackages"] ''
+    set_shell_to_zsh() {
+      local shell_path="$HOME/.nix-profile/bin/zsh"
+
+      if ! grep -qxF "$shell_path" /etc/shells; then
+        $VERBOSE_ECHO "Adding '$shell_path' to /etc/shells"
+        $DRY_RUN_CMD sudo sh -c "echo $shell_path >> /etc/shells"
+      fi
+
+      if [ "$SHELL" != "$shell_path" ]; then
+        $VERBOSE_ECHO "Changing shell for '$LOGNAME' to '$shell_path'"
+        $DRY_RUN_CMD sudo chsh -s "$shell_path" "$LOGNAME"
+      fi
+    }
+
+    set_shell_to_zsh
+  '';
 }
