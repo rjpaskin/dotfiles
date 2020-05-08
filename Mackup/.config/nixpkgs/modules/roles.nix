@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ lib, ... }:
 
 with lib;
 with types;
@@ -20,9 +20,4 @@ in {
     mkOptionalRole = mkRole false;
     mkDefaultRole = mkRole true;
   };
-
-  options.roles.docker = config.lib.roles.mkOptionalRole "Docker tools";
-  options.roles.go = config.lib.roles.mkOptionalRole "Golang dev";
-  options.roles.heroku = config.lib.roles.mkOptionalRole "Heroku tools";
-  options.roles.react-native = config.lib.roles.mkOptionalRole "React Native dev (Android)";
 }

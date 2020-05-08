@@ -29,9 +29,13 @@ with lib;
     ./modules/roles.nix
     ./modules/host
 
+    ./modules/docker.nix
     ./modules/git.nix
+    ./modules/go.nix
+    ./modules/heroku.nix
     ./modules/javascript.nix
     ./modules/neovim
+    ./modules/react-native.nix
     ./modules/ruby.nix
     ./modules/symlinks.nix
     ./modules/tmux.nix
