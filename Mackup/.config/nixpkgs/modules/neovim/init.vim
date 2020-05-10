@@ -55,7 +55,6 @@ set shortmess+=I             " suppress intro message
 set splitright               " open vertical splits to the right
 set splitbelow               " open horizontal splits below
 set gdefault                 " replace all occurences on line without `g` flag, not just first one
-set shell=/usr/local/bin/zsh
 set colorcolumn=             " disable coloured line at 80 chars
 set showmatch                " show matching parentheses
 set textwidth=0              " disable wrapping of text in insert mode
