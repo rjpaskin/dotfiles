@@ -148,9 +148,6 @@ case "$SHELL" in
     ;;
 esac
 
-fancy_echo "Downloading/updating oh-my-zsh ..."
-github_clone_or_pull "robbyrussell/oh-my-zsh" "$HOME/.oh-my-zsh"
-
 if has_tag "ruby"; then
   fancy_echo "Configuring Ruby ..."
 
