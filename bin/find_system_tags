@@ -6,7 +6,7 @@ module SystemTags
   module_function
 
   SETUP_FILES = %w[Brewfile bootstrap.sh dock.sh basics.sh].map {|file| "setup/#{file}" }
-  DOTFILES = %w[.bash_profile .tmux.conf .config/zsh/.zshrc].map {|file| "Mackup/#{file}" }
+  DOTFILES = %w[.bash_profile .tmux.conf].map {|file| "Mackup/#{file}" }
 
   def run
     root = Pathname(__FILE__).realpath.join("../..")
