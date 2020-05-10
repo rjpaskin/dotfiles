@@ -7,8 +7,6 @@ load File.join(
 tap "beeftornado/rmtree" # remove formula and all its (orphaned) dependencies
 
 #== Basics ==
-brew "zsh"
-
 brew "git"
 brew_if_tagged "git-flow"
 brew "git-when-merged"

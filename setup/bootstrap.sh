@@ -44,18 +44,6 @@ dir_is_in_path() {
   [[ ":$PATH:" == *:"$dir":* ]]
 }
 
-update_shell() {
-  local shell_path;
-  shell_path="$(which zsh)"
-
-  fancy_echo "Changing your shell to zsh ..."
-  if ! grep --silent "$shell_path" /etc/shells; then
-    fancy_echo "Adding '$shell_path' to /etc/shells"
-    sudo sh -c "echo $shell_path >> /etc/shells"
-  fi
-  sudo chsh -s "$shell_path" "$LOGNAME"
-}
-
 git_clone_or_pull() {
   local repo_url="$1"
   local local_repo="$2"
@@ -136,17 +124,6 @@ if has_tag "heroku" && brew list | grep --silent "heroku"; then
 
   fancy_echo "Setup Heroku with: heroku accounts:add <home|work>, then: heroku accounts:set <home|work>"
 fi
-
-case "$SHELL" in
-  */zsh)
-    if [ "$(which zsh)" != '/usr/local/bin/zsh' ] ; then
-      update_shell
-    fi
-    ;;
-  *)
-    update_shell
-    ;;
-esac
 
 if has_tag "ruby"; then
   fancy_echo "Configuring Ruby ..."
