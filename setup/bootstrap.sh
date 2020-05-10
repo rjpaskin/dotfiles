@@ -17,9 +17,6 @@ set -e
 script_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
 dotfiles_dir="$script_dir/.."
 
-# shellcheck source=../has_tag.sh
-. "$dotfiles_dir/has_tag.sh"
-
 # set -x # for debugging
 
 # From https://github.com/MikeMcQuaid/strap/blob/c72f36595f0f2160d017750a5e14f61825105731/bin/strap.sh
@@ -109,13 +106,13 @@ else
   fancy_echo "Skipping brew install"
 fi
 
-if has_tag "qt" && brew list | grep --silent "qt@5.5"; then
+if brew list | grep --silent "qt@5.5"; then
   fancy_echo "Symlink qmake binary to /usr/local/bin for Capybara Webkit..."
   brew unlink qt@5.5
   brew link --force qt@5.5
 fi
 
-if has_tag "heroku" && brew list | grep --silent "heroku"; then
+if brew list | grep --silent "heroku"; then
   for plugin in "heroku-repo" "heroku-accounts"; do
     if heroku plugins | grep --silent "$plugin"; then
       heroku plugins:install "$plugin"
@@ -125,7 +122,7 @@ if has_tag "heroku" && brew list | grep --silent "heroku"; then
   fancy_echo "Setup Heroku with: heroku accounts:add <home|work>, then: heroku accounts:set <home|work>"
 fi
 
-if has_tag "ruby"; then
+if command -v rbenv > /dev/null; then
   fancy_echo "Configuring Ruby ..."
 
   if ! dir_is_in_path "$HOME/.rbenv/shims"; then
@@ -157,7 +154,7 @@ if has_tag "ruby"; then
   bundle config --global jobs $((number_of_cores - 1))
 fi
 
-if has_tag "node"; then
+if command -v nodenv > /dev/null; then
   fancy_echo "Configuring Node ..."
 
   if ! dir_is_in_path "$HOME/.nodenv/shims"; then
