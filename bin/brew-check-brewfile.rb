@@ -1,11 +1,15 @@
 $LOAD_PATH.unshift Tap.fetch("homebrew/bundle").path.join("lib").to_s
 require "forwardable"
 require "bundle"
+require "cli/parser"
 
 class CheckBrewfile
   attr_reader :brewfile
 
-  def initialize(filename)
+  def initialize
+    args.parse
+
+    filename = Homebrew.args.named.first || File.expand_path("../../setup/Brewfile", File.realpath(__FILE__))
     @brewfile = Bundle::Dsl.new(File.read filename)
   rescue => error
     @error = error
@@ -45,12 +49,26 @@ class CheckBrewfile
 
   attr_reader :error
 
+  def args
+    Homebrew::CLI::Parser.new do
+      usage_banner <<~EOS
+      `check-brewfile` [<options>] [<Brewfile>]
+
+      See what would be installed from the given Brewfile.
+      EOS
+
+      switch "--status",
+        description: "Check Brewfile against currently installed formulae/casks"
+      max_named 1
+    end
+  end
+
   def invalid?
     !@error.nil?
   end
 
   def tags
-    brewfile.singleton_class::SYSTEM_TAGS
+    ::SYSTEM_TAGS
   rescue NameError
     []
   end
@@ -148,7 +166,7 @@ class CheckBrewfile
     private
 
     def installed_flag
-      return "" unless ARGV.flag?("--status")
+      return "" unless Homebrew.args.status?
 
       if installed?
         $stdout.isatty ? "#{Tty.bold}#{Formatter.success "✔"}#{Tty.reset} " : "Y "
@@ -201,8 +219,4 @@ class CheckBrewfile
   end
 end
 
-CheckBrewfile.new(
-  ENV.fetch("BREWFILE") {
-    File.expand_path("../../setup/Brewfile", File.realpath(__FILE__))
-  }
-).print_report
+CheckBrewfile.new.print_report

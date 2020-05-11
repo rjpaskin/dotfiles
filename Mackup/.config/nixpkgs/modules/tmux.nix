@@ -5,4 +5,8 @@
     ".tmux.conf"
     ".tmuxinator"
   ];
+
+  programs.zsh.initExtra = ''
+    maybe_source "/usr/local/share/zsh/site-functions/tmuxinator.zsh"
+  '';
 }

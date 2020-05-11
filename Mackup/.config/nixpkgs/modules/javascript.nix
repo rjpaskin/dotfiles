@@ -13,6 +13,17 @@ with lib;
       vim-prettier
     ];
 
+    programs.zsh = {
+      oh-my-zsh.plugins = ["node" "npm" "yarn"];
+
+      initExtra = ''
+        # nodenv setup
+        if command -v nodenv >/dev/null; then
+          eval "$(nodenv init - --no-rehash)"
+        fi
+      '';
+    };
+
     home.symlinks = config.lib.mackup.mackupFiles [
       ".config/yarn/global/package.json"
       ".config/yarn/global/yarn.lock"

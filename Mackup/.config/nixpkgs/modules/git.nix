@@ -8,19 +8,30 @@ with lib;
     git-flow = mkOptionalRole "Git flow";
   };
 
-  config = mkIf config.roles.git {
-    programs.neovim.plugs = with pkgs.vimPlugins; [
-      vim-fugitive
-      vim-rhubarb
-    ];
+  config = mkIf config.roles.git (mkMerge [
+    {
+      programs.neovim.plugs = with pkgs.vimPlugins; [
+        vim-fugitive
+        vim-rhubarb
+      ];
 
-    home.symlinks = config.lib.mackup.mackupFiles [
-      ".config/git/attributes"
-      ".config/git/ignore"
-      ".config/git/config"
-      ".config/git/config.local"
+      programs.zsh.oh-my-zsh.plugins = ["git"];
 
-      "Library/Application Support/SourceTree/sourcetree.license"
-    ];
-  };
+      home.symlinks = config.lib.mackup.mackupFiles [
+        ".config/git/attributes"
+        ".config/git/ignore"
+        ".config/git/config"
+        ".config/git/config.local"
+
+        "Library/Application Support/SourceTree/sourcetree.license"
+      ];
+    }
+
+    (mkIf config.roles.git-flow {
+      programs.zsh = {
+        oh-my-zsh.plugins = ["git-flow"];
+        shellAliases.gf = "git-flow"; # restore now-removed shortcut
+      };
+    })
+  ]);
 }
