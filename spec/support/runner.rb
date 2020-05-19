@@ -1,4 +1,5 @@
 require "json"
+require "tempfile"
 
 require_relative "./command"
 require_relative "./path"
@@ -58,6 +59,10 @@ class Runner
 
   define_cached_method :role_enabled? do |role|
     eval_nix(format GET_HOME_MANAGER_VALUE, expression: "config.roles.#{role}")
+  end
+
+  define_cached_method :neovim_variable do |name|
+    eval_neovim("json_encode(#{name})").as_json
   end
 
   def self.current
@@ -127,5 +132,45 @@ class Runner
     run_in_shell!(
       "nix-instantiate --eval --strict --json --show-trace -E '#{expression}'"
     ).as_json
+  end
+
+  EVAL_NEOVIM_EXPRESSION = "redir @\">|silent echo %{expression}|redir END" \
+    "|enew|put|write! %{tmpfile}|quit!".freeze
+
+  def eval_neovim(expression)
+    Tempfile.open("eval_neovim") do |tmpfile|
+      run_in_shell!(
+        "nvim -n -i NONE -c '#{format(EVAL_NEOVIM_EXPRESSION, expression: expression, tmpfile: tmpfile.path)}'"
+      )
+
+      Command::Output.new(tmpfile.tap(&:rewind).read)
+    end
+  end
+
+  def neovim_packages
+    @neovim_packages ||= eval_neovim("&runtimepath").split(",").grep(%r{/share/vim-plugins/[^/]+$}).map! do |pkg|
+      File.basename(pkg)
+    end
+  end
+
+  def neovim_keymappings
+    @neovim_keymappings ||= begin
+      eval_neovim(
+        %[execute("map") . "\n" . execute("map!")]
+      ).strip.split("\n").each_with_object(deep_hash) do |line, map|
+        mode, key, function_or_special, function = line.split(/\s+/, 4)
+        function ||= function_or_special
+
+        map[mode][key] = function
+      end
+    end
+  end
+
+  private
+
+  def deep_hash
+    default = proc {|hash, key| hash[key] = Hash.new(&default) }
+
+    Hash.new(&default)
   end
 end
