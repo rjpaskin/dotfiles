@@ -3,8 +3,8 @@ RSpec.describe "Neovim" do
     it { should be_an_executable }
   end
 
-  it "uses the executable from Nix profile" do
-    expect(which "nvim").to eq(profile_bin("nvim"))
+  describe which("nvim") do
+    it { should eq(profile_bin "nvim") }
   end
 
   context "aliases" do
@@ -19,24 +19,26 @@ RSpec.describe "Neovim" do
   end
 
   context "config" do
-    # Not testing everything here, just the essentials, with the assumption
-    # that if these are installed, others should be too
-    it "has basic packages installed" do
-      packages = %w[
-        vim-sensible
-        vim-commentary
-        vim-surround
-        vim-repeat
-        vim-unimpaired
-        editorconfig-vim
-        vim-tmux-navigator
-        ale
-        denite.nvim
-        deoplete.nvim
-        vim-airline
-      ]
+    describe neovim_packages do
+      # Not testing everything here, just the essentials, with the assumption
+      # that if these are installed, others should be too
+      let(:packages) do
+        %w[
+          vim-sensible
+          vim-commentary
+          vim-surround
+          vim-repeat
+          vim-unimpaired
+          editorconfig-vim
+          vim-tmux-navigator
+          ale
+          denite.nvim
+          deoplete.nvim
+          vim-airline
+        ]
+      end
 
-      expect(neovim_packages).to include(*packages)
+      it { should include(*packages) }
     end
 
     # Not testing everything here, again just assuming that if these are

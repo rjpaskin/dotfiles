@@ -3,6 +3,10 @@ RSpec.describe "ZSH" do
     it { should be_an_executable }
   end
 
+  describe oh_my_zsh_plugins do
+    it { should include("osx", "history-substring-search") }
+  end
+
   context "setup" do
     let(:shell_path) { profile_bin("zsh") }
 
@@ -14,12 +18,12 @@ RSpec.describe "ZSH" do
       expect(user_config["UserShell"]).to eq(shell_path)
     end
 
-    it "adds ZSH to list of permitted shells" do
-      expect(path "/etc/shells").to include(/^#{shell_path}$/)
+    describe file("/etc/shells") do
+      it { should include(/^#{shell_path}$/) }
     end
 
-    it "uses the executable from Nix profile" do
-      expect(which "zsh").to eq(shell_path)
+    describe which("zsh") do
+      it { should eq(shell_path) }
     end
   end
 
@@ -31,14 +35,22 @@ RSpec.describe "ZSH" do
     it { should be_a_file.and be_readable }
     it { should include "/usr/libexec/path_helper -s" }
 
-    let(:options) { run_in_shell!("setopt").lines }
+    context "history" do
+      let(:options) { run_in_shell!("setopt").lines }
 
-    it "defines correct history options" do
-      aggregate_failures do
-        expect(shell_variable "HISTFILE").to eq xdg_data_path("zsh/history")
-        expect(shell_variable("HISTSIZE").to_i).to eq 50_000
-        expect(shell_variable("SAVEHIST").to_i).to eq 10_000
+      describe shell_variable("HISTFILE") do
+        it { should eq(xdg_data_path "zsh/history") }
+      end
 
+      describe shell_variable("HISTSIZE") do
+        it { should eq(50_000) }
+      end
+
+      describe shell_variable("SAVEHIST") do
+        it { should eq(10_000) }
+      end
+
+      it "defines correct history options" do
         expect(options).to include(
           /^hist_?ignore_?dups$/i,
           /^hist_?ignore_?space$/i,
@@ -60,8 +72,8 @@ RSpec.describe "ZSH" do
       end
     end
 
-    it "sets correct theme" do
-      expect(shell_variable "ZSH_THEME").to eq("robbyrussell")
+    describe shell_variable("ZSH_THEME") do
+      it { should eq("robbyrussell") }
     end
 
     it "defines valid directory hashes" do
@@ -79,12 +91,6 @@ RSpec.describe "ZSH" do
 
     it "cleans up local functions" do
       expect(shell_functions).to_not include("maybe_source")
-    end
-
-    context "Oh-My-ZSH" do
-      it "defines base plugins" do
-        expect(oh_my_zsh_plugins).to include("osx", "history-substring-search")
-      end
     end
   end
 end

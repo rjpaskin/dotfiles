@@ -1,15 +1,17 @@
 RSpec.describe "Docker", role: "docker" do
-  describe xdg_config_path("zsh/.zshrc") do
-    it "has Docker-specific Oh-My-ZSH plugins" do
-      expect(oh_my_zsh_plugins).to include("docker", "docker-compose")
-    end
+  describe oh_my_zsh_plugins do
+    it { should include("docker", "docker-compose") }
+  end
 
-    it "defines Docker-specific aliases" do
-      aggregate_failures do
-        expect(shell_aliases["dup"]).to eq("docker-compose up")
-        expect(shell_aliases["bdup"]).to eq("BYEBUG=1 docker-compose up")
-        expect(shell_aliases["dkill"]).to eq("docker-compose kill")
-      end
-    end
+  describe shell_alias("dup") do
+    it { should eq("docker-compose up") }
+  end
+
+  describe shell_alias("bdup") do
+    it { should eq("BYEBUG=1 docker-compose up") }
+  end
+
+  describe shell_alias("dkill") do
+    it { should eq("docker-compose kill") }
   end
 end

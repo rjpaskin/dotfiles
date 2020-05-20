@@ -1,24 +1,14 @@
 RSpec.describe "Ruby", role: "ruby" do
-  context "Neovim packages" do
-    it "has Ruby-specific packages installed" do
-      expect(neovim_packages).to include(
-        *%w[
-          splitjoin-vim
-          vim-rails
-          vim-endwise
-          vim-ruby
-          vim-rubyhash
-          vim-yaml-helper
-        ]
-      )
-    end
+  describe neovim_packages do
+    it { should include("splitjoin-vim", "vim-rails", "vim-endwise",
+                        "vim-ruby", "vim-rubyhash", "vim-yaml-helper") }
+  end
+
+  describe oh_my_zsh_plugins do
+    it { should include("bundler", "gem", "rails") }
   end
 
   describe xdg_config_path("zsh/.zshrc") do
-    it "has Ruby-specific Oh-My-ZSH plugins" do
-      expect(oh_my_zsh_plugins).to include("bundler", "gem", "rails")
-    end
-
     it "loads rbenv" do
       aggregate_failures do
         expect(run_in_shell! "type rbenv").to include("is a shell function")

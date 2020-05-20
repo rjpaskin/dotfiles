@@ -1,14 +1,10 @@
 RSpec.describe "Git", role: "git" do
-  context "Neovim packages" do
-    it "has Git-specific packages installed" do
-      expect(neovim_packages).to include("vim-fugitive", "vim-rhubarb")
-    end
+  describe neovim_packages do
+    it { should include("vim-fugitive", "vim-rhubarb") }
   end
 
-  describe xdg_config_path("zsh/.zshrc") do
-    it "has Git Oh-My-ZSH plugin" do
-      expect(oh_my_zsh_plugins).to include("git")
-    end
+  describe oh_my_zsh_plugins do
+    it { should include("git") }
   end
 
   describe xdg_config_path("git/attributes") do
@@ -68,19 +64,16 @@ RSpec.describe "Git", role: "git" do
 
   describe home_path("Library/Application Support/SourceTree/sourcetree.license") do
     it { should be_a_file.and be_readable }
-
     it { should_not be_in_nix_store }
   end
 
-  context "Git flow", role: "git-flow" do
-    describe xdg_config_path("zsh/.zshrc") do
-      it "has Git-Flow Oh-My-ZSH plugin" do
-        expect(oh_my_zsh_plugins).to include("git-flow")
-      end
+  context "git-flow", role: "git-flow" do
+    describe oh_my_zsh_plugins do
+      it { should include("git-flow") }
+    end
 
-      it "has git-flow alias defined" do
-        expect(shell_aliases["gf"]).to eq("git-flow")
-      end
+    describe shell_alias("gf") do
+      it { should eq("git-flow") }
     end
   end
 end

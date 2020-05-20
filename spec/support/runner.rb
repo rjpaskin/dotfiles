@@ -1,10 +1,38 @@
 require "json"
 require "tempfile"
+require "delegate"
 
 require_relative "./command"
 require_relative "./path"
 
 class Runner
+  class Resource < SimpleDelegator
+    attr_reader :name
+
+    def initialize(name, &block)
+      @name = name
+      @block = block
+    end
+
+    def to_s
+      name.to_s
+    end
+
+    def __getobj__
+      __setobj__(block.call) unless defined?(@__called)
+      @__called = true
+      super
+    end
+
+    def inspect
+      "#<#{name} #{__getobj__.inspect}>"
+    end
+
+    private
+
+    attr_reader :block
+  end
+
   class << self
     attr_reader :cache_blocks
   end
@@ -35,18 +63,20 @@ class Runner
   end
 
   define_cached_method :which do |executable|
-    run_in_shell!("which #{executable}").as_path
+    Resource.new("which #{executable}") { run_in_shell!("which #{executable}").as_path }
   end
 
   define_cached_method :shell_variable do |name|
-    output = run_in_shell!("echo $#{name}").stdout.chomp
+    Resource.new("$#{name}") do
+      output = run_in_shell!("echo $#{name}").stdout.chomp
 
-    if name == "PATH"
-      output.as_search_path
-    elsif output =~ %r{\A[0-9]+\z}
-      Integer(output)
-    else
-      output
+      if name == "PATH"
+        output.as_search_path
+      elsif output =~ %r{\A[0-9]+\z}
+        Integer(output)
+      else
+        output
+      end
     end
   end
 
@@ -77,7 +107,7 @@ class Runner
     command(*args).check!
   end
 
-  def path(path_str)
+  def file(path_str)
     Path.new(path_str)
   end
 
@@ -128,8 +158,14 @@ class Runner
     @shell_aliases ||= run_in_shell!("alias").as_vars
   end
 
+  def shell_alias(name)
+    Resource.new("alias #{name}") { shell_aliases[name] }
+  end
+
   def oh_my_zsh_plugins
-    @oh_my_zsh_plugins ||= run_in_shell!("print -l $plugins").lines
+    @oh_my_zsh_plugins ||= Resource.new("Oh-My-ZSH plugins") do
+      run_in_shell!("print -l $plugins").lines
+    end
   end
 
   def eval_nix(expression)
@@ -152,8 +188,10 @@ class Runner
   end
 
   def neovim_packages
-    @neovim_packages ||= eval_neovim("&runtimepath").split(",").grep(%r{/share/vim-plugins/[^/]+$}).map! do |pkg|
-      File.basename(pkg)
+    @neovim_packages ||= Resource.new("Neovim packages") do
+      eval_neovim("&runtimepath").split(",").grep(%r{/share/vim-plugins/[^/]+$}).map! do |pkg|
+        File.basename(pkg)
+      end
     end
   end
 

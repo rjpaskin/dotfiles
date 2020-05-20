@@ -1,20 +1,13 @@
 RSpec.describe "Javascript", role: "javascript" do
-  describe "Neovim packages" do
-    it "has JS-specific packages" do
-      expect(neovim_packages).to include(
-        "emmet-vim",
-        "vim-javascript",
-        "vim-jsx",
-        "vim-prettier"
-      )
-    end
+  describe neovim_packages do
+    it { should include("emmet-vim", "vim-javascript", "vim-jsx", "vim-prettier") }
+  end
+
+  describe oh_my_zsh_plugins do
+    it { should include("node", "npm", "yarn") }
   end
 
   describe xdg_config_path("zsh/.zshrc") do
-    it "has JS-specific Oh-My-ZSH plugins" do
-      expect(oh_my_zsh_plugins).to include("node", "npm", "yarn")
-    end
-
     it "loads nodenv" do
       aggregate_failures do
         expect(run_in_shell! "type nodenv").to include("is a shell function")
