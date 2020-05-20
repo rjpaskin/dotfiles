@@ -83,9 +83,7 @@ RSpec.describe "ZSH" do
 
     context "Oh-My-ZSH" do
       it "defines base plugins" do
-        plugins = run_in_shell!("print -l $plugins").lines
-
-        expect(plugins).to include("osx", "history-substring-search")
+        expect(oh_my_zsh_plugins).to include("osx", "history-substring-search")
       end
     end
   end

@@ -128,6 +128,10 @@ class Runner
     @shell_aliases ||= run_in_shell!("alias").as_vars
   end
 
+  def oh_my_zsh_plugins
+    @oh_my_zsh_plugins ||= run_in_shell!("print -l $plugins").lines
+  end
+
   def eval_nix(expression)
     run_in_shell!(
       "nix-instantiate --eval --strict --json --show-trace -E '#{expression}'"
