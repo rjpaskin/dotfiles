@@ -44,6 +44,14 @@ class Path
     end
   end
 
+  def blank?
+    content =~ /\A\s*\z/
+  end
+
+  def glob(pattern)
+    pathname.glob(pattern).map {|path| self.class.new(path) }
+  end
+
   def inspect
     "#<Path #{pathname.to_s}>"
   end
