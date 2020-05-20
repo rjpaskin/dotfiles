@@ -170,6 +170,22 @@ class Runner
     end
   end
 
+  GIT_CONFIG_VALUES = {
+    "true" => true,
+    "false" => false
+  }.freeze
+
+  def git_config
+    @git_config ||= begin
+      run_in_shell!("git --no-pager config --global --list --includes").lines.each_with_object(deep_hash) do |line, config|
+        key, value = line.split("=", 2)
+        *parts, last = key.split(".").map!(&:to_sym)
+
+        config.dig(*parts)[last] = GIT_CONFIG_VALUES.fetch(value, value)
+      end
+    end
+  end
+
   private
 
   def deep_hash

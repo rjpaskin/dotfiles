@@ -58,6 +58,12 @@ class Path
     @lines ||= content.split(/\r?\n/)
   end
 
+  NIX_STORE_PATH = "/nix/store/".freeze
+
+  def in_nix_store?
+    symlink? && realpath.to_s.start_with?(NIX_STORE_PATH)
+  end
+
   private
 
   attr_reader :pathname
