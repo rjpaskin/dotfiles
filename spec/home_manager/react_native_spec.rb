@@ -11,6 +11,8 @@ RSpec.describe "React Native", role: "react-native" do
 
     it { should include(*paths) }
 
+    let(:other_path) { directory("/bin") }
+
     it "has android tools at the end" do
       base_path_position = subject.index("/bin")
       expect(base_path_position).to be_a(Integer)

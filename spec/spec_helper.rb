@@ -1,3 +1,6 @@
+$LOAD_PATH << File.expand_path("./support", __dir__)
+require "shell_lib"
+
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
     # This option will default to `true` in RSpec 4. It makes the `description`
@@ -26,6 +29,15 @@ RSpec.configure do |config|
   config.order = :random
 
   Kernel.srand config.seed
-end
 
-require_relative "./support/helpers"
+  config.extend ShellLib::ResourceHelpers
+  config.include ShellLib::ResourceHelpers
+  config.extend ShellLib::PathHelpers
+  config.include ShellLib::PathHelpers
+
+  config.before(:each, :role) do |example|
+    role = example.metadata[:role]
+
+    skip("role '#{role}' is disabled") unless role_enabled?(role)
+  end
+end
