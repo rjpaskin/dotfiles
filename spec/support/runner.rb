@@ -111,6 +111,8 @@ class Runner
     Path.new(path_str)
   end
 
+  alias_method :directory, :file
+
   HOME = Path.new("~").freeze
   NIX_PROFILE = HOME.join(".nix-profile").freeze
 
@@ -172,6 +174,14 @@ class Runner
     run_in_shell!(
       "nix-instantiate --eval --strict --json --show-trace -E '#{expression}'"
     ).as_json
+  end
+
+  def nix_channels
+    @nix_channels ||= run_in_shell!("nix-channel --list").as_vars(separator: " ")
+  end
+
+  def nix_channel(name)
+    Resource.new("Nix channel '#{name}'") { nix_channels[name] }
   end
 
   EVAL_NEOVIM_EXPRESSION = "redir @\">|silent echo %{expression}|redir END" \

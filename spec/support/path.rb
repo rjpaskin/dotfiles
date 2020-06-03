@@ -36,6 +36,14 @@ class Path
     RUBY
   end
 
+  %i[glob children].each do |method|
+    class_eval <<~RUBY, __FILE__, __LINE__ + 1
+      def #{method}(*args)
+        pathname.#{method}(*args).map {|path| self.class.new(path) }
+      end
+    RUBY
+  end
+
   def include?(matcher)
     if matcher.is_a?(Regexp)
       content =~ matcher
@@ -48,8 +56,12 @@ class Path
     content =~ /\A\s*\z/
   end
 
-  def glob(pattern)
-    pathname.glob(pattern).map {|path| self.class.new(path) }
+  def empty?
+    if directory?
+      children.none?
+    elsif file?
+      blank?
+    end
   end
 
   def inspect
