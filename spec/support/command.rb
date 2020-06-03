@@ -85,10 +85,14 @@ class Command
 
   attr_reader :command
 
+  def open3_args
+    command
+  end
+
   def run
     return if run?
 
-    stdout, @stderr, @status = Open3.capture3(*command)
+    stdout, @stderr, @status = Open3.capture3(*open3_args)
     @stdout = Output.new(stdout)
   end
 

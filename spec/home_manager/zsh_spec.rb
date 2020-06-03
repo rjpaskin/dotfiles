@@ -28,7 +28,7 @@ RSpec.describe "ZSH" do
   end
 
   it "runs ok" do
-    expect(run_in_shell("exit").stderr).to be_empty
+    expect(run_in_shell("exit").stderr.gsub(" > ", "")).to be_empty
   end
 
   describe xdg_config_path("zsh/.zshrc") do

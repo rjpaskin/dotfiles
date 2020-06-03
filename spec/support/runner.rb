@@ -3,6 +3,7 @@ require "tempfile"
 require "delegate"
 
 require_relative "./command"
+require_relative "./shell_command"
 require_relative "./path"
 
 class Runner
@@ -141,7 +142,7 @@ class Runner
   end
 
   def run_in_shell(*args)
-    command(%W[env -i USER=#{ENV["USER"]} HOME=#{ENV["HOME"]} #{profile_bin("zsh")} -i -c] + args.flatten)
+    ShellCommand.new(*args)
   end
 
   def run_in_shell!(*args)
