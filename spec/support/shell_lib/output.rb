@@ -30,7 +30,7 @@ module ShellLib
     end
 
     def as_search_path
-      line.split(":").map(&:as_path)
+      SearchPath.parse(line)
     end
 
     def as_json

@@ -9,6 +9,7 @@ module ShellLib
   autoload :Resource, "shell_lib/resource"
   autoload :ResourceHelpers, "shell_lib/resource_helpers"
   autoload :Runner, "shell_lib/runner"
+  autoload :SearchPath, "shell_lib/search_path"
 
   autoload :CachedMethods, "shell_lib/cached_methods"
 end

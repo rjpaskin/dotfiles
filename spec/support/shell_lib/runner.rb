@@ -74,6 +74,11 @@ module ShellLib
       Resource.new("alias #{name}") { shell_aliases[name] }
     end
 
+    def path_entry(path)
+      path = Path.new(path)
+      Resource.new("$PATH -> #{path}") { shell_variable("PATH")[path] }
+    end
+
     def oh_my_zsh_plugins
       @oh_my_zsh_plugins ||= Resource.new("Oh-My-ZSH plugins") do
         run_in_shell!("print -l $plugins").lines

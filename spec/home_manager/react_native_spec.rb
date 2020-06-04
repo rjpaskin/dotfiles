@@ -1,27 +1,29 @@
 RSpec.describe "React Native", role: "react-native" do
+  android_home = home_path("Library/Android/sdk")
+
   describe shell_variable("ANDROID_HOME") do
-    it { should eq(home_path "Library/Android/sdk") }
+    it { should eq(android_home) }
   end
 
-  describe shell_variable("PATH") do
-    let(:android_home) { shell_variable("ANDROID_HOME").as_path }
-    let(:paths) do
-      %w[emulator tools tools/bin platform-tools].map {|path| android_home.join(path) }
-    end
+  let(:other_path) { shell_variable("PATH")["/bin"] }
 
-    it { should include(*paths) }
+  describe path_entry(android_home.join "emulator") do
+    it { should be_present }
+    it { should be_after(other_path) }
+  end
 
-    let(:other_path) { directory("/bin") }
+  describe path_entry(android_home.join "tools") do
+    it { should be_present }
+    it { should be_after(other_path) }
+  end
 
-    it "has android tools at the end" do
-      base_path_position = subject.index("/bin")
-      expect(base_path_position).to be_a(Integer)
+  describe path_entry(android_home.join "tools/bin") do
+    it { should be_present }
+    it { should be_after(other_path) }
+  end
 
-      aggregate_failures do
-        paths.each do |path|
-          expect(subject.index(path)).to be > base_path_position
-        end
-      end
-    end
+  describe path_entry(android_home.join "platform-tools") do
+    it { should be_present }
+    it { should be_after(other_path) }
   end
 end
