@@ -1,0 +1,19 @@
+#!/usr/bin/env sh
+set -e
+
+# Can't run inside nix-shell as we get a Nix build env
+# which doesn't have things like $HOME set, so instead
+# get the path to the build env and run in the current
+# shell
+build="$(nix-build --no-out-link spec/support/deps)"
+
+# Add GC root for build
+nix-store \
+  --realise "$build" \
+  --add-root "$HOME/.cache/dotfiles/specs" \
+  --indirect > /dev/null
+
+"$build/bin/rspec" \
+  --require spec_helper \
+  --format doc \
+  "$@"
