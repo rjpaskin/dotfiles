@@ -86,12 +86,14 @@ module ShellLib
       ).as_json
     end
 
-    def nix_channels
-      @nix_channels ||= run_in_shell!("nix-channel --list").as_vars(separator: " ")
+    def nix_channel_urls
+      @nix_channel_urls ||= run_in_shell!("nix-channel --list").as_vars(separator: " ")
     end
 
+    NixChannel = Struct.new(:name, :url)
+
     def nix_channel(name)
-      Resource.new("Nix channel '#{name}'") { nix_channels[name] }
+      Resource.new("Nix channel '#{name}'") { NixChannel.new(name, nix_channel_urls[name]) }
     end
 
     EVAL_NEOVIM_EXPRESSION = "redir @\">|silent echo %{expression}|redir END" \

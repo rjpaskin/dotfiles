@@ -29,7 +29,7 @@ RSpec.describe "Bootstrap" do
     end
 
     describe nix_channel("nixpkgs") do
-      it { should eq("https://nixos.org/channels/nixpkgs-unstable") }
+      its(:url) { should eq("https://nixos.org/channels/nixpkgs-unstable") }
     end
 
     context "config" do
@@ -53,7 +53,7 @@ RSpec.describe "Bootstrap" do
 
     context "home-manager" do
       describe nix_channel("home-manager") do
-        it { should eq("https://github.com/rycee/home-manager/archive/master.tar.gz") }
+        its(:url) { should eq("https://github.com/rycee/home-manager/archive/master.tar.gz") }
       end
 
       describe xdg_config_path("nixpkgs/home.nix") do

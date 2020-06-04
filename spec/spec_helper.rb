@@ -1,3 +1,5 @@
+require "rspec/its"
+
 $LOAD_PATH << File.expand_path("./support", __dir__)
 require "shell_lib"
 

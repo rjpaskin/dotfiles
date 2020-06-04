@@ -42,6 +42,17 @@
     };
     version = "3.9.2";
   };
+  rspec-its = {
+    dependencies = ["rspec-core" "rspec-expectations"];
+    groups = ["default"];
+    platforms = [];
+    source = {
+      remotes = ["https://rubygems.org"];
+      sha256 = "15zafd70gxly5i0s00nky14sj2n92dnj3xpj83ysl3c2wx0119ad";
+      type = "gem";
+    };
+    version = "1.3.0";
+  };
   rspec-mocks = {
     dependencies = ["diff-lcs" "rspec-support"];
     groups = ["default"];
