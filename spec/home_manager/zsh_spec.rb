@@ -72,6 +72,11 @@ RSpec.describe "ZSH" do
       end
     end
 
+    describe path_entry(profile_path "bin") do
+      it { should be_present }
+      it { should be_before shell_variable("PATH")["/usr/local/bin"] }
+    end
+
     describe shell_variable("ZSH_THEME") do
       it { should eq("robbyrussell") }
     end
