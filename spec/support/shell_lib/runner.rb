@@ -11,6 +11,10 @@ module ShellLib
       path && path.as_path
     end
 
+    define_cached_method :manpage do |name|
+      run_in_shell!("man --path #{name}").as_path
+    end
+
     define_cached_method :shell_variable do |name|
       Resource.new("$#{name}") do
         output = run_in_shell!("echo $#{name}").stdout.chomp
@@ -83,6 +87,15 @@ module ShellLib
     def path_entry(path)
       path = Path.new(path)
       Resource.new("$PATH -> #{path}") { shell_variable("PATH")[path] }
+    end
+
+    def manpath
+      @manpath ||= run_in_shell!("manpath").as_search_path
+    end
+
+    def manpath_entry(path)
+      path = Path.new(path)
+      Resource.new("manpath -> #{path}") { manpath[path] }
     end
 
     def oh_my_zsh_plugins

@@ -5,6 +5,7 @@ RSpec.describe "ZSH" do
 
   describe program("zsh") do
     its(:location) { should eq profile_bin }
+    its(:manpage) { should be_inside profile_path("share/man") }
 
     it "runs ok" do
       expect(run_in_shell("exit").stderr.gsub(" > ", "")).to be_empty
@@ -75,6 +76,12 @@ RSpec.describe "ZSH" do
     describe path_entry(profile_path "bin") do
       it { should be_present }
       it { should be_before shell_variable("PATH")["/usr/local/bin"] }
+    end
+
+    describe manpath_entry(profile_path "share/man") do
+      it { should be_present }
+      it { should be_before(manpath["/usr/local/share/man"]) }
+      it { should be_before(manpath["/usr/share/man"]) }
     end
 
     describe shell_variable("ZSH_THEME") do

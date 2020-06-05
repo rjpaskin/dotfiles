@@ -65,6 +65,12 @@ module ShellLib
       end
     end
 
+    def in?(other)
+      to_s.start_with?(other.to_s)
+    end
+
+    alias_method :inside?, :in?
+
     def inspect
       "#<Path #{pathname.to_s}>"
     end

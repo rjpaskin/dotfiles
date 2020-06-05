@@ -22,5 +22,9 @@ module ShellLib
     def location
       __getobj__.dirname
     end
+
+    def manpage
+      Runner.current.manpage(name)
+    end
   end
 end
