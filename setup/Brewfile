@@ -19,7 +19,6 @@ if tag? :ctags
   brew "universal-ctags/universal-ctags/universal-ctags", args: ["HEAD"]
 end
 
-brew "jq"
 brew "ncdu"
 brew "openssl", pin: true
 brew "the_silver_searcher"
