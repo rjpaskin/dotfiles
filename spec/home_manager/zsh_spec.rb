@@ -3,6 +3,14 @@ RSpec.describe "ZSH" do
     it { should be_an_executable }
   end
 
+  describe program("zsh") do
+    its(:location) { should eq profile_bin }
+
+    it "runs ok" do
+      expect(run_in_shell("exit").stderr.gsub(" > ", "")).to be_empty
+    end
+  end
+
   describe oh_my_zsh_plugins do
     it { should include("osx", "history-substring-search") }
   end
@@ -21,14 +29,6 @@ RSpec.describe "ZSH" do
     describe file("/etc/shells") do
       it { should include(/^#{shell_path}$/) }
     end
-
-    describe which("zsh") do
-      it { should eq(shell_path) }
-    end
-  end
-
-  it "runs ok" do
-    expect(run_in_shell("exit").stderr.gsub(" > ", "")).to be_empty
   end
 
   describe xdg_config_path("zsh/.zshrc") do

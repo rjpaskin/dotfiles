@@ -3,8 +3,8 @@ RSpec.describe "Neovim" do
     it { should be_an_executable }
   end
 
-  describe which("nvim") do
-    it { should eq(profile_bin "nvim") }
+  describe program("nvim") do
+    its(:location) { should eq profile_bin }
   end
 
   context "aliases" do

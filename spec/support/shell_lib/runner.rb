@@ -6,7 +6,9 @@ module ShellLib
     extend CachedMethods
 
     define_cached_method :which do |executable|
-      Resource.new("which #{executable}") { run_in_shell!("which #{executable}").as_path }
+      path = run_in_shell!("which -a #{executable}").lines.find {|line| line.start_with?("/") }
+
+      path && path.as_path
     end
 
     define_cached_method :shell_variable do |name|
@@ -56,6 +58,10 @@ module ShellLib
 
     def run_in_shell!(*args)
       run_in_shell(*args).check!
+    end
+
+    def program(name)
+      Resource.new("program #{name}") { Program.new(name) }
     end
 
     def login_env

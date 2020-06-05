@@ -74,8 +74,8 @@ RSpec.describe "Bootstrap" do
         it { should be_an_executable }
       end
 
-      describe which("home-manager") do
-        it { should eq(profile_bin "home-manager") }
+      describe program("home-manager") do
+        its(:location) { should eq profile_bin }
       end
 
       it "works ok" do
