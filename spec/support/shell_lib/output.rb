@@ -18,6 +18,12 @@ module ShellLib
       lines.first
     end
 
+    def include?(matcher)
+      return self =~ matcher if matcher.is_a?(Regexp)
+
+      super
+    end
+
     def as_vars(separator: "=")
       lines.each_with_object({}) do |line, env|
         name, value = line.split(separator, 2)

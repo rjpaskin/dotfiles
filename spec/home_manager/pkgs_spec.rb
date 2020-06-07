@@ -14,6 +14,24 @@ RSpec.describe "Packages" do
     end
   end
 
+  describe program("ctags") do
+    its(:location) { should eq profile_bin }
+    its("--version") { should include(/universal ctags/i) }
+    its(:manpage) { should be_inside nix_profile_manpath }
+
+    class ClassForCtagsToIndex; end
+
+    it "runs without errors" do
+      result = run_in_shell("ctags -f - '#{__FILE__}'")
+
+      aggregate_failures do
+        expect(result).to be_success
+        expect(result.stdout).to include(__FILE__, "ClassForCtagsToIndex")
+        expect(result.stderr.strip).to be_empty
+      end
+    end
+  end
+
   describe program("jq") do
     its(:location) { should eq profile_bin }
     its(:manpage) { should be_inside nix_profile_manpath }

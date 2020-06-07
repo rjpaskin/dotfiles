@@ -15,10 +15,6 @@ brew_if_tagged "git-standup"
 cask "emacs"
 
 #== Unix ==
-if tag? :ctags
-  brew "universal-ctags/universal-ctags/universal-ctags", args: ["HEAD"]
-end
-
 brew "ncdu"
 brew "openssl", pin: true
 
