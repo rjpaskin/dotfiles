@@ -2,6 +2,7 @@
 
 {
   home.packages = with pkgs; [
+    fzf
     jq
     ncdu
     silver-searcher

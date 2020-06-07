@@ -32,6 +32,16 @@ RSpec.describe "Packages" do
     end
   end
 
+  describe program("fzf") do
+    its(:location) { should eq profile_bin }
+    its(:manpage) { should be_inside nix_profile_manpath }
+    its("--version") { should be_success }
+  end
+
+  describe program("fzf-tmux") do
+    its(:location) { should eq profile_bin }
+  end
+
   describe program("jq") do
     its(:location) { should eq profile_bin }
     its(:manpage) { should be_inside nix_profile_manpath }
