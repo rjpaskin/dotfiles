@@ -52,6 +52,20 @@ RSpec.describe "Packages" do
     end
   end
 
+  describe program("shellcheck") do
+    its(:location) { should eq profile_bin }
+    its(:manpage) { should be_inside nix_profile_manpath }
+
+    it "runs without errors" do
+      result = run_in_shell("echo 'ls $1' | shellcheck -s sh -f gcc -")
+
+      aggregate_failures do
+        expect(result.status).to eq(1)
+        expect(result.stdout).to include("[SC2086]")
+      end
+    end
+  end
+
   describe program("ncdu") do
     its(:location) { should eq profile_bin }
     its(:manpage) { should be_inside nix_profile_manpath }

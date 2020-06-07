@@ -41,7 +41,6 @@ cask my_formula("kdiff3")
 
 #== Testing ==
 cask_if_tagged my_formula("cypress")
-brew "shellcheck"
 brew "hadolint"
 
 #== Programming languages and package managers ==

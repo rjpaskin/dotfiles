@@ -4,6 +4,24 @@ module ShellLib
   class Command
     class ExecutionError < StandardError; end
 
+    Status = Struct.new(:raw) do
+      def ==(other)
+        other.is_a?(Integer) ? raw.exitstatus == other : super
+      end
+
+      def to_i
+        raw.exitstatus
+      end
+
+      def success?
+        raw.success?
+      end
+
+      def failed?
+        !success?
+      end
+    end
+
     def initialize(*args)
       @command = args.flatten
     end
@@ -17,14 +35,10 @@ module ShellLib
       RUBY
     end
 
-    %i[success?].each do |method|
+    %i[success? failed?].each do |method|
       class_eval <<~RUBY
         def #{method}; status.#{method}; end
       RUBY
-    end
-
-    def failed?
-      !success?
     end
 
     def check!
@@ -54,8 +68,10 @@ module ShellLib
     def run
       return if run?
 
-      stdout, @stderr, @status = Open3.capture3(*open3_args)
+      stdout, stderr, status = Open3.capture3(*open3_args)
       @stdout = Output.new(stdout)
+      @stderr = Output.new(stderr)
+      @status = Status.new(status)
     end
 
     def run?

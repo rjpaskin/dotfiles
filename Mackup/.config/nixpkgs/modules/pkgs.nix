@@ -5,6 +5,7 @@
     fzf
     jq
     ncdu
+    shellcheck
     silver-searcher
     universal-ctags
   ];
