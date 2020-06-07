@@ -15,7 +15,6 @@ brew_if_tagged "git-standup"
 cask "emacs"
 
 #== Unix ==
-brew "ncdu"
 brew "openssl", pin: true
 
 if tag? :tmux

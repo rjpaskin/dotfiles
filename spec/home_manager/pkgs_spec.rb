@@ -41,4 +41,10 @@ RSpec.describe "Packages" do
       expect(run_in_shell! "echo '[]' | jq").to be_success
     end
   end
+
+  describe program("ncdu") do
+    its(:location) { should eq profile_bin }
+    its(:manpage) { should be_inside nix_profile_manpath }
+    its("--version") { should be_success }
+  end
 end
