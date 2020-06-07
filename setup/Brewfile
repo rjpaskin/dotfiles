@@ -21,7 +21,6 @@ end
 
 brew "ncdu"
 brew "openssl", pin: true
-brew "the_silver_searcher"
 
 if tag? :tmux
   brew "reattach-to-user-namespace"
