@@ -1,4 +1,14 @@
 RSpec.describe "React Native", role: "react-native" do
+  describe program("react-native") do
+    its(:location) { should eq profile_bin }
+    its("--version") { should be_success }
+  end
+
+  describe program("watchman") do
+    its(:location) { should eq profile_bin }
+    its("--version") { should be_success }
+  end
+
   android_home = home_path("Library/Android/sdk")
 
   describe shell_variable("ANDROID_HOME") do

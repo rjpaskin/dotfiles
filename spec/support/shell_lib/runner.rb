@@ -6,7 +6,13 @@ module ShellLib
     extend CachedMethods
 
     define_cached_method :which do |executable|
-      Resource.new("which #{executable}") { run_in_shell!("which #{executable}").as_path }
+      path = run_in_shell!("which -a #{executable}").lines.find {|line| line.start_with?("/") }
+
+      path && path.as_path
+    end
+
+    define_cached_method :manpage do |name|
+      run_in_shell!("man --path #{name}").as_path
     end
 
     define_cached_method :shell_variable do |name|
@@ -58,6 +64,10 @@ module ShellLib
       run_in_shell(*args).check!
     end
 
+    def program(name)
+      Resource.new("program #{name}") { Program.new(name) }
+    end
+
     def login_env
       @login_env ||= run_in_shell!("env").as_vars
     end
@@ -77,6 +87,15 @@ module ShellLib
     def path_entry(path)
       path = Path.new(path)
       Resource.new("$PATH -> #{path}") { shell_variable("PATH")[path] }
+    end
+
+    def manpath
+      @manpath ||= run_in_shell!("manpath").as_search_path
+    end
+
+    def manpath_entry(path)
+      path = Path.new(path)
+      Resource.new("manpath -> #{path}") { manpath[path] }
     end
 
     def oh_my_zsh_plugins

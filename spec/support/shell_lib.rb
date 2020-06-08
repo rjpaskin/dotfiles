@@ -6,6 +6,7 @@ module ShellLib
   autoload :PathHelpers, "shell_lib/path_helpers"
 
   autoload :Output, "shell_lib/output"
+  autoload :Program, "shell_lib/program"
   autoload :Resource, "shell_lib/resource"
   autoload :ResourceHelpers, "shell_lib/resource_helpers"
   autoload :Runner, "shell_lib/runner"

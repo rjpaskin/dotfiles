@@ -13,8 +13,8 @@ module ShellLib
       NIX_PROFILE.join(path)
     end
 
-    def profile_bin(path)
-      profile_path("bin/#{path}")
+    def profile_bin(path = nil)
+      NIX_PROFILE.join("bin", path.to_s)
     end
 
     def home

@@ -8,28 +8,11 @@ tap "beeftornado/rmtree" # remove formula and all its (orphaned) dependencies
 
 #== Basics ==
 brew "git"
-brew_if_tagged "git-flow"
-brew "git-when-merged"
-brew_if_tagged "git-standup"
 
 cask "emacs"
 
 #== Unix ==
-if tag? :ctags
-  brew "universal-ctags/universal-ctags/universal-ctags", args: ["HEAD"]
-end
-
-brew "jq"
-brew "ncdu"
 brew "openssl", pin: true
-brew "the_silver_searcher"
-
-if tag? :tmux
-  brew "reattach-to-user-namespace"
-  brew "tmux"
-  brew_gem "tmuxinator"
-  brew_if_tagged "tmate"
-end
 
 #== Compilers ==
 brew "gcc"
@@ -41,16 +24,11 @@ if tag? :heroku
 end
 
 #== Utilities ==
-brew "dockutil"
-brew "hub"
-brew "fzf" # used by `git co` alias
 cask "betterzip"
 cask my_formula("kdiff3")
 
 #== Testing ==
 cask_if_tagged my_formula("cypress")
-brew "shellcheck"
-brew "hadolint"
 
 #== Programming languages and package managers ==
 brew "libyaml", pin: true # should come after openssl
@@ -79,7 +57,6 @@ if tag? :clojure
 end
 
 if tag? :react_native
-  brew "watchman"
   cask "android-studio"
 end
 
@@ -125,7 +102,6 @@ end
 
 brew_if_tagged "circleci"
 
-brew_gem "autoterm"
 brew_gem_if_tagged "mailcatcher"
 brew_gem_if_tagged "rubocop"
 brew_gem_if_tagged "ultrahook"

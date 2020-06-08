@@ -15,14 +15,4 @@ RSpec.describe "Javascript", role: "javascript" do
       end
     end
   end
-
-  describe xdg_config_path("yarn/global/package.json") do
-    it { should be_a_file.and be_readable }
-    it { should_not be_in_nix_store }
-  end
-
-  describe xdg_config_path("yarn/global/yarn.lock") do
-    it { should be_a_file.and be_readable }
-    it { should_not be_in_nix_store }
-  end
 end

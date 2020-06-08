@@ -35,6 +35,7 @@ with lib;
     ./modules/heroku.nix
     ./modules/javascript.nix
     ./modules/neovim
+    ./modules/pkgs.nix
     ./modules/react-native.nix
     ./modules/ruby.nix
     ./modules/symlinks.nix
