@@ -71,4 +71,8 @@ RSpec.describe "Packages" do
     its(:manpage) { should be_inside nix_profile_manpath }
     its("--version") { should be_success }
   end
+
+  describe program("autoterm") do
+    its(:location) { should eq profile_bin }
+  end
 end

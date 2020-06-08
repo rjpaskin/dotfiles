@@ -8,5 +8,7 @@
     shellcheck
     silver-searcher
     universal-ctags
+
+    autoterm
   ];
 }
