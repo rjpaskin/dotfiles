@@ -58,7 +58,6 @@ if tag? :clojure
 end
 
 if tag? :react_native
-  brew "watchman"
   cask "android-studio"
 end
 
