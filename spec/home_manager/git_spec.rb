@@ -67,13 +67,31 @@ RSpec.describe "Git", role: "git" do
     it { should_not be_in_nix_store }
   end
 
+  describe program("hub") do
+    its(:location) { should eq profile_bin }
+  end
+
+  describe program("git-when-merged") do
+    its(:location) { should eq profile_bin }
+  end
+
   context "git-flow", role: "git-flow" do
+    describe program("git-flow") do
+      its(:location) { should eq profile_bin }
+    end
+
     describe oh_my_zsh_plugins do
       it { should include("git-flow") }
     end
 
     describe shell_alias("gf") do
       it { should eq("git-flow") }
+    end
+  end
+
+  context "git-standup", role: "git-standup" do
+    describe program("git-standup") do
+      its(:location) { should eq profile_bin }
     end
   end
 end

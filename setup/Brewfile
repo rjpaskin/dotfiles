@@ -8,9 +8,6 @@ tap "beeftornado/rmtree" # remove formula and all its (orphaned) dependencies
 
 #== Basics ==
 brew "git"
-brew_if_tagged "git-flow"
-brew "git-when-merged"
-brew_if_tagged "git-standup"
 
 cask "emacs"
 
@@ -35,7 +32,6 @@ end
 
 #== Utilities ==
 brew "dockutil"
-brew "hub"
 cask "betterzip"
 cask my_formula("kdiff3")
 
