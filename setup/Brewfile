@@ -14,13 +14,6 @@ cask "emacs"
 #== Unix ==
 brew "openssl", pin: true
 
-if tag? :tmux
-  brew "reattach-to-user-namespace"
-  brew "tmux"
-  brew_gem "tmuxinator"
-  brew_if_tagged "tmate"
-end
-
 #== Compilers ==
 brew "gcc"
 
