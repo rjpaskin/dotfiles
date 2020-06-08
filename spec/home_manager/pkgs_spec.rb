@@ -75,4 +75,9 @@ RSpec.describe "Packages" do
   describe program("autoterm") do
     its(:location) { should eq profile_bin }
   end
+
+  describe program("dockutil") do
+    its(:location) { should eq profile_bin }
+    its("--version") { should be_success }
+  end
 end

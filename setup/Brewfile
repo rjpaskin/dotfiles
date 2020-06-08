@@ -24,7 +24,6 @@ if tag? :heroku
 end
 
 #== Utilities ==
-brew "dockutil"
 cask "betterzip"
 cask my_formula("kdiff3")
 
