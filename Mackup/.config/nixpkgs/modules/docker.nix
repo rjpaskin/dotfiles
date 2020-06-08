@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 
 with lib;
 
@@ -6,6 +6,8 @@ with lib;
   options.roles.docker = config.lib.roles.mkOptionalRole "Docker tools";
 
   config = mkIf config.roles.docker {
+    home.packages = [ pkgs.hadolint ];
+
     programs.zsh = {
       oh-my-zsh.plugins = ["docker" "docker-compose"];
 

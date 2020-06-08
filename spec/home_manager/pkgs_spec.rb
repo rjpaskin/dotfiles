@@ -27,7 +27,7 @@ RSpec.describe "Packages" do
       aggregate_failures do
         expect(result).to be_success
         expect(result.stdout).to include(__FILE__, "ClassForCtagsToIndex")
-        expect(result.stderr.strip).to be_empty
+        expect(result.stderr).to be_empty
       end
     end
   end

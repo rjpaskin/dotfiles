@@ -24,6 +24,10 @@ module ShellLib
       super
     end
 
+    def empty?
+      super || /\A[[:space:]]*\z/.match?(self) # from ActiveSupport
+    end
+
     def as_vars(separator: "=")
       lines.each_with_object({}) do |line, env|
         name, value = line.split(separator, 2)

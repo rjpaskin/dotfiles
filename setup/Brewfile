@@ -41,7 +41,6 @@ cask my_formula("kdiff3")
 
 #== Testing ==
 cask_if_tagged my_formula("cypress")
-brew "hadolint"
 
 #== Programming languages and package managers ==
 brew "libyaml", pin: true # should come after openssl
