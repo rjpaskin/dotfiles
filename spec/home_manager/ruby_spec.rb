@@ -41,4 +41,12 @@ RSpec.describe "Ruby", role: "ruby" do
   describe home_path(".rbenv/default-gems") do
     it { should be_a_file.and be_readable }
   end
+
+  describe program("mailcatcher"), role: "mailcatcher" do
+    its(:location) { should eq profile_bin }
+  end
+
+  describe program("ultrahook"), role: "ultrahook" do
+    its(:location) { should eq profile_bin }
+  end
 end

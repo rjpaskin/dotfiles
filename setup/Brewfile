@@ -102,9 +102,7 @@ end
 
 brew_if_tagged "circleci"
 
-brew_gem_if_tagged "mailcatcher"
 brew_gem_if_tagged "rubocop"
-brew_gem_if_tagged "ultrahook"
 
 if tag?(:createk)
   brew_gem "relsr"
