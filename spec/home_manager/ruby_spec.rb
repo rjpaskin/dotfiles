@@ -1,4 +1,28 @@
 RSpec.describe "Ruby", role: "ruby" do
+  xdescribe program("ruby") do
+    its(:location) { should eq profile_bin }
+    its(:manpage) { should be_inside profile_path("share/man") }
+  end
+
+  xdescribe program("irb") do
+    its(:location) { should eq profile_bin }
+  end
+
+  xdescribe program("rake") do
+    its(:location) { should eq profile_bin }
+  end
+
+  describe "gem `byebug`" do
+    it "is installed with default Ruby package" do
+      result = command("#{profile_bin "ruby"} -rbyebug -e exit")
+
+      aggregate_failures do
+        expect(result).to be_success
+        expect(result.stderr).to be_empty
+      end
+    end
+  end
+
   describe neovim_packages do
     it { should include("splitjoin-vim", "vim-rails", "vim-endwise",
                         "vim-ruby", "vim-rubyhash", "vim-yaml-helper") }

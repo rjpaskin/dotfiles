@@ -2,16 +2,46 @@
 
 with lib;
 
-{
-  options.roles = with config.lib.roles; {
-    ruby = mkOptionalRole "Ruby dev";
+let
+  cfg = config.programs.ruby;
 
-    mailcatcher = mkOptionalRole "MailCatcher";
-    ultrahook = mkOptionalRole "Ultrahook";
+  gemsFunctionType = mkOptionType {
+    name = "gems";
+    description = "gems to install";
+    check = x: if isFunction x then isList (x pkgs.ruby.packages) else false;
+    merge = mergeOneOption;
+  };
+
+in {
+  options = {
+    roles = with config.lib.roles; {
+      ruby = mkOptionalRole "Ruby dev";
+
+      mailcatcher = mkOptionalRole "MailCatcher";
+      ultrahook = mkOptionalRole "Ultrahook";
+    };
+
+    programs.ruby = {
+      defaultPackage = mkOption {
+        type = types.package;
+        description = "Package to use as `ruby` as default";
+        default = pkgs.ruby_2_6;
+      };
+
+      defaultGems = mkOption {
+        type = gemsFunctionType;
+        description = "Gems to install with default ruby";
+        default = gems: [ gems.byebug ];
+      };
+    };
   };
 
   config = mkMerge [
     (mkIf config.roles.ruby {
+      home.packages = [
+        (cfg.defaultPackage.withPackages cfg.defaultGems)
+      ];
+
       programs.neovim.plugs = with pkgs.vimPlugins; [
         splitjoin-vim
         vim-bundler
