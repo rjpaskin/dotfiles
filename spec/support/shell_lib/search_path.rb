@@ -20,6 +20,17 @@ module ShellLib
       def after?(other)
         index > other.index
       end
+
+      def ===(other)
+        case other
+        when Regexp
+          other.match?(path.to_s)
+        when String, Path
+          path == other
+        else
+          raise ArgumentError
+        end
+      end
     end
 
     NULL_ENTRY = Entry.new("<not found>", -1)
@@ -47,6 +58,10 @@ module ShellLib
       else
         raise ArgumentError
       end
+    end
+
+    def include?(matcher)
+      entries.any? {|entry| entry === matcher }
     end
 
     def pretty_print(pp)

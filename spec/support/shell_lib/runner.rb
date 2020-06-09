@@ -19,7 +19,7 @@ module ShellLib
       Resource.new("$#{name}") do
         output = run_in_shell!("echo $#{name}").stdout.chomp
 
-        if name == "PATH"
+        if name =~ /^F?PATH$/
           output.as_search_path
         elsif output =~ %r{\A[0-9]+\z}
           Integer(output)
@@ -96,6 +96,11 @@ module ShellLib
     def manpath_entry(path)
       path = Path.new(path)
       Resource.new("manpath -> #{path}") { manpath[path] }
+    end
+
+    def fpath_entry(path)
+      path = Path.new(path)
+      Resource.new("$FPATH -> #{path}") { shell_variable("FPATH")[path] }
     end
 
     def oh_my_zsh_plugins

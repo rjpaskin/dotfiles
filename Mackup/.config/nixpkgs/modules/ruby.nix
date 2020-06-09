@@ -26,30 +26,14 @@ with lib;
       ];
 
       programs.zsh = {
-        oh-my-zsh.plugins = ["bundler" "gem" "rails"];
+        oh-my-zsh.plugins = ["gem" "rails"];
+
+        initExtraBeforeCompInit = ''
+          # Load completions for Bundler
+          fpath+=(${pkgs.oh-my-zsh}/share/oh-my-zsh/plugins/bundler)
+        '';
 
         initExtra = ''
-          # Don't try to run bundled commands in docker projects
-          for bcmd in $bundled_commands; do
-            read -d "" _eval <<EOF
-              maybe_bundled_$bcmd() {
-                setopt localoptions extendedglob
-
-                if ! [ -z (../)#docker-compose.yml(N) ]; then
-                  unbundled_$bcmd
-                else
-                  bundled_$bcmd
-                fi
-              }
-          EOF
-            # Line above should be flush with `for`
-
-            eval "$_eval"
-            alias "$bcmd"="maybe_bundled_$bcmd"
-          done
-
-          unset bcmd _eval
-
           # rbenv setup
           if command -v rbenv >/dev/null; then
             eval "$(rbenv init - --no-rehash)"
