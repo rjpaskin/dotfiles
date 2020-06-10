@@ -1,17 +1,21 @@
 self: super:
 
 let
-  ruby = super.ruby_2_6;
+  overrides = {
+    ruby = super.ruby_2_6;
+  };
+
+  callPackage = super.lib.callPackageWith (super // overrides);
 
 in {
-  autoterm = super.callPackage ../pkgs/autoterm.nix { inherit ruby; };
-  dockutil = super.callPackage ../pkgs/dockutil.nix {};
-  flight_plan_cli = super.callPackage ../pkgs/flight_plan_cli { inherit ruby; };
-  git-when-merged = super.callPackage ../pkgs/git-when-merged.nix {};
-  heroku-with-plugins = super.callPackage ../pkgs/heroku-with-plugins.nix {};
-  nix-rebuild = super.callPackage ../pkgs/nix-rebuild.nix {};
-  rubocop_0_59 = super.callPackage ../pkgs/rubocop_0_59 { inherit ruby; };
-  ultrahook = super.callPackage ../pkgs/ultrahook.nix { inherit ruby; };
+  autoterm = callPackage ../pkgs/autoterm.nix {};
+  dockutil = callPackage ../pkgs/dockutil.nix {};
+  flight_plan_cli = callPackage ../pkgs/flight_plan_cli {};
+  git-when-merged = callPackage ../pkgs/git-when-merged.nix {};
+  heroku-with-plugins = callPackage ../pkgs/heroku-with-plugins.nix {};
+  nix-rebuild = callPackage ../pkgs/nix-rebuild.nix {};
+  rubocop_0_59 = callPackage ../pkgs/rubocop_0_59 {};
+  ultrahook = callPackage ../pkgs/ultrahook.nix {};
 
   vimPlugins = super.vimPlugins // super.callPackage ../pkgs/vim-plugins {};
 }
