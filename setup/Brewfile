@@ -102,8 +102,6 @@ end
 
 brew_if_tagged "circleci"
 
-brew_gem_if_tagged "rubocop"
-
 if tag?(:createk)
   brew_gem "relsr"
   brew_gem "flight_plan_cli"

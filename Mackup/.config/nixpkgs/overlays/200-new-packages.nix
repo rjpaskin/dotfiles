@@ -10,6 +10,7 @@ in {
   git-when-merged = super.callPackage ../pkgs/git-when-merged.nix {};
   heroku-with-plugins = super.callPackage ../pkgs/heroku-with-plugins.nix {};
   nix-rebuild = super.callPackage ../pkgs/nix-rebuild.nix {};
+  rubocop_0_59 = super.callPackage ../pkgs/rubocop_0_59 { inherit ruby; };
   ultrahook = super.callPackage ../pkgs/ultrahook.nix { inherit ruby; };
 
   vimPlugins = super.vimPlugins // super.callPackage ../pkgs/vim-plugins {};

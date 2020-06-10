@@ -18,6 +18,7 @@ in {
       ruby = mkOptionalRole "Ruby dev";
 
       mailcatcher = mkOptionalRole "MailCatcher";
+      rubocop = mkOptionalRole "RuboCop";
       ultrahook = mkOptionalRole "Ultrahook";
     };
 
@@ -32,6 +33,14 @@ in {
         type = gemsFunctionType;
         description = "Gems to install with default ruby";
         default = gems: [ gems.byebug ];
+      };
+    };
+
+    programs.rubocop = {
+      package = mkOption {
+        type = types.package;
+        description = "RuboCop package to install into profile";
+        default = pkgs.rubocop_0_59;
       };
     };
   };
@@ -76,6 +85,10 @@ in {
         ".irbrc"
         ".rbenv/default-gems"
       ];
+    })
+
+    (mkIf config.roles.rubocop {
+      home.packages = [ config.programs.rubocop.package ];
     })
 
     (mkIf config.roles.mailcatcher {
