@@ -13,13 +13,6 @@ def tag?(tag_name)
   SYSTEM_TAGS.include? tag_name.to_s.gsub("-", "_")
 end
 
-def brew_gem(name, options = {})
-  # required to install the following formula file
-  @_brew_gem_entry ||= brew "brew-gem"
-
-  brew File.join(MY_FORMULA_DIR, "gem-#{name}.rb"), options
-end
-
 def my_formula(name)
   File.join(MY_FORMULA_DIR, name)
 end
