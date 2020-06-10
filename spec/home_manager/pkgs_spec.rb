@@ -72,6 +72,20 @@ RSpec.describe "Packages" do
     its("--version") { should be_success }
   end
 
+  describe program("flight"), role: "flight-plan" do
+    its(:location) { should eq profile_bin }
+
+    it "runs without errors" do
+      result = run_in_shell("flight help")
+
+      aggregate_failures do
+        expect(result).to be_success
+        expect(result.stdout).to include(/flight.?plan/i)
+        expect(result.stderr).to be_empty
+      end
+    end
+  end
+
   describe program("autoterm") do
     its(:location) { should eq profile_bin }
   end
