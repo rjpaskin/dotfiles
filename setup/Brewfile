@@ -102,10 +102,6 @@ end
 
 brew_if_tagged "circleci"
 
-if tag?(:createk)
-  brew_gem "relsr"
-end
-
 #== Quicklook ==
 cask "qlcolorcode" # syntax highlighting
 cask "qlstephen" # files without extensions
