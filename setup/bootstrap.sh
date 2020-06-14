@@ -122,38 +122,6 @@ if brew list | grep --silent "heroku"; then
   fancy_echo "Setup Heroku with: heroku accounts:add <home|work>, then: heroku accounts:set <home|work>"
 fi
 
-if command -v rbenv > /dev/null; then
-  fancy_echo "Configuring Ruby ..."
-
-  if ! dir_is_in_path "$HOME/.rbenv/shims"; then
-    # shellcheck disable=SC2016
-    eval "$(rbenv init -)"
-  fi
-
-  if [ -z "$SKIP_INSTALLS" ]; then
-    find_latest_ruby() {
-      rbenv install --list | grep -v '-' | tail -1 | sed -e 's/^ *//'
-    }
-
-    ruby_version="$(find_latest_ruby)"
-
-    if ! rbenv versions | grep -Fq "$ruby_version"; then
-      RUBY_CONFIGURE_OPTS=--with-openssl-dir=/usr/local/opt/openssl \
-        rbenv install --skip-existing "$ruby_version"
-    fi
-
-    rbenv global "$ruby_version"
-    rbenv shell "$ruby_version"
-  else
-    fancy_echo "Skipping installing latest ruby version"
-  fi
-
-  gem update --system
-
-  number_of_cores=$(sysctl -n hw.ncpu)
-  bundle config --global jobs $((number_of_cores - 1))
-fi
-
 if command -v nodenv > /dev/null; then
   fancy_echo "Configuring Node ..."
 

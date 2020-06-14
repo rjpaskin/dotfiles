@@ -1,10 +1,13 @@
 RSpec.describe "Ruby", role: "ruby" do
-  xdescribe program("ruby") do
+  describe program("ruby") do
     its(:location) { should eq profile_bin }
-    its(:manpage) { should be_inside profile_path("share/man") }
   end
 
-  xdescribe program("irb") do
+  describe program("irb") do
+    its(:location) { should eq profile_bin }
+  end
+
+  describe program("gem") do
     its(:location) { should eq profile_bin }
   end
 
@@ -37,24 +40,11 @@ RSpec.describe "Ruby", role: "ruby" do
     it { should include(%r{share/oh-my-zsh/plugins/bundler$}) }
   end
 
-  describe xdg_config_path("zsh/.zshrc") do
-    it "loads rbenv" do
-      aggregate_failures do
-        expect(run_in_shell! "type rbenv").to include("is a shell function")
-        expect(run_in_shell "rbenv --version").to be_success
-      end
-    end
-  end
-
   describe home_path(".gemrc") do
     it { should be_a_file.and be_readable }
   end
 
   describe home_path(".irbrc") do
-    it { should be_a_file.and be_readable }
-  end
-
-  describe home_path(".rbenv/default-gems") do
     it { should be_a_file.and be_readable }
   end
 

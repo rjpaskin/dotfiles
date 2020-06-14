@@ -71,19 +71,11 @@ in {
           # Load completions for Bundler
           fpath+=(${pkgs.oh-my-zsh}/share/oh-my-zsh/plugins/bundler)
         '';
-
-        initExtra = ''
-          # rbenv setup
-          if command -v rbenv >/dev/null; then
-            eval "$(rbenv init - --no-rehash)"
-          fi
-        '';
       };
 
       home.symlinks = config.lib.mackup.mackupFiles [
         ".gemrc"
         ".irbrc"
-        ".rbenv/default-gems"
       ];
     })
 

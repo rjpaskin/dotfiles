@@ -64,28 +64,6 @@ else
   mas upgrade
 fi
 
-if command -v rbenv > /dev/null; then
-  section "gems"
-
-  default_gems=( $(grep -vE '^(#|$)' "$(rbenv root)/default-gems") )
-
-  if [ -n "$dry_run" ]; then
-    remote_version=$(gem list --remote "^rubygems-update$" | awk '{gsub(/[()]/, ""); print $2}')
-    current_version=$(gem -v)
-
-    if [ "$current_version" != "$remote_version" ]; then
-      echo "gem ($current_version) < $remote_version"
-    else
-      echo "No update to gem --system"
-    fi
-
-    gem outdated | grep -E "^($(join_by \| "${default_gems[@]}"))" || echo "No updates to default gems"
-  else
-    rbenv each -v gem update --system
-    rbenv each -v gem update "${default_gems[@]}"
-  fi
-fi
-
 if command -v circleci > /dev/null; then
   section "CircleCI CLI"
 

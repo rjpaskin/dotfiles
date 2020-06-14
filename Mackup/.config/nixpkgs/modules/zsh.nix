@@ -37,7 +37,7 @@ in {
   # This needs to appear at the very top of the file, and so we can't use `initExtra`
   home.file."${config.programs.zsh.dotDir}/.zshrc".text = mkBefore ''
     # Reset $PATH when we load tmux
-    # Avoids rbenv, nodenv etc. entries being added twice
+    # Avoids nodenv etc. entries being added twice
     if ([ -n "$TMUX" ] || [ -n "$INSIDE_EMACS" ]) && [ -x "/usr/libexec/path_helper" ]; then
       eval "$(PATH="" /usr/libexec/path_helper -s)"
     fi
