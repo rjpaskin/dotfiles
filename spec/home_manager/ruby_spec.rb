@@ -42,6 +42,7 @@ RSpec.describe "Ruby", role: "ruby" do
 
   describe home_path(".gemrc") do
     it { should be_a_file.and be_readable }
+    its(:contents) { should include("--no-document") }
   end
 
   describe home_path(".irbrc") do

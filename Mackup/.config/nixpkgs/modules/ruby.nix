@@ -74,9 +74,12 @@ in {
       };
 
       home.symlinks = config.lib.mackup.mackupFiles [
-        ".gemrc"
         ".irbrc"
       ];
+
+      home.file.".gemrc".text = ''
+        gem: --no-ri --no-rdoc --no-document
+      '';
     })
 
     (mkIf config.roles.rubocop {
