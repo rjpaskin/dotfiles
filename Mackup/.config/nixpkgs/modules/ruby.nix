@@ -73,16 +73,14 @@ in {
         '';
       };
 
-      home.symlinks = config.lib.mackup.mackupFiles [
-        ".irbrc"
-      ];
-
       home.file.".gemrc".text = ''
         gem: --no-ri --no-rdoc --no-document
       '';
 
       # Ensure IRB history directory exists
       xdg.dataFile."irb/.keep".text = "";
+
+      home.file.".irbrc".source = ./ruby/irbrc;
     })
 
     (mkIf config.roles.rubocop {
