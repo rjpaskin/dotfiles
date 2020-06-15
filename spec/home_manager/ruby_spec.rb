@@ -49,6 +49,10 @@ RSpec.describe "Ruby", role: "ruby" do
     it { should be_a_file.and be_readable }
   end
 
+  describe xdg_data_path("irb/.keep") do
+    it { should be_a_file }
+  end
+
   describe program("mailcatcher"), role: "mailcatcher" do
     its(:location) { should eq profile_bin }
   end

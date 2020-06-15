@@ -80,6 +80,9 @@ in {
       home.file.".gemrc".text = ''
         gem: --no-ri --no-rdoc --no-document
       '';
+
+      # Ensure IRB history directory exists
+      xdg.dataFile."irb/.keep".text = "";
     })
 
     (mkIf config.roles.rubocop {
