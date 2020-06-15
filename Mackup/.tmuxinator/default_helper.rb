@@ -54,11 +54,7 @@ class DefaultHelper
   end
 
   def ruby_version
-    if exists? ".ruby-version"
-      path.join(".ruby-version").read.chomp
-    else
-      `rbenv global`.chomp
-    end
+    path.join(".ruby-version").read.chomp if exists?(".ruby-version")
   end
 
   private

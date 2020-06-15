@@ -33,13 +33,6 @@ cask_if_tagged my_formula("cypress")
 #== Programming languages and package managers ==
 brew "libyaml", pin: true # should come after openssl
 
-if tag? :ruby
-  brew "rbenv"
-  brew "ruby-build"
-  brew "rbenv-default-gems"
-  brew my_formula("rbenv-each"), args: ["HEAD"]
-end
-
 if tag? :node
   brew "nodenv"
   brew "yarn"
@@ -101,15 +94,6 @@ if tag?(:docker) && tag?(:codeclimate)
 end
 
 brew_if_tagged "circleci"
-
-brew_gem_if_tagged "mailcatcher"
-brew_gem_if_tagged "rubocop"
-brew_gem_if_tagged "ultrahook"
-
-if tag?(:createk)
-  brew_gem "relsr"
-  brew_gem "flight_plan_cli"
-end
 
 #== Quicklook ==
 cask "qlcolorcode" # syntax highlighting

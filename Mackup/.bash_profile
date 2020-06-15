@@ -40,9 +40,3 @@ alias mv='mv -i'
 if [ -f "$(brew --prefix)/etc/bash_completion.d/git-completion.bash" ]; then
   . "$(brew --prefix)/etc/bash_completion.d/git-completion.bash"
 fi
-
-# Setup rbenv
-if ! command -v rbenv >/dev/null; then
-  export PATH="$HOME/.rbenv/bin:$PATH"
-  eval "$(rbenv init -)"
-fi

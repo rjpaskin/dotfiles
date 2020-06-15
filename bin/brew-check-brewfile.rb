@@ -75,12 +75,7 @@ class CheckBrewfile
 
   def entries
     @entries ||= begin
-      brewfile.entries.map do |entry|
-        # implicit dependency, added by `brew_gem` DSL method
-        next if entry.name == "brew-gem"
-
-        EntryDecorator.new(entry)
-      end.compact.sort
+      brewfile.entries.map {|entry| EntryDecorator.new(entry) }.sort
     end
   end
 
@@ -121,7 +116,7 @@ class CheckBrewfile
   class EntryDecorator
     include Comparable
 
-    SORT_ORDER = %w[tap brew brew_gem cask mas].freeze
+    SORT_ORDER = %w[tap brew cask mas].freeze
 
     attr_reader :original
 
@@ -134,33 +129,19 @@ class CheckBrewfile
     end
 
     def to_s
-      %Q{#{installed_flag}#{type} #{Tty.blue}"#{display_name}"#{Tty.reset}#{options_to_s}}
+      %Q{#{installed_flag}#{type} #{Tty.blue}"#{name}"#{Tty.reset}#{options_to_s}}
     end
 
     def sort_key
-      [SORT_ORDER.index(type) || -1, display_name]
-    end
-
-    def display_name
-      name.sub(/^gem-/, "")
+      [SORT_ORDER.index(type) || -1, name]
     end
 
     def name
-      if brew_gem?
-        File.basename(original.name, ".rb")
-      else
-        original.name
-      end
+      original.name.start_with?("/") ? File.basename(original.name, ".rb") : original.name
     end
 
     def type
-      if original.type == :mac_app_store
-        "mas"
-      elsif brew_gem?
-        "brew_gem"
-      else
-        original.type.to_s
-      end
+      original.type == :mac_app_store ? "mas" : original.type.to_s
     end
 
     private
@@ -188,10 +169,6 @@ class CheckBrewfile
       when :tap
         Bundle::TapInstaller.installed_taps.include?(original.name)
       end
-    end
-
-    def brew_gem?
-      original.name.start_with? "/"
     end
 
     def options
