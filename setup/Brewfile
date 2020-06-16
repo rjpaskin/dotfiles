@@ -19,7 +19,6 @@ brew "gcc"
 
 #== Heroku ==
 if tag? :heroku
-  brew "heroku/brew/heroku"
   brew "thoughtbot/formulae/parity" if tag?(:postgres) || tag?(:postgresql)
 end
 
