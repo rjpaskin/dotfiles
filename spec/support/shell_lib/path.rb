@@ -23,7 +23,7 @@ module ShellLib
       pathname <=> other_pathname
     end
 
-    %i[directory? file? executable? symlink? readable? writable? extname read to_s].each do |method|
+    %i[directory? file? executable? symlink? readable? writable? exist? extname read to_s].each do |method|
       class_eval <<~RUBY, __FILE__, __LINE__ + 1
         def #{method}(*args); pathname.#{method}(*args); end
       RUBY
@@ -65,6 +65,10 @@ module ShellLib
       end
     end
 
+    def absent?
+      !exist?
+    end
+
     def in?(other)
       to_s.start_with?(other.to_s)
     end
@@ -83,6 +87,10 @@ module ShellLib
 
     def lines
       @lines ||= content.split(/\r?\n/)
+    end
+
+    def as_json
+      @json ||= JSON.parse(content, symbolize_names: true)
     end
 
     NIX_STORE_PATH = "/nix/store/".freeze
