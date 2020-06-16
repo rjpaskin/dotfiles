@@ -112,16 +112,6 @@ if brew list | grep --silent "qt@5.5"; then
   brew link --force qt@5.5
 fi
 
-if brew list | grep --silent "heroku"; then
-  for plugin in "heroku-repo" "heroku-accounts"; do
-    if heroku plugins | grep --silent "$plugin"; then
-      heroku plugins:install "$plugin"
-    fi
-  done
-
-  fancy_echo "Setup Heroku with: heroku accounts:add <home|work>, then: heroku accounts:set <home|work>"
-fi
-
 if command -v nodenv > /dev/null; then
   fancy_echo "Configuring Node ..."
 
