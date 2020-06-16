@@ -3,18 +3,28 @@
 plugins:
 
 let
-  addPluginsToPackage = writeText "addPluginsToPackage.js" ''
+  amendPackages = writeText "amendPackages.js" ''
     const fs = require("fs");
     const path = require("path");
 
     const pjson = JSON.parse(fs.readFileSync("./package.json"));
-    const plugins = JSON.parse(process.argv[2]);
+    const { pluginsToAdd, pluginsToRemove, topicsToRemove } = JSON.parse(process.argv[2]);
 
-    plugins.forEach(function({ packageName, version }) {
+    pluginsToAdd.forEach(function({ packageName, version }) {
       pjson.oclif.plugins.push(packageName);
 
       // not needed for plugins to work it seems, but add it anyway
       pjson.dependencies[packageName] = version.toString();
+    });
+
+    pjson.oclif.plugins = pjson.oclif.plugins.filter(name => pluginsToRemove.indexOf(name) === -1)
+
+    pluginsToRemove.forEach(function(packageName) {
+      delete pjson.dependencies[packageName];
+    });
+
+    topicsToRemove.forEach(function(topic) {
+      delete pjson.oclif.topics[topic];
     });
 
     fs.unlinkSync("./package.json"); // remove symlink
@@ -25,7 +35,14 @@ let
     inherit (plugin) packageName version;
   };
 
-  pluginsJSON = builtins.toJSON (map pluginsAttrs plugins);
+  pluginsJSON = builtins.toJSON {
+    pluginsToAdd = (map pluginsAttrs plugins);
+    pluginsToRemove = [
+      "@oclif/plugin-warn-if-update-available"
+      "@oclif/plugin-update"
+    ];
+    topicsToRemove = [ "update" ];
+  };
 
 in buildEnv {
   name = "heroku-with-plugins";
@@ -45,7 +62,7 @@ in buildEnv {
       --set HEROKU_SKIP_ANALYTICS 1
 
     cd $out
-    ${nodejs}/bin/node ${addPluginsToPackage} ${lib.escapeShellArg pluginsJSON}
+    ${nodejs}/bin/node ${amendPackages} ${lib.escapeShellArg pluginsJSON}
   '';
 
   passthru = {

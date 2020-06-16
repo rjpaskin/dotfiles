@@ -1,4 +1,6 @@
 RSpec.describe "Heroku", role: "heroku" do
+  let(:heroku_commands) { run_in_shell!("heroku commands").lines }
+
   describe program("heroku") do
     its(:location) { should eq profile_bin }
     its("--version") { should be_success.and include("heroku") }
@@ -11,8 +13,6 @@ RSpec.describe "Heroku", role: "heroku" do
   describe "plugins" do
     let(:data_dir) { xdg_data_path("heroku") }
     let(:plugins) { %w[heroku-accounts heroku-repo] }
-
-    let(:heroku_commands) { run_in_shell!("heroku commands").lines }
 
     let(:package_json) do
       begin
@@ -49,6 +49,30 @@ RSpec.describe "Heroku", role: "heroku" do
     describe "heroku-repo" do
       it "is installed" do
         expect(heroku_commands).to include("repo:purge_cache", "repo:gc")
+      end
+    end
+  end
+
+  context "disabling updates" do
+    let(:package_directory) { profile_bin("heroku").realpath.dirname.join("..") }
+
+    it "removes `update` command" do
+      aggregate_failures do
+        expect(heroku_commands).not_to include("update")
+        expect(run_in_shell! "heroku").not_to include(/^  update/)
+      end
+    end
+
+    it "removes update plugins from Heroku config" do
+      package_json = package_directory.join("package.json").as_json
+
+      aggregate_failures do
+        expect(package_json[:dependencies]).not_to include(
+          "@oclif/plugin-warn-if-update-available",
+          "@oclif/plugin-update"
+        )
+
+        expect(package_json[:oclif][:topics]).not_to include("update")
       end
     end
   end
