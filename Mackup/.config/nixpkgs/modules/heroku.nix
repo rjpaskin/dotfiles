@@ -8,8 +8,9 @@ let
   plugins = import ../pkgs/heroku-plugins {};
 
 in {
-  options = {
-    roles.heroku = config.lib.roles.mkOptionalRole "Heroku tools";
+  options = with config.lib.roles; {
+    roles.heroku = mkOptionalRole "Heroku tools";
+    roles.parity = mkOptionalRole "Parity";
 
     programs.heroku.plugins = mkOption {
       type = types.listOf types.package;
@@ -20,6 +21,8 @@ in {
   config = mkIf config.roles.heroku {
     home.packages = [
       (pkgs.heroku.withPlugins cfg.plugins)
+
+      (mkIf config.roles.parity pkgs.parity-gem)
     ];
 
     programs.heroku.plugins = with plugins; [
