@@ -17,5 +17,11 @@ in {
   rubocop_0_59 = callPackage ../pkgs/rubocop_0_59 {};
   ultrahook = callPackage ../pkgs/ultrahook.nix {};
 
+  heroku = super.heroku.overrideAttrs(old: {
+    passthru.withPlugins = callPackage ../pkgs/heroku-with-plugins.nix {
+      inherit (super) heroku;
+    };
+  });
+
   vimPlugins = super.vimPlugins // super.callPackage ../pkgs/vim-plugins {};
 }
