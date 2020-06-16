@@ -14,6 +14,7 @@ in {
   git-when-merged = callPackage ../pkgs/git-when-merged.nix {};
   heroku-with-plugins = callPackage ../pkgs/heroku-with-plugins.nix {};
   nix-rebuild = callPackage ../pkgs/nix-rebuild.nix {};
+  parity-gem = callPackage ../pkgs/parity {}; # already a package called "parity"
   rubocop_0_59 = callPackage ../pkgs/rubocop_0_59 {};
   ultrahook = callPackage ../pkgs/ultrahook.nix {};
 
