@@ -1,4 +1,4 @@
-{ writeText, heroku, nodejs, buildEnv, makeWrapper, lib }:
+{ writeText, heroku, nodejs, buildEnv, makeWrapper, lib, stdenv }:
 
 plugins:
 
@@ -44,25 +44,38 @@ let
     topicsToRemove = [ "update" ];
   };
 
-in buildEnv {
-  name = "heroku-with-plugins";
-  paths = [ "${heroku}/share/heroku" ] ++ map (drv: "${drv}/lib") plugins;
-  buildInputs = [ makeWrapper ];
+  combined = buildEnv {
+    name = "heroku-with-plugins-unwrapped-${heroku.version}";
+    paths = [ "${heroku}/share/heroku" ] ++ map (drv: "${drv}/lib") plugins;
+    buildInputs = [ makeWrapper ];
 
-  postBuild = ''
-    rm $out/bin # remove symlink
-    mkdir $out/bin
+    postBuild = ''
+      rm $out/bin # remove symlink
+      mkdir $out/bin
 
-    # Re-wrap bin so that it executes in the 'right' directory
-    # to use our amended package.json
-    cp ${heroku}/share/heroku/bin/run $out/bin/heroku
-    wrapProgram $out/bin/heroku \
+      # Re-wrap bin so that it executes in the 'right' directory
+      # to use our amended package.json
+      cp ${heroku}/share/heroku/bin/run $out/bin/heroku
+      wrapProgram $out/bin/heroku \
       --set HEROKU_DISABLE_AUTOUPDATE 1 \
       --set HEROKU_UPDATE_INSTRUCTIONS "" \
       --set HEROKU_SKIP_ANALYTICS 1
 
-    cd $out
-    ${nodejs}/bin/node ${amendPackages} ${lib.escapeShellArg pluginsJSON}
+      cd $out
+      ${nodejs}/bin/node ${amendPackages} ${lib.escapeShellArg pluginsJSON}
+    '';
+  };
+
+in stdenv.mkDerivation {
+  inherit (heroku) version;
+  pname = "heroku-with-plugins";
+
+  phases = [ "installPhase" ];
+
+  installPhase = ''
+    mkdir -p $out/share
+    ln -s ${combined} $out/share/heroku
+    ln -s ${combined}/bin $out/bin
   '';
 
   passthru = {
