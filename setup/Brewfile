@@ -17,12 +17,6 @@ brew "openssl", pin: true
 #== Compilers ==
 brew "gcc"
 
-#== Heroku ==
-if tag? :heroku
-  brew "heroku/brew/heroku"
-  brew "thoughtbot/formulae/parity" if tag?(:postgres) || tag?(:postgresql)
-end
-
 #== Utilities ==
 cask "betterzip"
 cask my_formula("kdiff3")
