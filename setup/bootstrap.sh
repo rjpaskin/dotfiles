@@ -112,33 +112,6 @@ if brew list | grep --silent "qt@5.5"; then
   brew link --force qt@5.5
 fi
 
-if command -v nodenv > /dev/null; then
-  fancy_echo "Configuring Node ..."
-
-  if ! dir_is_in_path "$HOME/.nodenv/shims"; then
-    # shellcheck disable=SC2016
-    eval "$(nodenv init -)"
-  fi
-
-  if [ -z "$SKIP_INSTALLS" ]; then
-    find_latest_node() {
-      nodenv install --list | grep -vE '(-|nightly|rc)' | tail -1 | sed -e 's/^ *//'
-    }
-
-    node_version="$(find_latest_node)"
-
-    if ! nodenv versions 2> /dev/null | grep -Fq "$node_version"; then
-      NODE_CONFIGURE_OPTS=--with-openssl-dir=/usr/local/opt/openssl \
-        nodenv install --skip-existing "$node_version"
-    fi
-
-    nodenv global "$node_version"
-    nodenv shell "$node_version"
-  else
-    fancy_echo "Skipping installing latest node version"
-  fi
-fi
-
 if ! [ -f "$HOME/.ssh/id_rsa" ]; then
   fancy_echo "Generating a new SSH key ..."
   ssh_password=$(openssl rand -base64 18 | tee "$HOME/Desktop/ssh_key.txt")
