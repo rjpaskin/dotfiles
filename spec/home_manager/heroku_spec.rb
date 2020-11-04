@@ -1,5 +1,7 @@
 RSpec.describe "Heroku", role: "heroku" do
-  let(:heroku_commands) { run_in_shell!("heroku commands").lines }
+  let(:heroku_commands) do
+    run_in_shell!("heroku commands --output=json").as_json.map {|cmd| cmd[:id] }
+  end
 
   describe program("heroku") do
     its(:location) { should eq profile_bin }
