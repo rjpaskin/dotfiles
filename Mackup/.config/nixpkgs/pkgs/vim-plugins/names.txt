@@ -3,7 +3,6 @@ ecomba/vim-ruby-refactoring@main
 Julian/vim-textobj-variable-segment
 Konfekt/vim-alias
 lmeijvogel/vim-yaml-helper
-mxw/vim-jsx
 nelstrom/vim-textobj-rubyblock
 Olical/conjure@v4.8.0
 pbrisbin/vim-mkdir

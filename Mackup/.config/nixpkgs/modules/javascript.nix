@@ -9,7 +9,7 @@ with lib;
     programs.neovim.plugs = with pkgs.vimPlugins; [
       emmet-vim
       vim-javascript
-      vim-jsx
+      vim-jsx-pretty
       vim-prettier
     ];
 

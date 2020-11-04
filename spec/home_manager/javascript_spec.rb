@@ -1,6 +1,6 @@
 RSpec.describe "Javascript", role: "javascript" do
   describe neovim_packages do
-    it { should include("emmet-vim", "vim-javascript", "vim-jsx", "vim-prettier") }
+    it { should include("emmet-vim", "vim-javascript", "vim-jsx-pretty", "vim-prettier") }
   end
 
   describe oh_my_zsh_plugins do

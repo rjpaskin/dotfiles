@@ -65,18 +65,6 @@ let
     meta.homepage = "https://github.com/vim-crystal/vim-crystal/";
   };
 
-  vim-jsx = buildVimPluginFrom2Nix {
-    pname = "vim-jsx";
-    version = "2019-09-29";
-    src = fetchFromGitHub {
-      owner = "mxw";
-      repo = "vim-jsx";
-      rev = "8879e0d9c5ba0e04ecbede1c89f63b7a0efa24af";
-      sha256 = "0czjily7kjw7bwmkxd8lqn5ncrazqjsfhsy3sf2wl9ni0r45cgcd";
-    };
-    meta.homepage = "https://github.com/mxw/vim-jsx/";
-  };
-
   vim-mkdir = buildVimPluginFrom2Nix {
     pname = "vim-mkdir";
     version = "2019-04-29";
