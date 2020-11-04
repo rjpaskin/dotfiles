@@ -1,9 +1,9 @@
 RSpec.describe "Javascript", role: "javascript" do
-  xdescribe program("node") do
+  describe program("node") do
     its(:location) { should eq profile_bin }
   end
 
-  xdescribe program("npm") do
+  describe program("npm") do
     its(:location) { should eq profile_bin }
   end
 
@@ -17,14 +17,5 @@ RSpec.describe "Javascript", role: "javascript" do
 
   describe oh_my_zsh_plugins do
     it { should include("node", "npm", "yarn") }
-  end
-
-  describe xdg_config_path("zsh/.zshrc") do
-    it "loads nodenv" do
-      aggregate_failures do
-        expect(run_in_shell! "type nodenv").to include("is a shell function")
-        expect(run_in_shell "nodenv --version").to be_success
-      end
-    end
   end
 end
