@@ -5,9 +5,11 @@ Konfekt/vim-alias
 lmeijvogel/vim-yaml-helper
 mxw/vim-jsx
 nelstrom/vim-textobj-rubyblock
+Olical/conjure@v4.8.0
 pbrisbin/vim-mkdir
 prettier/vim-prettier
 rorymckinley/vim-rubyhash
 thoughtbot/vim-rspec
 tpope/vim-bundler
 tpope/vim-rails
+vim-crystal/vim-crystal

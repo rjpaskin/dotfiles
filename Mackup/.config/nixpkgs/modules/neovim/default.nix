@@ -101,7 +101,6 @@ in {
 
         deoplete-nvim
         ale
-        vim-nix
 
         # UI
         vim-one # colour scheme
@@ -112,6 +111,12 @@ in {
         neomru-vim
         nerdtree
         vim-nerdtree-tabs
+
+        # Languages - move to modules?
+        conjure
+        swift-vim
+        vim-crystal
+        vim-nix
       ];
     };
 

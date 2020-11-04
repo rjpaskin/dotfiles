@@ -4,6 +4,18 @@
 let
   packages = ( self:
 {
+  conjure = buildVimPluginFrom2Nix {
+    pname = "conjure";
+    version = "2020-11-01";
+    src = fetchFromGitHub {
+      owner = "Olical";
+      repo = "conjure";
+      rev = "a4c31e1c0136e943fa7dd48ecc11849158d3554e";
+      sha256 = "0xvz1s3lx75k9fgn319b0q6d8vj7cpw6mj2xkh73qmaqvvx3bni1";
+    };
+    meta.homepage = "https://github.com/Olical/conjure/";
+  };
+
   splitjoin-vim = buildVimPluginFrom2Nix {
     pname = "splitjoin-vim";
     version = "2020-10-25";
@@ -39,6 +51,18 @@ let
       sha256 = "1vwvm708cdrrlyc1ys2i9qj2mv2mrcp183jgpn1bq0nnpz2w09w1";
     };
     meta.homepage = "https://github.com/tpope/vim-bundler/";
+  };
+
+  vim-crystal = buildVimPluginFrom2Nix {
+    pname = "vim-crystal";
+    version = "2020-10-12";
+    src = fetchFromGitHub {
+      owner = "vim-crystal";
+      repo = "vim-crystal";
+      rev = "bc4f115de69fdeb4419e2cbef1981f0b39c6d972";
+      sha256 = "17qr5rbchpgh75g14i5m899zp56c4zkj0yaj0h0p4x184xkjrxl3";
+    };
+    meta.homepage = "https://github.com/vim-crystal/vim-crystal/";
   };
 
   vim-jsx = buildVimPluginFrom2Nix {
