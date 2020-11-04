@@ -2,7 +2,7 @@
 "  Leader and shortcuts
 " -------------------------------------------------
 let g:mapleader = "\<space>"
-let g:maplocalleader = "\<NUL>" " Ctrl+Space
+let g:maplocalleader = ","
 
 nnoremap <silent><leader>q :quit<cr>
 nnoremap <silent><leader>w :write<cr>
