@@ -2,6 +2,7 @@ require "rspec/its"
 
 $LOAD_PATH << File.expand_path("./support", __dir__)
 require "shell_lib"
+require "spec_helpers"
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
@@ -31,6 +32,8 @@ RSpec.configure do |config|
   config.order = :random
 
   Kernel.srand config.seed
+
+  config.include SpecHelpers
 
   config.extend ShellLib::ResourceHelpers
   config.include ShellLib::ResourceHelpers

@@ -116,7 +116,9 @@ in {
     };
 
     xdg.configFile = {
-      "nvim/reference.vim".source = pkgs.vimUtils.vimrcFile cfg.configure;
+      "nvim/reference.vim".source = pkgs.writeText "init.vim" (
+        pkgs.neovimUtils.makeNeovimConfig { inherit (cfg) configure; }
+      ).neovimRcContent;
       "nvim/after/plugin/alias.vim".text = ''
         :Alias ag grep
       '';
