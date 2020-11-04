@@ -11,11 +11,6 @@ let
   };
 
 in {
-  options.roles = {
-    description = "Top-level roles config";
-    type = attrsOf bool;
-  };
-
   config.lib.roles = {
     mkOptionalRole = mkRole false;
     mkDefaultRole = mkRole true;
