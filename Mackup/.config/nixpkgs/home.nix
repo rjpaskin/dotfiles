@@ -37,6 +37,7 @@ with lib;
     ./modules/go.nix
     ./modules/heroku.nix
     ./modules/javascript.nix
+    ./modules/misc.nix
     ./modules/neovim
     ./modules/pkgs.nix
     ./modules/react-native.nix

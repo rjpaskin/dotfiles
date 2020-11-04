@@ -34,6 +34,7 @@ RSpec.configure do |config|
   Kernel.srand config.seed
 
   config.include SpecHelpers
+  config.extend SpecHelpers::DescribeHelpers
 
   config.extend ShellLib::ResourceHelpers
   config.include ShellLib::ResourceHelpers

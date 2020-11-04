@@ -25,7 +25,7 @@ module ShellLib
         "-s", # read from stdin
         unsetenv_others: true,
         # prepend command with spaces to avoid committing to history
-        stdin_data: " #{command.join " "}"
+        stdin_data: command.join(" ").gsub(/^/, " ")
       ]
     end
 

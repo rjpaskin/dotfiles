@@ -44,6 +44,11 @@ module ShellLib
       eval_neovim("json_encode(#{name})").as_json
     end
 
+    define_cached_method :shell_functions, key_optional: true do |type|
+      name = [*type, "functions"].join("_")
+      run_in_shell!("print -l ${(ko)#{name}}").lines
+    end
+
     def self.current
       Thread.current[:Runner] ||= new
     end
@@ -70,10 +75,6 @@ module ShellLib
 
     def login_env
       @login_env ||= run_in_shell!("env").as_vars
-    end
-
-    def shell_functions
-      @shell_functions ||= run_in_shell!("print -l ${(ko)functions}").lines
     end
 
     def shell_aliases

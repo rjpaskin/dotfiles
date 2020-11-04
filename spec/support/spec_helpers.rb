@@ -1,4 +1,20 @@
+require "tmpdir"
+
 module SpecHelpers
+  module DescribeHelpers
+    def using_tmpdir
+      attr_accessor :tmpdir
+
+      around do |example|
+        Dir.mktmpdir do |tmp|
+          self.tmpdir = Pathname(tmp)
+          yield tmpdir, example
+          example.run
+        end
+      end
+    end
+  end
+
   def custom_inspect(object, text: nil)
     object.tap do
       object.singleton_class.define_method(:inspect) do

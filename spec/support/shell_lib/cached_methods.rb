@@ -10,7 +10,7 @@ module ShellLib
       end
     end
 
-    def define_cached_method(name, &block)
+    def define_cached_method(name, key_optional: false, &block)
       @cache_blocks[name.to_sym] = block
       escaped_name = name.to_s.sub(/[!?]$/, "")
 
@@ -27,7 +27,7 @@ module ShellLib
 
         private :#{escaped_name}_cache
 
-        def #{name}(value)
+        def #{name}(value#{" = nil" if key_optional})
           #{escaped_name}_cache[value]
         end
       RUBY
