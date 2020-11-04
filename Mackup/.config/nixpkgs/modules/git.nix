@@ -24,7 +24,7 @@ with lib;
 
       programs.zsh.oh-my-zsh.plugins = ["git"];
 
-      home.symlinks = config.lib.mackup.mackupFiles [
+      home.file = config.lib.mackup.mackupFiles [
         ".config/git/attributes"
         ".config/git/ignore"
         ".config/git/config"

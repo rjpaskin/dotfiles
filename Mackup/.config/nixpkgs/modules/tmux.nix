@@ -11,7 +11,7 @@ with lib;
   config = mkMerge [
     {
       # This is used by autoterm so always needs be present
-      home.symlinks = config.lib.mackup.mackupFiles [ ".tmuxinator" ];
+      home.file = config.lib.mackup.mackupFiles [ ".tmuxinator" ];
     }
 
     (mkIf config.roles.tmux {
@@ -21,7 +21,7 @@ with lib;
         tmuxinator
       ];
 
-      home.symlinks = config.lib.mackup.mackupFiles [ ".tmux.conf" ];
+      home.file = config.lib.mackup.mackupFiles [ ".tmux.conf" ];
 
       programs.zsh.initExtra = ''
         maybe_source "/usr/local/share/zsh/site-functions/tmuxinator.zsh"
