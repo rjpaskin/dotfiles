@@ -1,4 +1,8 @@
 RSpec.describe "Javascript", role: "javascript" do
+  describe program("yarn") do
+    its(:location) { should eq profile_bin }
+  end
+
   describe neovim_packages do
     it { should include("emmet-vim", "vim-javascript", "vim-jsx-pretty", "vim-prettier") }
   end

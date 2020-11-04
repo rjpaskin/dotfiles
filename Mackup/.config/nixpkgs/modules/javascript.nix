@@ -6,6 +6,10 @@ with lib;
   options.roles.javascript = config.lib.roles.mkOptionalRole "Javascript dev";
 
   config = mkIf config.roles.javascript {
+    home.packages = with pkgs; [
+      yarn
+    ];
+
     programs.neovim.plugs = with pkgs.vimPlugins; [
       emmet-vim
       vim-javascript
