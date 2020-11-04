@@ -12,7 +12,7 @@ in {
     enableCompletion = true;
 
     history = {
-      path = ".local/share/zsh/history";
+      path = "${config.xdg.dataHome}/zsh/history";
       # Match oh-my-zsh settings
       extended = true;
       expireDuplicatesFirst = true;

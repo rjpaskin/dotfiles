@@ -15,7 +15,7 @@ with lib;
     # You can update Home Manager without changing this value. See
     # the Home Manager release notes for a list of state version
     # changes in each release.
-    home.stateVersion = "19.09";
+    home.stateVersion = "20.03";
 
     news.display = "silent";
 
