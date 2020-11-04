@@ -15,7 +15,7 @@ with lib;
     # You can update Home Manager without changing this value. See
     # the Home Manager release notes for a list of state version
     # changes in each release.
-    home.stateVersion = "20.03";
+    home.stateVersion = "20.09";
 
     news.display = "silent";
 
@@ -23,6 +23,9 @@ with lib;
     # but still add `man` to `extraOutputsToInstall` as the `man` module does
     programs.man.enable = false;
     home.extraOutputsToInstall = [ "man" ];
+
+    home.username = builtins.getEnv("USER");
+    home.homeDirectory = builtins.getEnv("HOME");
   };
 
   imports = [
