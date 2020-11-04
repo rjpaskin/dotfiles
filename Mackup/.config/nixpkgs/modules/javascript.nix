@@ -8,6 +8,7 @@ with lib;
   config = mkIf config.roles.javascript {
     home.packages = with pkgs; [
       yarn
+      nodejs
     ];
 
     programs.neovim.plugs = with pkgs.vimPlugins; [

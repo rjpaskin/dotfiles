@@ -1,4 +1,12 @@
 RSpec.describe "Javascript", role: "javascript" do
+  xdescribe program("node") do
+    its(:location) { should eq profile_bin }
+  end
+
+  xdescribe program("npm") do
+    its(:location) { should eq profile_bin }
+  end
+
   describe program("yarn") do
     its(:location) { should eq profile_bin }
   end
