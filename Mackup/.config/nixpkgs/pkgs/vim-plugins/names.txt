@@ -1,7 +1,7 @@
 AndrewRadev/splitjoin.vim
+ecomba/vim-ruby-refactoring@main
 Julian/vim-textobj-variable-segment
 Konfekt/vim-alias
-ecomba/vim-ruby-refactoring
 lmeijvogel/vim-yaml-helper
 mxw/vim-jsx
 nelstrom/vim-textobj-rubyblock
