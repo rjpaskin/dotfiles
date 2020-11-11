@@ -54,6 +54,7 @@ let
     mkdir -p $out/bin
 
     makeWrapper ${git}/bin/git $out/bin/git-wrapped \
+      --set GIT_SSH /usr/bin/ssh \
       --prefix PATH : ${helpersPath}
   '';
 
