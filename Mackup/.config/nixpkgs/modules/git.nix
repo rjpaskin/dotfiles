@@ -44,35 +44,16 @@ let
   ];
 
   aliases = let
-    gitGrep = flags: ''
-      !f() { git branch -l${flags} --format="%(refname:short)" | xargs git grep "$@"; }; f "$@"
-    '';
     tab = "%09";
   in {
-    branches = ''
-      for-each-ref \
-        --sort=-committerdate \
-        --format="%(color:yellow)%(authordate:relative)${tab}%(color:blue)%(authorname)${tab}%(color:red)%(color:bold)%(refname:short)" \
+    branches = builtins.replaceStrings [ "\n" ] [ "" ] ''
+      for-each-ref
+        --sort=-committerdate
+        --format="%(color:yellow)%(authordate:relative)${tab}%(color:blue)%(authorname)${tab}%(color:red)%(color:bold)%(refname:short)"
         refs/remotes
     '';
-    local-branches = "!git branch -vv | cut -c 3- | awk '$3 !~/\\[/ { print $1 }'";
-    oldest-ancestor = ''
-      !zsh -c 'diff --old-line-format="" --new-line-format="" \
-        <(git rev-list --first-parent "''${1:-master}") \
-        <(git rev-list --first-parent "''${2:-HEAD}") | head -1' -"
-    '';
-    grep-branch = gitGrep("a");
-    grep-branch-remote = gitGrep("r");
-    grep-branch-locale = gitGrep("");
-    checkout-at = ''
-      !f() { rev=$(git rev-list -1 --before="$1" ''${2:-master}) && git checkout "$rev"; }; f
-    '';
-    rename-branch = ''
-      !f() { git branch -m $1 $2; git push origin :$1; git push --set-upstream origin $2; }; f
-    '';
-    up = ''
-      !echo 'Fetching from remotes...' && git fetch --all --quiet && git ffwd
-    '';
+    local-branches = "branch -l --format=\"%(refname:short)\"";
+    up = "!echo 'Fetching from remotes...' && git fetch --all --quiet && git ffwd";
   };
 
 in {
