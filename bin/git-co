@@ -1,11 +1,11 @@
 #!/usr/bin/env sh
-f() {
-  git show-ref |
-    sed "s/.* refs\///" |
-    sed "s/heads\///" |
-    fzf-tmux |
-    sed "s/remotes\/origin\///" |
-    sed "s/tags\///"
-}
+if [ "$#" -gt 0 ]; then exec git checkout "$@"; fi
 
-git checkout $(f)
+branch="$(
+  git show-ref |
+    sed -e "s|.* refs/||" -e "s|heads/||" |
+    fzf-tmux |
+    sed -e "s|remotes/origin/||" -e "s|tags/||"
+)"
+
+[ -n "$branch" ] && git checkout "$branch"
