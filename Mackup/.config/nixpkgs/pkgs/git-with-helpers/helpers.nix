@@ -76,6 +76,28 @@ in {
       <(git rev-list --first-parent "''${2:-HEAD}") | head -1
   '';
 
+  recreate-branch = writeShellScriptBin "git-recreate-branch" ''
+    set -euo pipefail
+
+    base_branch="''${1:-master}"
+    branch_to_move="''${2:-$(git symbolic-ref --short HEAD)}"
+
+    echo "Moving $branch_to_move onto $base_branch"
+
+    new_commits_count=$(git rev-list --count "$branch_to_move".."$base_branch")
+
+    if [ "$new_commits_count" -eq 0 ]; then
+      # move branch
+      git checkout "$branch_to_move"
+      git checkout "$base_branch"
+      git pull
+      git branch -D "$branch_to_move"
+      git checkout -b "$branch_to_move"
+    else
+      git rebase --onto "$base_branch" "$base_branch" "$branch_to_move"
+    fi
+  '';
+
   rename-branch = writeShellScriptBin "git-rename-branch" ''
     set -euo pipefail
 
