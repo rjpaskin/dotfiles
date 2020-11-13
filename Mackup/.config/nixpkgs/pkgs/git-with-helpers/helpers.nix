@@ -1,6 +1,6 @@
 {
   stdenv, lib,
-  writeShellScriptBin
+  fetchFromGitHub, writeShellScriptBin
 }:
 
 let
@@ -11,6 +11,15 @@ let
       | xargs git grep "$@"
   '';
 
+  mkBinPackage = { name, src, path ? name, ... }@args: stdenv.mkDerivation ({
+    phases = [ "unpackPhase" "buildPhase" "fixupPhase" ];
+    dontStrip = true;
+    buildPhase = ''
+      mkdir -p $out/bin
+      cp $src/${path} $out/bin
+    '';
+  } // removeAttrs args [ "path" ]);
+
 in {
   checkout-at = writeShellScriptBin "git-checkout-at" ''
     set -euo pipefail
@@ -18,6 +27,21 @@ in {
     rev="$(git rev-list -1 --before="$1" ''${2:-master})"
     git checkout "$rev"
   '';
+
+  ffwd = mkBinPackage rec {
+    name = "git-ffwd";
+    path = "bin/${name}";
+    src = fetchFromGitHub {
+      owner = "muhqu";
+      repo = "dotfiles";
+      rev = "97f20c81860bc84de412dbdf9b3d8b37b89bc770";
+      sha256 = "1hr0p66bz4wmsv7qsrqwx85rs00wqzbxc8n2bd7h2wxylwhrn7p0";
+    };
+    postFixup = ''
+      # Fix deprecated flag
+      sed -e "s|git branch -l|git branch --create-reflog|" -i $out/${path}
+    '';
+  };
 
   grep-branch = gitGrep { flags = "a"; };
   grep-branch-local = gitGrep { suffix = "local"; };
