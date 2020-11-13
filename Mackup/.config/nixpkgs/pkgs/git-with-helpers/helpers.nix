@@ -1,7 +1,7 @@
 {
   stdenv, lib,
   fetchFromGitHub, writeShellScriptBin,
-  ruby
+  fzf, ruby
 }:
 
 let
@@ -27,6 +27,19 @@ in {
 
     rev="$(git rev-list -1 --before="$1" ''${2:-master})"
     git checkout "$rev"
+  '';
+
+  co = writeShellScriptBin "git-co" ''
+    if [ "$#" -gt 0 ]; then exec git checkout "$@"; fi
+
+    ref="$(
+      git show-ref |
+      sed -e "s|.* refs/||" -e "s|heads/||" |
+      ${fzf}/bin/fzf-tmux |
+      sed -e "s|remotes/origin/||" -e "s|tags/||"
+    )"
+
+    [ -n "$ref" ] && git checkout "$ref"
   '';
 
   ffwd = mkBinPackage rec {
