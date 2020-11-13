@@ -1,48 +1,16 @@
-{ 
-  lib,
+{
+  stdenv, lib,
   buildEnv, makeWrapper, runCommandLocal,
-  writeScriptBin, writeShellScriptBin,
-  git
+  git,
+  fetchFromGitHub, fzf, ruby, writeShellScriptBin
 }:
 
 let
-  gitGrep = flags: ''
-    git branch -l${flags} --format="%(refname:short)" \
-      | xargs git grep "$@"
-  '';
-
-  rename-branch = writeShellScriptBin "git-rename-branch" ''
-    set -euo pipefail
-
-    git branch -m "$1" "$2"
-    git push origin ":$1"
-    git push --set-upstream origin "$2"
-  '';
-
-  checkout-at = writeShellScriptBin "git-checkout-at" ''
-    set -euo pipefail
-
-    rev="$(git rev-list -1 --before="$1" ''${2:-master})"
-    git checkout "$rev"
-  '';
-
-  oldest-ancestor = writeScriptBin "git-oldest-ancestor" ''
-    #!/usr/bin/env zsh
-    set -euo pipefail
-
-    diff --old-line-format="" --new-line-format="" \
-      <(git rev-list --first-parent "''${1:-master}") \
-      <(git rev-list --first-parent "''${2:-HEAD}") | head -1' -"
-  '';
-
-  helpersPath = lib.makeBinPath [
-    (writeShellScriptBin "git-grep-branch" (gitGrep "a"))
-    (writeShellScriptBin "git-grep-branch-remote" (gitGrep "r"))
-    (writeShellScriptBin "git-grep-branch-local" (gitGrep ""))
-    rename-branch
-    checkout-at
-    oldest-ancestor
-  ];
+  helpersPath = lib.makeBinPath (
+    builtins.attrValues (import ./helpers.nix {
+      inherit stdenv lib fetchFromGitHub fzf ruby writeShellScriptBin;
+    })
+  );
 
   # We don't output a `git` file to avoid collisions with
   # the main `git` package - we could use `ignoreCollisions`
