@@ -105,4 +105,14 @@ in {
     git push origin ":$1"
     git push --set-upstream origin "$2"
   '';
+
+  stash-rename = writeShellScriptBin "git-stash-rename" ''
+    rev="$(git rev-parse "$1")" && git stash drop "$1" || exit 1
+
+    git diff-index --quiet HEAD; s="$?"
+    [ "$s" != 0 ] && git stash save "tmp stash from stash-rename"
+
+    git stash apply "$rev" && shift && git stash save "$@" \
+      && [ "$s" != 0 ] && git stash pop "stash@{1}"
+  '';
 }
