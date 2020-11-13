@@ -1,6 +1,7 @@
 {
   stdenv, lib,
-  fetchFromGitHub, writeShellScriptBin
+  fetchFromGitHub, writeShellScriptBin,
+  ruby
 }:
 
 let
@@ -46,6 +47,13 @@ in {
   grep-branch = gitGrep { flags = "a"; };
   grep-branch-local = gitGrep { suffix = "local"; };
   grep-branch-remote = gitGrep { suffix = "remote"; flags = "a"; };
+
+  merge-rails-schema = mkBinPackage {
+    name = "merge-rails-schema";
+    buildInputs = [ ruby ];
+    dontUnpack = true;
+    src = toString ./.;
+  };
 
   oldest-ancestor = writeShellScriptBin "git-oldest-ancestor" ''
     set -euo pipefail

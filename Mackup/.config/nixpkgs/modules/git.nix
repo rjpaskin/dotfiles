@@ -94,7 +94,6 @@ in {
       in {
         extraConfig.merge.${id} = {
           name = "newer Rails schema version";
-          # TODO: interpolate path to `merge-rails-schema`
           driver = "merge-rails-schema %O %A %B %L";
         };
         attributes = [ "db/schema.rb merge=${id}" ];
