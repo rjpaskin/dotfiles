@@ -61,4 +61,9 @@ RSpec.describe "Misc" do
     it { should be_a_file.and be_readable }
     it { should_not be_empty }
   end
+
+  describe home_path(".editorconfig") do
+    it { should be_a_file.and be_readable }
+    it { should include("trim_trailing_whitespace") }
+  end
 end

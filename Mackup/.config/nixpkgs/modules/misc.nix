@@ -1,6 +1,16 @@
-{ ... }:
+{ lib, ... }:
 
-{
+let
+  editorConfigINI = attrs: with lib; let
+    mkKeyValue = generators.mkKeyValueDefault {} " = ";
+    attrsOfAttrs = attrsets.filterAttrs (_: v: isAttrs v) attrs;
+    topLevel = attrsets.filterAttrs (_: v: !(isAttrs v)) attrs;
+  in ''
+    ${generators.toKeyValue { inherit mkKeyValue; } topLevel}
+    ${generators.toINI { inherit mkKeyValue; } attrsOfAttrs}
+  '';
+
+in {
   programs.direnv = {
     enable = true;
     enableZshIntegration = true;
@@ -27,5 +37,18 @@
       show-all-if-ambiguous = true;  # avoid double-tabbing when > 1 match
       completion-ignore-case = true; # case-insensitive tab completion
     };
+  };
+
+  home.file.".editorconfig".text = editorConfigINI {
+    root = true;
+    "*" = {
+      indent_type = "space";
+      indent_size = 2;
+      end_of_line = "lf"; # Unix-style newlines
+      charset = "utf-8";
+      trim_trailing_whitespace = true;
+      insert_final_newline = true;
+    };
+    "Makefile" = { indent_style = "tab"; };
   };
 }

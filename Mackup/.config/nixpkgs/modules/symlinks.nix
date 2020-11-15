@@ -44,7 +44,6 @@ in {
 
     # Bash and other tools
     ".bash_profile"
-    ".editorconfig"
     ".ssh/config"
 
     # Emacs
