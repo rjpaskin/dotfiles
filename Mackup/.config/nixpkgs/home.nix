@@ -32,6 +32,7 @@ with lib;
     ./modules/roles.nix
     ./modules/host
 
+    ./modules/clojure
     ./modules/docker
     ./modules/git.nix
     ./modules/go.nix

@@ -17,16 +17,10 @@ cask "kdiff3"
 cask_if_tagged my_formula("cypress")
 
 #== Programming languages and package managers ==
-cask "java"
 brew "python"
 
 brew_if_tagged "elixir"
 brew_if_tagged "go"
-
-if tag? :clojure
-  brew "leiningen"
-  brew "rlwrap"
-end
 
 if tag? :react_native
   cask "android-studio"

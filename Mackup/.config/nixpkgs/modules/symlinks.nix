@@ -44,8 +44,5 @@ in {
 
     # Emacs
     ".emacs.d"
-
-    # Clojure
-    ".lein"
   ];
 }

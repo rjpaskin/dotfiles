@@ -113,7 +113,6 @@ in {
         vim-nerdtree-tabs
 
         # Languages - move to modules?
-        conjure
         swift-vim
         vim-crystal
         vim-nix
