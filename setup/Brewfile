@@ -7,26 +7,16 @@ load File.join(
 tap "beeftornado/rmtree" # remove formula and all its (orphaned) dependencies
 
 #== Basics ==
-brew "git"
-
 cask "emacs"
-
-#== Unix ==
-brew "openssl", pin: true
-
-#== Compilers ==
-brew "gcc"
 
 #== Utilities ==
 cask "betterzip"
-cask my_formula("kdiff3")
+cask "kdiff3"
 
 #== Testing ==
 cask_if_tagged my_formula("cypress")
 
 #== Programming languages and package managers ==
-brew "libyaml", pin: true # should come after openssl
-
 cask "java"
 brew "python"
 
@@ -43,7 +33,6 @@ if tag? :react_native
 end
 
 #== Databases ==
-brew_if_tagged "sqlite", pin: true
 cask_if_tagged "sequel-pro"
 
 if tag?(:postgres) || tag?(:postgresql)
