@@ -42,8 +42,7 @@ in {
     ".atom/styles.less"
     "Library/Preferences/com.github.atom.plist"
 
-    # Bash and other tools
-    ".bash_profile"
+    # Other tools
     ".ssh/config"
 
     # Emacs

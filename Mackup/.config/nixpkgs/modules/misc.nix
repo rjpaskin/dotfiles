@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ config, lib, ... }:
 
 let
   editorConfigINI = attrs: with lib; let
@@ -11,6 +11,38 @@ let
   '';
 
 in {
+  programs.bash = {
+    enable = true;
+    historyFile = "${config.xdg.dataHome}/bash/history";
+    # don't put duplicates lines or empty spaces in history
+    historyControl = [ "ignorespace" "ignoredups" ];
+    shellOptions = [
+      "cdspell"      # correct typos in `cd`
+      "checkwinsize" # resize out to fit window
+      "cmdhist"      # combine multiline commands in history
+      "histappend"   # merge session histories
+    ];
+    sessionVariables = {
+      CLICOLOR = "1";
+      LSCOLORS = "Gxfxcxdxbxegedabagacad";
+      GREP_OPTIONS = "--color=auto";
+      IGNOREEOF = "1"; # Ctrl+D must be pressed twice to exit shell
+    };
+    shellAliases = {
+      ".." = "cd ..";
+
+      # list files...
+      "la"  = "ls -alh";  # list all files, incl. hidden
+      "ld"  = "ls -d */"; # list directories within current directory
+      "ll"  = "ls -lh";   # ...in long format w/ human-readable filesizes
+      "lt"  = "ls -lht";  # ...sorted by time modified
+      "lfs" = "ls -lhS";  # ...sorted by size
+      "lr"  = "ls -lhR";  # ...recursively
+      "l1"  = "ls -1";    # ...forcing 1 entry per line
+    };
+  };
+  xdg.dataFile."bash/.keep".text = ""; # ensure Bash has directory to write to
+
   programs.direnv = {
     enable = true;
     enableZshIntegration = true;

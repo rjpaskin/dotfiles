@@ -57,13 +57,27 @@ RSpec.describe "Misc" do
     end
   end
 
-  describe home_path(".inputrc") do
+  describe home_path(".bash_profile") do
     it { should be_a_file.and be_readable }
     it { should_not be_empty }
+  end
+
+  describe home_path(".bashrc") do
+    it { should be_a_file.and be_readable }
+    it { should_not be_empty }
+  end
+
+  describe xdg_data_path("bash/.keep") do
+    it { should be_a_file }
   end
 
   describe home_path(".editorconfig") do
     it { should be_a_file.and be_readable }
     it { should include("trim_trailing_whitespace") }
+  end
+
+  describe home_path(".inputrc") do
+    it { should be_a_file.and be_readable }
+    it { should_not be_empty }
   end
 end
