@@ -7,8 +7,9 @@
 /Mackup/.emacs.d/quelpa/
 /Mackup/.emacs.d/smex-items
 
-/Mackup/.tmuxinator/*.yml
-!/Mackup/.tmuxinator/default.yml
+/**/tmuxinator/*.yml
+!/**/tmuxinator/default.yml
+!/**/tmuxinator/default_helper.rb
 
 /Mackup/.*.old
 /Mackup/.*.local

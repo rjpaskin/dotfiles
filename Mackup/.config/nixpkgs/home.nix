@@ -43,7 +43,7 @@ with lib;
     ./modules/react-native.nix
     ./modules/ruby.nix
     ./modules/symlinks.nix
-    ./modules/tmux.nix
+    ./modules/tmux
     ./modules/zsh.nix
   ] ++ optional (builtins.getEnv("NO_HM_HOME_LINKS") != "") ./modules/preserve_home.nix;
 }

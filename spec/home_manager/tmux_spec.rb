@@ -5,6 +5,10 @@ RSpec.describe "Tmux" do
     it "contains YAML config files" do
       expect(subject.glob "*.yml").to_not be_empty
     end
+
+    describe home_path(".tmuxinator/default_helper.rb") do
+      it { should be_a_file.and be_readable }
+    end
   end
 
   context "when enabled", role: "tmux" do
@@ -49,10 +53,6 @@ RSpec.describe "Tmux" do
           expect(result.stderr).to be_empty
         end
       end
-    end
-
-    describe xdg_config_path("zsh/.zshrc") do
-      it { should include(%r{maybe_source .+/tmuxinator.zsh}) }
     end
 
     describe home_path(".tmux.conf") do
