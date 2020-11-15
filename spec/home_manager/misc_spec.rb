@@ -80,4 +80,9 @@ RSpec.describe "Misc" do
     it { should be_a_file.and be_readable }
     it { should_not be_empty }
   end
+
+  describe home_path(".ssh/config") do
+    it { should be_a_file.and be_readable }
+    it { should include(/^\s+UseKeychain\s+yes/) }
+  end
 end

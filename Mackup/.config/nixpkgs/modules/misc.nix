@@ -83,4 +83,13 @@ in {
     };
     "Makefile" = { indent_style = "tab"; };
   };
+
+  home.file.".ssh/config".text = ''
+    # Required for macOS Sierra 10.12.2 or later
+    # See https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/
+    Host *
+     AddKeysToAgent yes
+     UseKeychain yes
+     IdentityFile ~/.ssh/id_rsa
+  '';
 }
