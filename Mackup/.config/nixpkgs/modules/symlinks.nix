@@ -44,7 +44,6 @@ in {
 
     # Bash and other tools
     ".bash_profile"
-    ".config/silver_searcher/ignore"
     ".inputrc"
     ".editorconfig"
     ".ssh/config"

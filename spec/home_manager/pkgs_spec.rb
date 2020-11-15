@@ -12,6 +12,15 @@ RSpec.describe "Packages" do
 
       expect(result).to include(__FILE__, needle)
     end
+
+    describe xdg_config_path("silver_searcher/ignore") do
+      it { should be_a_file.and be_readable }
+      it { should include(".git") }
+    end
+
+    describe shell_alias("ag") do
+      it { should eq("ag --hidden --path-to-ignore ~/.config/silver_searcher/ignore") }
+    end
   end
 
   describe program("ctags") do

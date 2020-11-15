@@ -16,10 +16,23 @@ with lib;
         jq
         ncdu
         shellcheck
-        silver-searcher
         universal-ctags
       ];
     }
+
+    (let
+      config = "silver_searcher/ignore";
+    in {
+      home.packages = [ pkgs.silver-searcher ];
+      xdg.configFile.${config}.text = ''
+        .git/
+        vendor/assets/
+        public/
+      '';
+      programs.zsh.shellAliases = {
+        ag = "ag --hidden --path-to-ignore ~/.config/${config}";
+      };
+    })
 
     # My packages
     { home.packages = [ pkgs.autoterm ]; }

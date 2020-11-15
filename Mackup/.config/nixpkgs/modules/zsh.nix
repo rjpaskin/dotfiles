@@ -26,10 +26,6 @@ in {
     localVariables = {
       DISABLE_AUTO_TITLE = "true";
     };
-
-    shellAliases = {
-      ag = "ag --hidden --path-to-ignore ~/.config/silver_searcher/ignore";
-    };
   };
 
   #### .zshrc
