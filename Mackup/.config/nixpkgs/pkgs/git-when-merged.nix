@@ -15,7 +15,6 @@ stdenv.mkDerivation rec {
 
   phases = [ "unpackPhase" "installPhase" ];
 
-  # TODO: patch path to Git?
   installPhase = ''
     mkdir -p $out/bin
     cp ${src}/bin/${name} $out/bin/${name}
