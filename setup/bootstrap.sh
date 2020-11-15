@@ -134,7 +134,4 @@ if [ -f "$atom_packages" ]; then
   apm install --packages-file "$atom_packages"
 fi
 
-fancy_echo "Symlinking \`bin\` directory to \$HOME ..."
-ensure_symlink "$dotfiles_dir/bin" "$HOME/.bin"
-
 fancy_echo "All done!"

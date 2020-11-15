@@ -46,8 +46,6 @@ in {
       hash -d iCloud="$HOME/Library/Mobile Documents/com~apple~CloudDocs"
       hash -d dotfiles=~iCloud/dotfiles
 
-      path=("$HOME/.bin" $path)
-
       maybe_source() {
         [ -f "$1" ] && source "$1"
       }
