@@ -32,7 +32,7 @@ with lib;
     ./modules/roles.nix
     ./modules/host
 
-    ./modules/docker.nix
+    ./modules/docker
     ./modules/git.nix
     ./modules/go.nix
     ./modules/heroku.nix
