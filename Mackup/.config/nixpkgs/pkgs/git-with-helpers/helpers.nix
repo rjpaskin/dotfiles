@@ -61,6 +61,17 @@ in {
   grep-branch-local = gitGrep { suffix = "local"; };
   grep-branch-remote = gitGrep { suffix = "remote"; flags = "a"; };
 
+  mv-with-history = mkBinPackage {
+    name = "git-mv-with-history";
+    src = fetchFromGitHub {
+      githubBase = "gist.github.com";
+      owner = "ilanKeshet";
+      repo = "bf4251b21919d341cf4431f89e77a8a5";
+      rev = "d90bf2bcb75fe6c521105545b95234471f7f9e8d";
+      sha256 = "07mxi2fdix5qp4884fzc607998v2lnc8i0czcm1zxcjgix93ldm6";
+    };
+  };
+
   merge-rails-schema = mkBinPackage {
     name = "merge-rails-schema";
     buildInputs = [ ruby ];
