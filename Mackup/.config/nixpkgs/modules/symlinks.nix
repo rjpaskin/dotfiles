@@ -44,7 +44,6 @@ in {
 
     # Bash and other tools
     ".bash_profile"
-    ".inputrc"
     ".editorconfig"
     ".ssh/config"
 

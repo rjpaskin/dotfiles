@@ -19,4 +19,13 @@
       }
     '';
   };
+
+  programs.readline = {
+    enable = true;
+    includeSystemConfig = false; # doesn't exist on macOS
+    variables = {
+      show-all-if-ambiguous = true;  # avoid double-tabbing when > 1 match
+      completion-ignore-case = true; # case-insensitive tab completion
+    };
+  };
 }

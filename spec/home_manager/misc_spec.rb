@@ -56,4 +56,9 @@ RSpec.describe "Misc" do
       end
     end
   end
+
+  describe home_path(".inputrc") do
+    it { should be_a_file.and be_readable }
+    it { should_not be_empty }
+  end
 end
