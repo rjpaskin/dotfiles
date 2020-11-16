@@ -127,11 +127,17 @@ if ! [ -f "$HOME/.ssh/id_rsa" ]; then
   fancy_echo 'Add your key to GitHub: pbcopy < ~/.ssh/id_rsa.pub'
 fi
 
-atom_packages="$dotfiles_dir/Mackup/.atom/packages-list.txt"
+atom_packages="$dotfiles_dir/atom/packages-list.txt"
 
 if [ -f "$atom_packages" ]; then
   fancy_echo "Installing Atom packages ..."
   apm install --packages-file "$atom_packages"
 fi
+
+fancy_echo "Bootstrapping Nix config ..."
+mkdir -p "$HOME/.config/nix" "$HOME/.config/nixpkgs"
+ensure_symlink "$dotfiles_dir/nix.conf" "$HOME/.config/nix/nix.conf"
+ensure_symlink "$dotfiles_dir/home.nix" "$HOME/.config/nixpkgs/home.nix"
+ensure_symlink "$dotfiles_dir/overlays.nix" "$HOME/.config/nixpkgs/overlays.nix"
 
 fancy_echo "All done!"

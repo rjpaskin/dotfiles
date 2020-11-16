@@ -84,9 +84,8 @@ in {
 
       programs.zsh.oh-my-zsh.plugins = ["git"];
 
-      home.file = config.lib.mackup.mackupFiles [
-        "Library/Application Support/SourceTree/sourcetree.license"
-      ];
+      home.file = config.lib.symlinks.dotfile
+        "Library/Application Support/SourceTree/sourcetree.license";
     }
 
     {

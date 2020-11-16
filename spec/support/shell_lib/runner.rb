@@ -31,7 +31,7 @@ module ShellLib
 
     GET_HOME_MANAGER_VALUE = <<~NIX
       (import <home-manager/modules> {
-        configuration = ./Mackup/.config/nixpkgs/home.nix;
+        configuration = ./home.nix;
         pkgs = import <nixpkgs> {};
       }).%{expression}
     NIX

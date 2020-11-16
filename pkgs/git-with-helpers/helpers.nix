@@ -17,7 +17,7 @@ let
     dontStrip = true;
     buildPhase = ''
       mkdir -p $out/bin
-      cp $src/${path} $out/bin
+      cp "$src/${path}" $out/bin
     '';
   } // removeAttrs args [ "path" ]);
 
