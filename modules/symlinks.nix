@@ -4,7 +4,7 @@ with lib;
 with config.lib.file;
 
 let
-  dotfilesRoot = toString ../../../..;
+  dotfilesRoot = toString ./..;
 
   dotfile = file: let
     fileStr = toString file;

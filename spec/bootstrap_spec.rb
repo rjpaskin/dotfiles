@@ -33,11 +33,8 @@ RSpec.describe "Bootstrap" do
     end
 
     context "config" do
-      describe xdg_config_path("nix") do
-        it { should be_a_symlink }
-      end
-
       describe xdg_config_path("nix/nix.conf") do
+        it { should be_a_symlink }
         it { should be_a_file.and be_readable }
       end
 
@@ -53,6 +50,7 @@ RSpec.describe "Bootstrap" do
       end
 
       describe xdg_config_path("nixpkgs/home.nix") do
+        it { should be_a_symlink }
         it { should be_a_file.and be_readable }
       end
 

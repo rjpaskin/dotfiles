@@ -12,7 +12,7 @@ let
 
   serial-number = fileContents "${get-serial-number}/.serialnumber";
 
-  path = (../../hosts + "/${serial-number}.nix");
+  path = (../../hosts + "/${serial-number}");
 
 in
 
@@ -20,7 +20,7 @@ in
     imports = if pathExists path then [ path ]
     else warn ''
       No host config found, falling back to default config
-      To add host-specific config, add the file ${toString path}
+      To add host-specific config, add the file ${toString path}/default.nix
     '' [];
 
     # Prevent output from being garbage-collected
