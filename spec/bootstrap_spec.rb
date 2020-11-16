@@ -41,13 +41,9 @@ RSpec.describe "Bootstrap" do
         it { should be_a_file.and be_readable }
       end
 
-      describe xdg_config_path("nixpkgs") do
+      describe xdg_config_path("nixpkgs/overlays.nix") do
         it { should be_a_symlink }
-      end
-
-      describe xdg_config_path("nixpkgs/overlays") do
-        it { should be_a_directory }
-        it { should_not be_empty }
+        it { should be_a_file.and be_readable }
       end
     end
 
