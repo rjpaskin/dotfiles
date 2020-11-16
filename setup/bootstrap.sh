@@ -127,7 +127,7 @@ if ! [ -f "$HOME/.ssh/id_rsa" ]; then
   fancy_echo 'Add your key to GitHub: pbcopy < ~/.ssh/id_rsa.pub'
 fi
 
-atom_packages="$dotfiles_dir/Mackup/.atom/packages-list.txt"
+atom_packages="$dotfiles_dir/atom/packages-list.txt"
 
 if [ -f "$atom_packages" ]; then
   fancy_echo "Installing Atom packages ..."
