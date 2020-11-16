@@ -31,7 +31,6 @@ in buildEnv {
 
   name = "git-with-helpers-${git.version}";
   paths = [ git wrappedGit ];
-  buildInputs = [ makeWrapper ];
 
   postBuild = ''
     rm $out/bin/git

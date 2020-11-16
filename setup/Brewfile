@@ -36,11 +36,6 @@ end
 #== DevOps ==
 brew_if_tagged "ansible", pin: true
 
-if tag? :aws
-  brew "awscli"
-  cask "session-manager-plugin"
-end
-
 #== Browsers ==
 cask "google-chrome"
 cask "firefox"

@@ -5,6 +5,7 @@ with lib;
 {
   options.roles = with config.lib.roles; {
     flight-plan = mkOptionalRole "FlightPlan tools";
+    aws = mkOptionalRole "AWS tools";
   };
 
   config = mkMerge [
@@ -39,6 +40,13 @@ with lib;
 
     (mkIf config.roles.flight-plan {
       home.packages = [ pkgs.flight_plan_cli ];
+    })
+
+    (mkIf config.roles.aws {
+      home.packages = [ pkgs.awscli-with-plugins ];
+      programs.zsh.initExtra = ''
+        source $HOME/.nix-profile/share/zsh/site-functions/aws_zsh_completer.sh
+      '';
     })
   ];
 }
