@@ -29,17 +29,6 @@ module ShellLib
       end
     end
 
-    GET_HOME_MANAGER_VALUE = <<~NIX
-      (import <home-manager/modules> {
-        configuration = ./home.nix;
-        pkgs = import <nixpkgs> {};
-      }).%{expression}
-    NIX
-
-    define_cached_method :role_enabled? do |role|
-      eval_nix(format GET_HOME_MANAGER_VALUE, expression: "config.roles.#{role}")
-    end
-
     define_cached_method :neovim_variable do |name|
       eval_neovim("json_encode(#{name})").as_json
     end
@@ -108,6 +97,21 @@ module ShellLib
       @oh_my_zsh_plugins ||= Resource.new("Oh-My-ZSH plugins") do
         run_in_shell!("print -l $plugins").lines
       end
+    end
+
+    GET_HOME_MANAGER_VALUE = <<~NIX
+      (import <home-manager/modules> {
+        configuration = ./home.nix;
+        pkgs = import <nixpkgs> {};
+      }).%{expression}
+    NIX
+
+    def home_manager_roles
+      @home_manager_roles ||= eval_nix(format GET_HOME_MANAGER_VALUE, expression: "config.roles")
+    end
+
+    def role_enabled?(role)
+      home_manager_roles.fetch(role.to_sym) { raise "No role defined: '#{role}'" }
     end
 
     def eval_nix(expression)
