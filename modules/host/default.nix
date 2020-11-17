@@ -3,9 +3,11 @@
 with lib;
 
 let
+  _pkgs = (import ../..).nixpkgs;
+
   # Can't use `pkgs` here, since this needs to be evaluated before the modules are
   # merged together, due to the output being used in the `modules` argument below
-  get-serial-number = (import <nixpkgs> {}).runCommandNoCCLocal "get-serial-number" {} ''
+  get-serial-number = _pkgs.runCommandNoCCLocal "get-serial-number" {} ''
     mkdir -p $out
     /usr/bin/osascript -l JavaScript "${./serial_number.scpt.js}" > $out/.serialnumber
   '';

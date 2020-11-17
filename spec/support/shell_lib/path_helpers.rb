@@ -32,5 +32,13 @@ module ShellLib
     def xdg_data_path(path)
       home_path(".local/share/#{path}")
     end
+
+    DOTFILES = Path.new(
+      File.expand_path("../../..", __dir__)
+    ).freeze
+
+    def dotfiles_path(path = nil)
+      DOTFILES.join(path.to_s)
+    end
   end
 end

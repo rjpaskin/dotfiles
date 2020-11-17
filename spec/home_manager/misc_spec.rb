@@ -26,7 +26,7 @@ RSpec.describe "Misc" do
       using_tmpdir do |tmp|
         tmp.join(".envrc").write("use nix\n")
         tmp.join("shell.nix").write(<<~NIX)
-          { pkgs ? import <nixpkgs> {}}:
+          { pkgs ? (import "#{dotfiles_path}").nixpkgs }:
 
           pkgs.mkShell {
             nativeBuildInputs = [ pkgs.which ];

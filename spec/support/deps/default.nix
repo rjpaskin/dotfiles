@@ -1,4 +1,4 @@
-with (import <nixpkgs> {});
+with (import ../../..).nixpkgs;
 
 bundlerEnv {
   ruby = ruby_2_6;

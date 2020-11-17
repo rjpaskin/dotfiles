@@ -100,9 +100,11 @@ module ShellLib
     end
 
     GET_HOME_MANAGER_VALUE = <<~NIX
-      (import <home-manager/modules> {
-        configuration = ./home.nix;
-        pkgs = import <nixpkgs> {};
+      let
+        sources = import "#{PathHelpers::DOTFILES}";
+      in (import "${sources.home-manager-path}/modules" {
+        inherit (sources) pkgs;
+        configuration = "#{PathHelpers::DOTFILES}/home.nix";
       }).%{expression}
     NIX
 
