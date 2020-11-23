@@ -112,4 +112,24 @@ RSpec.describe "Neovim" do
   describe xdg_config_path("nvim/after/plugin/alias.vim") do
     it { should include(":Alias ag grep") }
   end
+
+  context "python bindings" do
+    let(:python3) do
+      profile_bin("nvim").realpath.join("../nvim-python3")
+    end
+
+    let(:version) do
+      command!(
+        "#{python3} -c 'from msgpack import version; print(version)'"
+      ).stdout.chomp
+    end
+
+    before do
+      expect(python3).to be_an_executable
+    end
+
+    it "uses msgpack 0.6.2 (for compatibility with pinned denite/deoplete)" do
+      expect(version).to eq("(0, 6, 2)")
+    end
+  end
 end

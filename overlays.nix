@@ -11,7 +11,7 @@ let
     });
 
     # https://nixos.org/nixpkgs/manual/#how-to-override-a-python-package-using-overlays
-    python37 = super.python37.override {
+    python38 = super.python38.override {
       packageOverrides = python-self: python-super: {
         msgpack = python-super.msgpack.overridePythonAttrs (old: rec {
           version = "0.6.2";
