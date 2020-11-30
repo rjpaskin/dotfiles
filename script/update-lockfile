@@ -1,0 +1,44 @@
+#!/usr/bin/env nix-shell
+#!nix-shell -i bash -p nixFlakes git
+
+# vim: filetype=sh
+# shellcheck shell=bash
+set -euo pipefail
+
+readonly dotfiles="$(CDPATH='' cd -- "$(dirname -- "$0")/.." && pwd -P)"
+readonly lockfile="$dotfiles/flake.lock"
+
+# shellcheck disable=SC2154
+mkdir -p "$out" # `$out` is defined by nix-shell
+
+{
+  cd "$out"
+  rm -rf .git flake.{nix,lock}
+
+  git init --quiet .
+
+  cp -i "$dotfiles/flake.nix" "$out"
+  git add flake.nix
+
+  if [ -f "$lockfile" ]; then
+    cp -i "$lockfile" "$out"
+    git add flake.lock
+  fi
+
+  git commit --quiet -m "wip" # remove message about Git tree being dirty
+
+  nix --experimental-features "nix-command flakes" \
+    flake update --recreate-lock-file
+
+  # `git status --porcelain` outputs nothing if no changes made
+  if [ -z "$(git status --porcelain)" ]; then
+    echo >&2 "No changes made"
+    exit
+  fi
+
+  git --no-pager diff \
+    "$([ -f "$lockfile" ] && echo "$lockfile" || echo "/dev/null")" \
+    flake.lock || true
+
+  cp -v flake.lock "$lockfile"
+}
