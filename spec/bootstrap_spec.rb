@@ -63,23 +63,6 @@ RSpec.describe "Bootstrap" do
           )
         end
       end
-
-      describe profile_bin("home-manager") do
-        it { should be_an_executable }
-      end
-
-      describe program("home-manager") do
-        its(:location) { should eq profile_bin }
-      end
-
-      it "works ok" do
-        result = run_in_shell!("home-manager generations")
-
-        aggregate_failures do
-          expect(result).to be_success
-          expect(result.stdout.lines.size).to be >= 1
-        end
-      end
     end
   end
 end

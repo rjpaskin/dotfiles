@@ -4,8 +4,8 @@ with lib;
 
 {
   config = {
-    # Let Home Manager install and manage itself.
-    programs.home-manager.enable = true;
+    # Use `script/switch` instead
+    programs.home-manager.enable = false;
 
     # This value determines the Home Manager release that your
     # configuration is compatible with. This helps avoid breakage
