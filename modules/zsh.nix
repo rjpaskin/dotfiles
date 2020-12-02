@@ -26,6 +26,12 @@ in {
     localVariables = {
       DISABLE_AUTO_TITLE = "true";
     };
+
+    # These get sorted alphabetically so we can't rely on the order
+    dirHashes = rec {
+      dotfiles = "${iCloud}/dotfiles";
+      iCloud = "$HOME/Library/Mobile Documents/com~apple~CloudDocs";
+    };
   };
 
   #### .zshrc
@@ -43,9 +49,6 @@ in {
 
   programs.zsh.initExtra = mkMerge [
     (mkBefore ''
-      hash -d iCloud="$HOME/Library/Mobile Documents/com~apple~CloudDocs"
-      hash -d dotfiles=~iCloud/dotfiles
-
       maybe_source() {
         [ -f "$1" ] && source "$1"
       }
