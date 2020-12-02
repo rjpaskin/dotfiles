@@ -35,6 +35,13 @@ with lib;
         unset -f nix-env
       '';
     };
+
+    home.extraBuilderCommands = ''
+      mkdir -p $out/rjp
+
+      # Record the roles that were used to build this generation
+      echo '${builtins.toJSON config.roles}' > $out/rjp/roles.json
+    '';
   };
 
   imports = [
