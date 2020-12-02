@@ -1,4 +1,5 @@
 require "json"
+require "shellwords"
 require "tempfile"
 
 module ShellLib
@@ -99,27 +100,14 @@ module ShellLib
       end
     end
 
-    GET_HOME_MANAGER_VALUE = <<~NIX
-      let
-        sources = import "#{PathHelpers::DOTFILES}";
-      in (import "${sources.home-manager-path}/modules" {
-        inherit (sources) pkgs;
-        configuration = "#{PathHelpers::DOTFILES}/home.nix";
-      }).%{expression}
-    NIX
-
     def home_manager_roles
-      @home_manager_roles ||= eval_nix(format GET_HOME_MANAGER_VALUE, expression: "config.roles")
+      @home_manager_roles ||= run_in_shell!(
+        "#{Shellwords.escape PathHelpers::DOTFILES}/script/switch --config config.roles"
+      ).as_json
     end
 
     def role_enabled?(role)
       home_manager_roles.fetch(role.to_sym) { raise "No role defined: '#{role}'" }
-    end
-
-    def eval_nix(expression)
-      run_in_shell!(
-        "nix-instantiate --eval --strict --json --show-trace -E '#{expression}'"
-      ).as_json
     end
 
     def nix_channel_urls

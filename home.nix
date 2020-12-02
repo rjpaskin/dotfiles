@@ -24,13 +24,21 @@ with lib;
     programs.man.enable = false;
     home.extraOutputsToInstall = [ "man" ];
 
-    home.username = builtins.getEnv("USER");
-    home.homeDirectory = builtins.getEnv("HOME");
+    # Prevent activation script from installing packages into ~/.nix-profile
+    # - we do this ourselves later on
+    home.activation = with lib.hm; {
+      disableNixEnv = dag.entryBefore ["installPackages"] ''
+        nix-env() { echo "==> Disabled - packages installed later"; }
+      '';
+
+      reenableNixEnv = dag.entryBefore ["linkGeneration"] ''
+        unset -f nix-env
+      '';
+    };
   };
 
   imports = [
     ./modules/roles.nix
-    ./modules/host
 
     ./modules/clojure
     ./modules/docker

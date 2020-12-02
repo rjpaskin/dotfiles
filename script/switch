@@ -1,0 +1,55 @@
+#!/usr/bin/env sh
+set -euo pipefail
+
+dotfiles="$(CDPATH='' cd -- "$(dirname -- "$0")/.." && pwd -P)"
+
+fail() {
+  echo >&2 "$1"
+  exit 1
+}
+
+hostId="$(
+  /usr/sbin/ioreg -c IOPlatformExpertDevice -d 2 \
+    | awk -F\" '/IOPlatformSerialNumber/{ print $(NF-1) }'
+)"
+
+[ -n "$hostId" ] || fail "Unable to determine serial number"
+
+mode="${1:-}"
+arg="${2:-}"
+
+# Overrides `$@`
+set -- \
+  --argstr hostConfig "$dotfiles/hosts/$hostId/default.nix" \
+  --argstr username "$USER" \
+  --argstr homeDirectory "$HOME" \
+  --argstr dotfilesRoot "$dotfiles"
+
+if [ "$mode" = "--config" ]; then
+  [ -n "$arg" ] || fail "Usage: $0 --config <arg>"
+
+  nix-instantiate --eval --strict --json --show-trace \
+    -A "hmConfig.$arg" \
+    "$@" \
+    "$dotfiles"
+
+  exit
+fi
+
+systemEnv="$(
+  nix-build --no-out-link \
+    --show-trace \
+    -A defaultPackage.x86_64-darwin \
+    "$@" \
+    "$dotfiles"
+)"
+
+echo "$systemEnv"
+
+VERBOSE=1 "$systemEnv/activate"
+
+echo "Installing packages to Nix profile"
+# We need to resolve the symlink to the buildEnv here, otherwise
+# Nix will use the $systemEnv buildEnv as the source of the profile
+# (meaning we get ~/.nix-profile/env and ~/.nix-profile/activate)
+nix-env --set "$(/usr/bin/readlink "$systemEnv/env")" --show-trace
