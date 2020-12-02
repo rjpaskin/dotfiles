@@ -1,9 +1,12 @@
-{ config, lib, ... }:
+{ config, lib, modulesPath, pkgs, ... }:
 
 with lib;
 
 let
   dag = lib.hm.dag;
+
+  hmPath = dirOf modulesPath;
+  nixpkgsPath = toString pkgs.path;
 
 in {
   programs.zsh = {
@@ -31,6 +34,10 @@ in {
     dirHashes = rec {
       dotfiles = "${iCloud}/dotfiles";
       iCloud = "$HOME/Library/Mobile Documents/com~apple~CloudDocs";
+
+      # For ease of searching
+      home-manager = hmPath;
+      nixpkgs = nixpkgsPath;
     };
   };
 

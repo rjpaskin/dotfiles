@@ -91,13 +91,15 @@ RSpec.describe "ZSH" do
     it "defines valid directory hashes" do
       hashes = run_in_shell!("hash -d").as_vars.transform_values(&:as_path)
 
-      expect(hashes).to include("iCloud", "dotfiles")
+      expect(hashes).to include("iCloud", "dotfiles", "nixpkgs", "home-manager")
 
       aggregate_failures do
         expect(hashes["iCloud"]).to eq(
           home_path("Library/Mobile Documents/com~apple~CloudDocs")
         )
         expect(hashes["dotfiles"]).to be_a_directory
+        expect(hashes["nixpkgs"]).to be_a_directory.and be_inside("/nix/store")
+        expect(hashes["home-manager"]).to be_a_directory.and be_inside("/nix/store")
       end
     end
 
