@@ -39,6 +39,9 @@ with lib;
     home.extraBuilderCommands = ''
       mkdir -p $out/rjp
 
+      # Link the flake source that build this generation
+      ln -s '${./.}' $out/rjp/source
+
       # Record the roles that were used to build this generation
       echo '${builtins.toJSON config.roles}' > $out/rjp/roles.json
     '';
