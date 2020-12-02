@@ -5,6 +5,7 @@ require "tempfile"
 module ShellLib
   class Runner
     extend CachedMethods
+    include PathHelpers
 
     define_cached_method :which do |executable|
       path = run_in_shell!("which -a #{executable}").lines.find {|line| line.start_with?("/") }
@@ -76,7 +77,7 @@ module ShellLib
     end
 
     def path_entry(path)
-      path = Path.new(path)
+      path = file(path)
       Resource.new("$PATH -> #{path}") { shell_variable("PATH")[path] }
     end
 
@@ -85,12 +86,12 @@ module ShellLib
     end
 
     def manpath_entry(path)
-      path = Path.new(path)
+      path = file(path)
       Resource.new("manpath -> #{path}") { manpath[path] }
     end
 
     def fpath_entry(path)
-      path = Path.new(path)
+      path = file(path)
       Resource.new("$FPATH -> #{path}") { shell_variable("FPATH")[path] }
     end
 
