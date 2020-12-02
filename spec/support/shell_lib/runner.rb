@@ -21,7 +21,7 @@ module ShellLib
       Resource.new("$#{name}") do
         output = run_in_shell!("echo $#{name}").stdout.chomp
 
-        if name =~ /^F?PATH$/
+        if name =~ /^(F|NIX_)?PATH$/
           output.as_search_path
         elsif output =~ %r{\A[0-9]+\z}
           Integer(output)
@@ -58,6 +58,10 @@ module ShellLib
 
     def run_in_shell!(*args)
       run_in_shell(*args).check!
+    end
+
+    def shell_command!(*args)
+      Resource.new(%{zsh -c "#{args.join " "}"}) { run_in_shell!(*args) }
     end
 
     def program(name)
@@ -114,14 +118,13 @@ module ShellLib
       home_manager_roles.fetch(role.to_sym) { raise "No role defined: '#{role}'" }
     end
 
-    def nix_channel_urls
-      @nix_channel_urls ||= run_in_shell!("nix-channel --list").as_vars(separator: " ")
-    end
-
-    NixChannel = Struct.new(:name, :url)
-
-    def nix_channel(name)
-      Resource.new("Nix channel '#{name}'") { NixChannel.new(name, nix_channel_urls[name]) }
+    def nix_path_entry(name)
+      if name.is_a?(Symbol)
+        Resource.new("$NIX_PATH -> <#{name}>") { shell_variable("NIX_PATH")[name] }
+      else
+        path = file(name)
+        Resource.new("$NIX_PATH -> #{path}") { shell_variable("NIX_PATH")[path] }
+      end
     end
 
     EVAL_NEOVIM_EXPRESSION = "redir @\">|silent echo %{expression}|redir END" \

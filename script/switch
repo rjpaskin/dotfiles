@@ -15,6 +15,8 @@ hostId="$(
 
 [ -n "$hostId" ] || fail "Unable to determine serial number"
 
+unset NIX_PATH
+
 systemEnv="$(
   nix-build --no-out-link \
     --show-trace \

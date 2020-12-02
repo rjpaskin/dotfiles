@@ -30,6 +30,10 @@ in {
       DISABLE_AUTO_TITLE = "true";
     };
 
+    sessionVariables = {
+      NIX_PATH = "nixpkgs=${nixpkgsPath}:home-manager=${hmPath}";
+    };
+
     # These get sorted alphabetically so we can't rely on the order
     dirHashes = rec {
       dotfiles = "${iCloud}/dotfiles";

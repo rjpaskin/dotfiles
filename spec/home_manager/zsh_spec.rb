@@ -73,6 +73,20 @@ RSpec.describe "ZSH" do
       end
     end
 
+    describe nix_path_entry(home_path ".nix-defexpr/channels") do
+      it { should_not be_present }
+    end
+
+    describe nix_path_entry(:nixpkgs) do
+      it { should be_present }
+      its(:path) { should be_inside("/nix/store/") }
+    end
+
+    describe nix_path_entry(:"home-manager") do
+      it { should be_present }
+      its(:path) { should be_inside("/nix/store/") }
+    end
+
     describe path_entry(profile_path "bin") do
       it { should be_present }
       it { should be_before shell_variable("PATH")["/usr/local/bin"] }

@@ -22,12 +22,8 @@ RSpec.describe "Bootstrap" do
       it { should be_a_directory.and be_in_nix_store }
     end
 
-    describe home_path(".nix-defexpr") do
-      it { should be_a_directory.and be_readable }
-    end
-
-    describe nix_channel("nixpkgs") do
-      its(:url) { should eq("https://nixos.org/channels/nixpkgs-unstable") }
+    describe shell_command!("nix-channel --list") do
+      its(:stdout) { should be_empty }
     end
 
     context "config" do
@@ -43,10 +39,6 @@ RSpec.describe "Bootstrap" do
     end
 
     context "home-manager" do
-      describe nix_channel("home-manager") do
-        its(:url) { should eq("https://github.com/rycee/home-manager/archive/master.tar.gz") }
-      end
-
       describe xdg_config_path("nixpkgs/home.nix") do
         it { should be_a_symlink }
         it { should be_a_file.and be_readable }
