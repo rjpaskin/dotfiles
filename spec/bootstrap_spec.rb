@@ -10,13 +10,11 @@ RSpec.describe "Bootstrap" do
       it { should be_a_directory.and be_readable }
     end
 
-    nix_profile = directory("/nix/var/nix/profiles/per-user/#{ENV["USER"]}")
-
-    describe nix_profile do
+    describe nix_profiles_path do
       it { should be_a_directory.and be_readable }
     end
 
-    describe nix_profile.join("profile") do
+    describe nix_profiles_path("profile") do
       it { should be_a_directory.and be_in_nix_store }
     end
 
@@ -54,7 +52,7 @@ RSpec.describe "Bootstrap" do
         it { should be_a_file.and be_readable }
       end
 
-      describe nix_profile.join("home-manager") do
+      describe nix_profiles_path("home-manager") do
         it { should be_a_directory.and be_in_nix_store }
 
         it "links to a valid generation" do

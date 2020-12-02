@@ -40,5 +40,13 @@ module ShellLib
     def dotfiles_path(path = nil)
       DOTFILES.join(path.to_s)
     end
+
+    NIX_PROFILES = Path.new(
+      "/nix/var/nix/profiles/per-user"
+    ).freeze
+
+    def nix_profiles_path(path = nil, user: ENV["USER"])
+      NIX_PROFILES.join(user, path.to_s)
+    end
   end
 end
