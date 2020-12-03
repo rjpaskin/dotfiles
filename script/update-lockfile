@@ -6,24 +6,25 @@
 set -euo pipefail
 
 readonly dotfiles="$(CDPATH='' cd -- "$(dirname -- "$0")/.." && pwd -P)"
-readonly lockfile="$dotfiles/flake.lock"
 
 # shellcheck disable=SC2154
 mkdir -p "$out" # `$out` is defined by nix-shell
 
 {
   cd "$out"
-  rm -rf .git flake.{nix,lock}
+  rm -rf .git flake.{nix,lock} NIX_VERSION
 
   git init --quiet .
 
   cp -i "$dotfiles/flake.nix" "$out"
   git add flake.nix
 
-  if [ -f "$lockfile" ]; then
-    cp -i "$lockfile" "$out"
-    git add flake.lock
-  fi
+  for file in flake.lock NIX_VERSION; do
+    if [ -f "$dotfiles/$file" ]; then
+      cp -i "$dotfiles/$file" "$out"
+      git add "$file"
+    fi
+  done
 
   git commit --quiet -m "wip" # remove message about Git tree being dirty
 
@@ -36,9 +37,15 @@ mkdir -p "$out" # `$out` is defined by nix-shell
     exit
   fi
 
-  git --no-pager diff \
-    "$([ -f "$lockfile" ] && echo "$lockfile" || echo "/dev/null")" \
-    flake.lock || true
+  # Get the `nix` version for the current nixpkgs
+  nix --experimental-features "nix-command flakes" \
+    eval --raw ".#nixpkgs.nix.version" > NIX_VERSION
 
-  cp -v flake.lock "$lockfile"
+  for file in flake.lock NIX_VERSION; do
+    git --no-pager diff \
+      "$([ -f "$dotfiles/$file" ] && echo "$dotfiles/$file" || echo "/dev/null")" \
+      "$file" || true
+  done
+
+  cp -v flake.lock NIX_VERSION "$dotfiles"
 }
