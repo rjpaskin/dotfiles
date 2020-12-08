@@ -23,6 +23,30 @@ let
         });
       };
     };
+
+    vimPlugins = super.vimPlugins // {
+      deoplete-nvim = self.vimUtils.buildVimPluginFrom2Nix rec {
+        pname = "deoplete.nvim";
+        version = "5.1";
+        src = self.fetchFromGitHub {
+          owner = "Shougo";
+          repo = pname;
+          rev = "refs/tags/${version}";
+          sha256 = "1ira7g8f1rzgjp8qzsf7vx265y58665fbh1yp28m9r19j97v2aqp";
+        };
+      };
+
+      denite-nvim = self.vimUtils.buildVimPluginFrom2Nix rec {
+        pname = "denite.nvim";
+        version = "2.1";
+        src = self.fetchFromGitHub {
+          owner = "Shougo";
+          repo = pname;
+          rev = "refs/tags/${version}";
+          sha256 = "17fsngxpfy1m0r76c99xphwlcip85s4fyf9zj3vcdvb69hdgva2s";
+        };
+      };
+    };
   };
 
   newPackages = self: super: let
@@ -49,7 +73,7 @@ let
       };
     });
 
-    vimPlugins = super.vimPlugins // super.callPackage ./pkgs/vim-plugins {};
+    vimPlugins = super.vimPlugins // (import ./default.nix).vimPlugins;
   };
 
 in [ customisations newPackages ]
