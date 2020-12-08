@@ -1,8 +1,11 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, dotfilesRoot, ... }:
 
 with lib;
 
-{
+let
+  root = "${dotfilesRoot}/modules/tmux";
+
+in {
   options.roles = with config.lib.roles; {
     tmux = mkOptionalRole "Tmux";
     tmate = mkOptionalRole "Tmate";
@@ -11,7 +14,7 @@ with lib;
   config = mkMerge [
     {
       # This is used by autoterm so always needs be present
-      home.file.".tmuxinator".source = config.lib.file.mkOutOfStoreSymlink ./tmuxinator;
+      home.file.".tmuxinator".source = config.lib.file.mkOutOfStoreSymlink "${root}/tmuxinator";
     }
 
     (mkIf config.roles.tmux {
@@ -21,7 +24,7 @@ with lib;
         tmuxinator
       ];
 
-      home.file.".tmux.conf".source = config.lib.file.mkOutOfStoreSymlink ./tmux.conf;
+      home.file.".tmux.conf".source = config.lib.file.mkOutOfStoreSymlink "${root}/tmux.conf";
     })
 
     (mkIf config.roles.tmate {

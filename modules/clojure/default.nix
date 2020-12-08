@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, dotfilesRoot, ... }:
 
 with lib;
 
@@ -21,6 +21,6 @@ with lib;
 
     programs.zsh.oh-my-zsh.plugins = [ "lein" ];
 
-    home.file.".lein".source = config.lib.file.mkOutOfStoreSymlink ./lein;
+    home.file.".lein".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesRoot}/modules/clojure/lein";
   };
 }
