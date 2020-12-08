@@ -8,6 +8,11 @@ fail() {
   exit 1
 }
 
+currentGeneration() {
+  /usr/bin/readlink "${NIX_STATE_DIR:-"/nix/var/nix"}/profiles/per-user/$USER/profile" \
+    | awk -F- '{ print $2 }'
+}
+
 hostId="$(
   /usr/sbin/ioreg -c IOPlatformExpertDevice -d 2 \
     | awk -F\" '/IOPlatformSerialNumber/{ print $(NF-1) }'
@@ -32,8 +37,18 @@ echo "$systemEnv"
 
 VERBOSE=1 "$systemEnv/activate"
 
+previousGeneration="$(currentGeneration)"
+
 echo "Installing packages to Nix profile"
 # We need to resolve the symlink to the buildEnv here, otherwise
 # Nix will use the $systemEnv buildEnv as the source of the profile
 # (meaning we get ~/.nix-profile/env and ~/.nix-profile/activate)
 nix-env --set "$(/usr/bin/readlink "$systemEnv/env")" --show-trace
+
+newGeneration="$(currentGeneration)"
+
+if [ "$previousGeneration" = "$newGeneration" ]; then
+  echo "==> No change, reusing generation $previousGeneration"
+else
+  echo "==> Now using profile generation $newGeneration"
+fi
