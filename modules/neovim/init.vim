@@ -170,7 +170,8 @@ call denite#custom#option('_', {
 
 call denite#custom#var('file/rec', 'command', [
     \ 'ag', '--follow', '--nocolor', '--nogroup',
-    \ '--hidden', '--path-to-ignore', '~/.config/silver_searcher/ignore', '-g', ''])
+    \ '--ignore', 'node_modules', '--ignore', '.git',
+    \ '--hidden', '--path-to-ignore', $HOME . '/.config/silver_searcher/ignore', '-g', ''])
 
 " ------------------------------------------------
 " Deoplete
