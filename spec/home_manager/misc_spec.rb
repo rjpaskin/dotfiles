@@ -26,7 +26,7 @@ RSpec.describe "Misc" do
       using_tmpdir do |tmp|
         tmp.join(".envrc").write("use nix\n")
         tmp.join("shell.nix").write(<<~NIX)
-          { pkgs ? (import "#{dotfiles_path}").nixpkgs }:
+          { pkgs ? (import <nixpkgs> {}) }:
 
           pkgs.mkShell {
             nativeBuildInputs = [ pkgs.which ];
@@ -51,7 +51,7 @@ RSpec.describe "Misc" do
           expect(result.stdout.as_search_path).to include(
             %r{^/nix/store/[^/]+-which-[^/]+/bin$}
           )
-          expect(result.stderr).to include(/direnv: using nix/, /direnv: export/)
+          expect(result.stderr).to include(/direnv: using nix/, /direnv: export.+\bPATH\b/)
         end
       end
     end
