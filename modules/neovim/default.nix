@@ -48,19 +48,17 @@ in {
       viAlias = true;
       vimAlias = true;
 
-      configure = {
-        plug.plugins = cfg.plugs;
+      configure.plug.plugins = cfg.plugs;
 
-        customRC = ''
-          " -------------------------------------------------
-          "  Colour scheme
-          " -------------------------------------------------
-          colorscheme one
-          set background=light
-          ${generateOneColours cfg.colours}
-          ${readFile ./init.vim}
-        '';
-      };
+      extraConfig = ''
+        " -------------------------------------------------
+        "  Colour scheme
+        " -------------------------------------------------
+        colorscheme one
+        set background=light
+        ${generateOneColours cfg.colours}
+        ${readFile ./init.vim}
+      '';
 
       colours = let
         white = "ffffff";
@@ -119,13 +117,8 @@ in {
       ];
     };
 
-    xdg.configFile = {
-      "nvim/reference.vim".source = pkgs.writeText "init.vim" (
-        pkgs.neovimUtils.makeNeovimConfig { inherit (cfg) configure; }
-      ).neovimRcContent;
-      "nvim/after/plugin/alias.vim".text = ''
-        :Alias ag grep
-      '';
-    };
+    xdg.configFile."nvim/after/plugin/alias.vim".text = ''
+      :Alias ag grep
+    '';
   };
 }

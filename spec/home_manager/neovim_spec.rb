@@ -95,20 +95,6 @@ RSpec.describe "Neovim" do
     end
   end
 
-  describe xdg_config_path("nvim/reference.vim") do
-    let(:generated_config) do
-      command_parts = profile_bin("nvim").contents.split(/\s+/)
-
-      config_file = command_parts.each_cons(2) do |(first, second)|
-        break(file second) if first == "-u"
-      end or raise "could not find config file in command flags"
-
-      custom_inspect(config_file.content, text: "<generated config>")
-    end
-
-    its(:content) { should eq(generated_config) }
-  end
-
   describe xdg_config_path("nvim/after/plugin/alias.vim") do
     it { should include(":Alias ag grep") }
   end
