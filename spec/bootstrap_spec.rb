@@ -55,4 +55,26 @@ RSpec.describe "Bootstrap" do
       end
     end
   end
+
+  context "Finder" do
+    describe home_path("Library") do
+      it { should_not be_hidden }
+    end
+
+    describe directory("/Library") do
+      it { should_not be_hidden }
+    end
+  end
+
+  context "Firewall" do
+    it "is enabled" do
+      expect(
+        command!("defaults read /Library/Preferences/com.apple.alf globalstate").chomp
+      ).to eq("1")
+    end
+
+    it "is running" do
+      expect(command "/usr/bin/pgrep -q socketfilterfw").to be_success
+    end
+  end
 end

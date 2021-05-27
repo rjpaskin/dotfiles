@@ -56,6 +56,7 @@ with lib;
     ./modules/go.nix
     ./modules/heroku.nix
     ./modules/javascript.nix
+    ./modules/macos_defaults
     ./modules/misc.nix
     ./modules/neovim
     ./modules/pkgs.nix

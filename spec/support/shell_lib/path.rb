@@ -75,6 +75,15 @@ module ShellLib
 
     alias_method :inside?, :in?
 
+    HIDDEN_FLAG = 0x8000
+
+    # See https://unix.stackexchange.com/a/438359
+    def hidden?
+      user_flags = Runner.current.command!("/usr/bin/stat -f '%Xf' '#{pathname}'")
+
+      user_flags.to_i(16) & HIDDEN_FLAG != 0
+    end
+
     def inspect
       "#<Path #{pathname.to_s}>"
     end
