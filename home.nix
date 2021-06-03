@@ -51,7 +51,7 @@ with lib;
     ./modules/roles.nix
 
     ./modules/clojure
-    ./modules/dock.nix
+    ./modules/dock
     ./modules/docker
     ./modules/git.nix
     ./modules/go.nix

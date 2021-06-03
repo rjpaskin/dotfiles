@@ -54,9 +54,6 @@ let
     tile-type = "${tileType}-tile";
   };
 
-  inherit (config.home) homeDirectory;
-  inherit (config) roles;
-
   cfg = config.targets.darwin.dock;
 
   plistFile = let
@@ -97,33 +94,8 @@ in {
     };
   };
 
-  config = {
-    targets.darwin.dock = {
-      apps = [
-        "Launchpad"
-        "Google Chrome"
-        (mkIf roles.git "SourceTree")
-        "iTerm"
-        "Utilities/Activity Monitor"
-        "Pages"
-        "Numbers"
-        "Keynote"
-        (mkIf roles.slack "Slack")
-        "System Preferences"
-      ];
-
-      others = let
-        defaults = { view = "grid"; display = "folder"; };
-      in [
-        ({ path = "/Applications"; sort = "name"; } // defaults)
-        ({ path = "${homeDirectory}/Documents"; sort = "kind"; } // defaults)
-        ({ path = "${homeDirectory}/Downloads"; sort = "dateadded"; } // defaults)
-      ];
-    };
-
-    home.activation.dock = hm.dag.entryAfter ["setDarwinDefaults"] ''
-      $DRY_RUN_CMD defaults import com.apple.dock ${plistFile}
-      $DRY_RUN_CMD /usr/bin/killall Dock
-    '';
-  };
+  config.home.activation.dock = hm.dag.entryAfter ["setDarwinDefaults"] ''
+    $DRY_RUN_CMD defaults import com.apple.dock ${plistFile}
+    $DRY_RUN_CMD /usr/bin/killall Dock
+  '';
 }
