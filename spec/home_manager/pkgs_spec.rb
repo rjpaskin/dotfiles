@@ -99,11 +99,6 @@ RSpec.describe "Packages" do
     its(:location) { should eq profile_bin }
   end
 
-  describe program("dockutil") do
-    its(:location) { should eq profile_bin }
-    its("--version") { should be_success }
-  end
-
   describe program("aws") do
     its(:location) { should eq profile_bin }
     its("--version") { should be_success }

@@ -59,7 +59,6 @@ let
   in {
     autoterm = callPackage ./pkgs/autoterm.nix {};
     awscli-with-plugins = callPackage ./pkgs/awscli-with-plugins.nix {};
-    dockutil = callPackage ./pkgs/dockutil.nix {};
     flight_plan_cli = callPackage ./pkgs/flight_plan_cli {};
     git-when-merged = callPackage ./pkgs/git-when-merged.nix {};
     git-with-helpers = callPackage ./pkgs/git-with-helpers {};

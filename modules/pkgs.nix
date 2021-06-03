@@ -12,7 +12,6 @@ with lib;
     # Basics
     {
       home.packages = with pkgs; [
-        dockutil
         fzf
         jq
         ncdu

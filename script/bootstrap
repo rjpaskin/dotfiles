@@ -22,6 +22,4 @@ ln -siv "$script_dir/../hosts/$host/.system_tags" "$HOME/.system_tags"
 
 run_with_log bootstrap.sh
 
-run_with_log dock.sh
-
 run_with_log .macos
