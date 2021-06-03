@@ -47,12 +47,5 @@ with lib;
         source $HOME/.nix-profile/share/zsh/site-functions/aws_zsh_completer.sh
       '';
     })
-
-    (let
-      pkg = pkgs.highlight;
-    in {
-      home.packages = [ pkg ];
-      targets.darwin.defaults."org.n8gray.QLColorCode".pathHL = "${pkg}/bin/highlight";
-    })
   ];
 }

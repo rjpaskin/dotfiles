@@ -10,7 +10,7 @@ let
   inherit (config.lib.roles) mkOptionalRole;
   inherit (pkgs) mas;
 
-  toCask = name: ''cask "${name}"'';
+  toCask = { name, ...}: ''cask "${name}"'';
   toMas = name: id: ''mas "${name}", id: ${toString id}'';
 
   cfg = config.targets.darwin.homebrew;
@@ -24,6 +24,50 @@ let
     # App Store apps
     ${concatStringsSep "\n" (mapAttrsToList toMas cfg.masApps)}
   '';
+
+  caskWithConfigType = submodule ({ config, ... }: let
+    prefToConfig = domain: "Library/Preferences/${domain}.plist";
+  in {
+    options = {
+      name = mkOption {
+        description = "Name of cask";
+        type = str;
+      };
+
+      files = mkOption {
+        description = "Files to symlink";
+        type = listOf str;
+        default = [];
+      };
+
+      prefs = mkOption {
+        description = "Preference files to symlink, as domains";
+        type = listOf str;
+        default = [];
+      };
+
+      configs = mkOption {
+        description = "Collected files to symlink";
+        type = listOf str;
+        internal = true;
+        default = [];
+      };
+
+      defaults = mkOption {
+        description = "macOS defaults to set";
+        type = attrs;
+        default = {};
+      };
+    };
+
+    config = {
+      name = mkDefault config.name;
+      configs = config.files ++ (map prefToConfig config.prefs);
+    };
+  });
+
+  extractedConfigs = foldl' (acc: { configs, ... }: acc ++ configs) [] cfg.casks;
+  extractedDefaults = mkMerge (catAttrs "defaults" cfg.casks);
 
 in {
   options = {
@@ -46,7 +90,7 @@ in {
     targets.darwin.homebrew = {
       casks = mkOption {
         description = "Homebrew casks to install";
-        type = listOf str;
+        type = listOf (coercedTo str (name: { inherit name; }) caskWithConfigType);
       };
 
       masApps = mkOption {
@@ -63,24 +107,41 @@ in {
           "google-chrome"
           "firefox"
 
-          "atom"
-          "dash"
-          "emacs"
-          "iterm2"
+          {
+            name = "atom";
+            files = [
+              "atom/config.cson"
+              "atom/init.coffee"
+              "atom/keymap.cson"
+              "atom/snippets.cson"
+              "atom/styles.less"
+            ];
+            prefs = ["com.github.atom"];
+          }
+          {
+            name = "dash";
+            prefs = ["com.kapeli.dash" "com.kapeli.dashdoc"];
+            files = ["Library/Application Support/Dash/library.dash"];
+          }
+          { name = "emacs"; files = ["emacs.d"]; }
+          { name = "iterm2"; prefs = ["com.googlecode.iterm2"]; }
           "kdiff3"
           "xquartz"
 
           # Quicklook plugins
-          "qlcolorcode" # syntax highlighting
+          {
+            name = "qlcolorcode"; # syntax highlighting
+            defaults."org.n8gray.QLColorCode".pathHL = "${pkgs.highlight}/bin/highlight";
+          }
           "qlcommonmark" # markdown files
           "qlstephen" # files without extensions
           "quicklook-json"
           "quicklook-csv"
 
-          "1password"
+          { name = "1password"; prefs = ["com.agilebits.onepassword4"]; }
           "betterzip"
           "imageoptim"
-          "keepingyouawake"
+          { name = "keepingyouawake"; prefs = ["info.marcel-dierkes.KeepingYouAwake"]; }
           "mollyguard"
           "superduper"
           "vlc"
@@ -88,7 +149,7 @@ in {
 
         (mkIf roles.cyberduck ["cyberduck"])
         (mkIf roles.dropbox ["dropbox"])
-        (mkIf roles.eqmac ["eqmac"])
+        (mkIf roles.eqmac [{ name = "eqmac"; prefs = ["com.bitgapp.eqMac2"]; }])
         (mkIf roles.gimp ["gimp"])
         (mkIf roles.inkscape ["inkscape"])
         (mkIf roles.ngrok ["ngrok"])
@@ -112,9 +173,13 @@ in {
       ];
     };
 
+    targets.darwin.defaults = extractedDefaults;
+
     programs.zsh.sessionVariables.HOMEBREW_BUNDLE_FILE = "${bundleFile}";
 
     home = {
+      file = config.lib.symlinks.dotfiles extractedConfigs;
+
       packages = [ mas ]; # make available for general use
 
       activation.homebrewBundle = lib.hm.dag.entryAfter ["installPackages"] ''
