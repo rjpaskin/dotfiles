@@ -20,6 +20,8 @@ in {
       exec-when-up
     ];
 
+    targets.darwin.homebrew.casks = ["docker"];
+
     programs.zsh = {
       oh-my-zsh.plugins = ["docker" "docker-compose"];
 

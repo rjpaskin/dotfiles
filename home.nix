@@ -56,6 +56,7 @@ with lib;
     ./modules/git.nix
     ./modules/go.nix
     ./modules/heroku.nix
+    ./modules/homebrew.nix
     ./modules/javascript.nix
     ./modules/macos_defaults
     ./modules/misc.nix

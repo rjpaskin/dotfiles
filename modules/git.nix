@@ -86,6 +86,8 @@ in {
 
       home.file = config.lib.symlinks.dotfile
         "Library/Application Support/SourceTree/sourcetree.license";
+
+      targets.darwin.homebrew.casks = ["sourcetree"];
     }
 
     {

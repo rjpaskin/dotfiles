@@ -55,6 +55,7 @@ let
   };
 
   inherit (config.home) homeDirectory;
+  inherit (config) roles;
 
   cfg = config.targets.darwin.dock;
 
@@ -77,27 +78,23 @@ let
   };
 
 in {
-  options = {
-    targets.darwin.dock = mkOption {
-      type = submodule {
-        options = {
-          apps = mkOption {
-            description = "Applications to put in the Dock";
-            type = listOf (coercedTo str (name: {
-              path = "/Applications/${name}.app";
-              tileType = "file";
-            }) itemType);
-          };
+  options.targets.darwin.dock = mkOption {
+    type = submodule {
+      options = {
+        apps = mkOption {
+          description = "Applications to put in the Dock";
+          type = listOf (coercedTo str (name: {
+            path = "/Applications/${name}.app";
+            tileType = "file";
+          }) itemType);
+        };
 
-          others = mkOption {
-            description = "Other items to add to the Dock";
-            type = listOf itemType;
-          };
+        others = mkOption {
+          description = "Other items to add to the Dock";
+          type = listOf itemType;
         };
       };
     };
-
-    roles.slack = config.lib.roles.mkOptionalRole "Slack app";
   };
 
   config = {
@@ -105,13 +102,13 @@ in {
       apps = [
         "Launchpad"
         "Google Chrome"
-        "SourceTree"
+        (mkIf roles.git "SourceTree")
         "iTerm"
         "Utilities/Activity Monitor"
         "Pages"
         "Numbers"
         "Keynote"
-        (mkIf config.roles.slack "Slack")
+        (mkIf roles.slack "Slack")
         "System Preferences"
       ];
 

@@ -16,6 +16,8 @@ in {
       watchman
     ];
 
+    targets.darwin.homebrew.casks = [ "android-studio" ];
+
     programs.zsh = {
       sessionVariables = {
         ANDROID_HOME = "$HOME/Library/Android/sdk";
