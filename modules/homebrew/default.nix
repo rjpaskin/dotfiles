@@ -31,17 +31,6 @@ in {
         "firefox"
 
         {
-          name = "atom";
-          files = [
-            "atom/config.cson"
-            "atom/init.coffee"
-            "atom/keymap.cson"
-            "atom/snippets.cson"
-            "atom/styles.less"
-          ];
-          prefs = ["com.github.atom"];
-        }
-        {
           name = "dash";
           prefs = ["com.kapeli.dash" "com.kapeli.dashdoc"];
           files = ["Library/Application Support/Dash/library.dash"];
