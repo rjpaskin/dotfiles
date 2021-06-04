@@ -39,11 +39,6 @@ RSpec.describe "Bootstrap" do
     end
 
     context "home-manager" do
-      describe xdg_config_path("nixpkgs/home.nix") do
-        it { should be_a_symlink }
-        it { should be_a_file.and be_readable }
-      end
-
       describe nix_profiles_path("home-manager") do
         it { should be_a_directory.and be_in_nix_store }
 

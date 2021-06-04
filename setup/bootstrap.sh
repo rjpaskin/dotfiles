@@ -134,10 +134,4 @@ if [ -f "$atom_packages" ]; then
   apm install --packages-file "$atom_packages"
 fi
 
-fancy_echo "Bootstrapping Nix config ..."
-mkdir -p "$HOME/.config/nix" "$HOME/.config/nixpkgs"
-ensure_symlink "$dotfiles_dir/nix.conf" "$HOME/.config/nix/nix.conf"
-ensure_symlink "$dotfiles_dir/home.nix" "$HOME/.config/nixpkgs/home.nix"
-ensure_symlink "$dotfiles_dir/overlays.nix" "$HOME/.config/nixpkgs/overlays.nix"
-
 fancy_echo "All done!"

@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, dotfilesRoot, ... }:
 
 with lib;
 
@@ -45,6 +45,11 @@ with lib;
       # Record the roles that were used to build this generation
       echo '${builtins.toJSON config.roles}' > $out/rjp/roles.json
     '';
+
+    xdg.configFile = with config.lib.file; {
+      "nix/nix.conf".source = mkOutOfStoreSymlink "${dotfilesRoot}/nix.conf";
+      "nixpkgs/overlays.nix".source = mkOutOfStoreSymlink "${dotfilesRoot}/overlays.nix";
+    };
   };
 
   imports = [
