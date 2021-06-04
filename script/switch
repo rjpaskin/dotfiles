@@ -20,7 +20,12 @@ hostId="$(
 
 [ -n "$hostId" ] || fail "Unable to determine serial number"
 
-unset NIX_PATH
+command -v nix-build > /dev/null || fail "Nix not installed"
+
+# Ensure that overlays and `nix.conf` are still found even when not
+# symlinked into `~/.config`
+export NIX_PATH="nixpkgs-overlays=$dotfiles/overlays.nix"
+export NIX_CONF_DIR="$dotfiles"
 
 systemEnv="$(
   nix-build --no-out-link \
