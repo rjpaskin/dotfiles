@@ -46,4 +46,8 @@ RSpec.configure do |config|
 
     skip("role '#{role}' is disabled") unless role_enabled?(role)
   end
+
+  config.before(:each, arm: true) do |example|
+    skip("not on an ARM system") unless ShellLib.arm?
+  end
 end

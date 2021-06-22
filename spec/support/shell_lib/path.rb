@@ -45,6 +45,10 @@ module ShellLib
       RUBY
     end
 
+    def basename_str(*args)
+      File.basename(pathname, *args)
+    end
+
     def include?(matcher)
       if matcher.is_a?(Regexp)
         content =~ matcher

@@ -1,3 +1,5 @@
+require "etc"
+
 module ShellLib
   autoload :Command, "shell_lib/command"
   autoload :ShellCommand, "shell_lib/shell_command"
@@ -13,4 +15,10 @@ module ShellLib
   autoload :SearchPath, "shell_lib/search_path"
 
   autoload :CachedMethods, "shell_lib/cached_methods"
+
+  ARM_ARCH = "arm64".freeze
+
+  def self.arm?
+    Etc.uname[:machine] == ARM_ARCH
+  end
 end

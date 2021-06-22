@@ -43,8 +43,8 @@ RSpec.describe "Bootstrap" do
         it { should be_a_directory.and be_in_nix_store }
 
         it "links to a valid generation" do
-          expect(subject.children.map(&:basename)).to include(
-            file("home-path"), file("home-files"), file("activate")
+          expect(subject.children.map(&:basename_str)).to include(
+            "home-path", "home-files", "activate"
           )
         end
       end
@@ -70,6 +70,28 @@ RSpec.describe "Bootstrap" do
 
     it "is running" do
       expect(command "/usr/bin/pgrep -q socketfilterfw").to be_success
+    end
+  end
+
+  context "Rosetta 2", :arm do
+    it "is installed" do
+      expect(
+        path("/Library/Apple/System/Library/LaunchDaemons/com.apple.oahd.plist")
+      ).to be_a_file
+    end
+  end
+
+  context "Homebrew" do
+    describe program("brew") do
+      its("--version") { should include(/homebrew/i) }
+    end
+  end
+
+  context "SSH" do
+    it "has a key present" do
+      expect(
+        home_path(".ssh").children.map(&:basename_str)
+      ).to include(/^id_(rsa|ed25519)$/)
     end
   end
 end

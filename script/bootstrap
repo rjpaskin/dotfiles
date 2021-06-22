@@ -1,25 +1,305 @@
-#!/bin/sh
+#!/bin/bash
+set -euo pipefail
 
-set -e
-
-script_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
-host="$1"
-
-if [ -z "$host" ]; then
-  echo "Provide a host" > /dev/stderr
+err() {
+  echo "$0: $*" >&2
   exit 1
-fi
-
-run_with_log() {
-  local dir="$script_dir/../setup"
-
-  "$dir/run_with_log" "$dir/$1"
 }
 
-run_with_log basics.sh
+debug() {
+  echo "[ DEBUG ] $*" >&2
+}
 
-ln -siv "$script_dir/../hosts/$host/.system_tags" "$HOME/.system_tags"
+require_restart() {
+  if [ -n "$DRY_RUN" ]; then
+    echo "[DRY RUN] Script would ask to restart computer because '$*' and then exit"
+  else
+    debug "$@"
+    debug "You should now restart your computer, then rerun this script"
+    exit 0
+  fi
+}
 
-run_with_log bootstrap.sh
+has_arg() {
+  local arg="$1"; shift
 
-run_with_log .macos
+  [[ " $* " == *" $arg "* ]]
+}
+
+ensure_dir_in_path() {
+  local dir="$1"
+
+  if [[ ":$PATH:" == *:"$dir":* ]]; then
+    debug "$dir already in \$PATH"
+  else
+    debug "Adding $dir to front of \$PATH..."
+    export PATH="$dir:$PATH"
+  fi
+}
+
+require_executable() {
+  [ -n "$DRY_RUN" ] && return 0
+
+  debug "Checking for presence of '$1' executable..."
+
+  local exec_path
+  set +e
+  exec_path="$(command -v "$1")"
+  local has_exec="$?"
+  set -e
+
+  if [ "$has_exec" -eq 0 ]; then
+    debug "Found '$1' at '$exec_path'"
+  else
+    err "No executable found for '$1'"
+  fi
+}
+
+capture_secret() {
+  local purpose="$1"
+  local secretfile="$HOME/Desktop/$1.txt"; shift
+  local secret
+
+  if [ -n "$DRY_RUN" ]; then
+    $DRY_RUN_CMD "$* | /usr/bin/tee -a $secretfile"
+    secret="<a generated secret>"
+  else
+    secret="$("$@" | /usr/bin/tee -a "$secretfile")"
+  fi
+
+  $DRY_RUN_CMD chmod u=rw,go= "$secretfile"
+  [ -z "$DRY_RUN" ] && debug "$purpose written to $secretfile"
+
+  echo "$secret"
+}
+
+# Ensure we don't pull in any Nix or Homebrew tools that may need
+# different/incompatible arguments to the ones we use in this script
+reset_path() {
+  export PATH="/usr/bin:/bin:/usr/sbin:/sbin"
+}
+
+reset_path
+
+dotfiles="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+if has_arg "--dry-run" "$@" || has_arg "-n" "$@"; then
+  export DRY_RUN=1
+  export DRY_RUN_CMD="echo [DRY RUN] Would run:"
+
+  debug "This is a dry run"
+else
+  export DRY_RUN=""
+  export DRY_RUN_CMD=""
+
+  debug "This is a live run"
+fi
+
+# TODO: update this from `script/update-lockfile`
+NIX_VERSION="2.3.10"
+
+require_executable "curl"
+require_executable "sw_vers"
+
+IFS='.' read -r macos_major macos_minor macos_patch << EOF
+$(sw_vers -productVersion)
+EOF
+
+require_executable "uname"
+
+macos_arch="$(uname -m)"
+
+debug "System: macOS ${macos_major}.${macos_minor}.${macos_patch} on $macos_arch"
+
+#-------------------------------------------------
+# Install macOS updates
+#-------------------------------------------------
+require_executable "softwareupdate"
+debug "Checking for macOS software updates..."
+
+softwareupdates="$(softwareupdate --list 2>&1)"
+
+case "$softwareupdates" in
+  *"No new software available"*)
+    debug "No software updates"
+    ;;
+  *)
+    debug "Found the following software updates:"
+    echo "$softwareupdates"
+    [ -z "$DRY_RUN" ] && debug "Installing software updates..."
+    $DRY_RUN_CMD softwareupdate --install --all
+    require_restart "Updates installed"
+    ;;
+esac
+
+#-------------------------------------------------
+# Install Rosetta 2 (if needed)
+#-------------------------------------------------
+debug "Checking if we need to install Rosetta 2..."
+
+if [ "$macos_arch" == "arm64" ]; then
+  if [ -f "/Library/Apple/System/Library/LaunchDaemons/com.apple.oahd.plist" ]; then
+    debug "Rosetta 2 already installed"
+  else
+    debug "Installing Rosetta 2..."
+    softwareupdate --install-rosetta --agree-to-license
+  fi
+else
+  debug "Rosetta 2 not needed for this machine"
+fi
+
+#-------------------------------------------------
+# Install Nix
+# (do this before enabling FileVault)
+#-------------------------------------------------
+if [ -d "/nix/store" ] && [ -d "$HOME/.nix-profile" ]; then
+  debug "Nix already installed"
+else
+  volume_flag=""
+
+  if [ "$macos_major" -gt 10 ] || { [ "$macos_major" -eq 10 ] && [ "$macos_minor" -gt 14 ]; }; then
+    volume_flag="--darwin-use-unencrypted-nix-store-volume"
+  fi
+
+  debug "Installing Nix $NIX_VERSION..."
+  [ -n "$volume_flag" ] && debug "  using $volume_flag"
+
+  if [ -n "$DRY_RUN" ]; then
+    $DRY_RUN_CMD "sh <(curl -fsSL https://releases.nixos.org/nix/nix-$NIX_VERSION/install) \
+      --no-daemon \
+      --no-modify-profile \
+      --no-channel-add \
+      $volume_flag"
+  else
+    export NIX_INSTALLER_NO_MODIFY_PROFILE=1
+
+    # WARNING: The Nix installer sources `<nix>/etc/profile.d/nix.sh`,
+    # which adds `~/.nix-profile/bin` to $PATH
+    sh <(curl -fsSL "https://releases.nixos.org/nix/nix-$NIX_VERSION/install") \
+      --no-daemon \
+      --no-modify-profile \
+      --no-channel-add \
+      $volume_flag
+
+    reset_path
+    debug "Finished installing Nix"
+  fi
+fi
+
+#-------------------------------------------------
+# Enable Firevault
+#-------------------------------------------------
+require_executable "fdesetup"
+
+filevault_status="$(fdesetup status)"
+
+case "$filevault_status" in
+  "FileVault is On"*)
+    debug "FileVault enabled"
+    ;;
+  "FileVault is Off, but will be enabled after the next restart"*)
+    require_restart "$filevault_status"
+    ;;
+  "FileVault is Off"*)
+    debug "Enabling FileVault..."
+    capture_secret "file_vault_recovery_key" sudo fdesetup enable -user "$USER"
+
+    require_restart "FileVault now enabled"
+    ;;
+  *)
+    err "Unknown status from fdesetup: $filevault_status"
+    ;;
+esac
+
+#-------------------------------------------------
+# Install Homebrew (and Xcode Command Line Tools)
+#-------------------------------------------------
+if [ "$macos_arch" == "arm64" ]; then
+  homebrew_prefix="/opt/homebrew"
+else
+  homebrew_prefix="/usr/local"
+fi
+
+if [ -e "$homebrew_prefix/bin/brew" ]; then
+  debug "Homebrew already installed in $homebrew_prefix"
+else
+  debug "Installing Homebrew..."
+
+  if [ -n "$DRY_RUN" ]; then
+    $DRY_RUN_CMD "/bin/bash -c \
+      \$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+  else
+    /bin/bash -c \
+      "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+  fi
+
+  debug "Finished installing Homebrew"
+fi
+
+#-------------------------------------------------
+# Add new SSH key
+#-------------------------------------------------
+if [ -f "$HOME/.ssh/id_rsa" ]; then
+  debug "Found RSA key in ~/.ssh"
+elif [ -f "$HOME/.ssh/id_ed25519" ]; then
+  debug "Found Ed25519 key in ~/.ssh"
+else
+  debug "Generating a new SSH key..."
+
+  require_executable "openssl"
+  require_executable "ssh-agent"
+  require_executable "ssh-keygen"
+  require_executable "/usr/bin/ssh-add"
+
+  ssh_password=
+
+  if [ -z "$DRY_RUN" ]; then
+    ssh_password="$(capture_secret "ssh_key_passphrase" openssl rand -base64 18)"
+
+    require_executable "security"
+
+    # Get email from iCloud
+    user_email="$(security find-generic-password \
+      -s com.apple.account.IdentityServices.token 2>/dev/null \
+      | awk -F\" '{if ($2 == "acct") {print $4}}')"
+
+    if [ -z "$user_email" ]; then
+      echo "Enter email for SSH key"
+      read -r user_email
+    fi
+  fi
+
+  $DRY_RUN_CMD ssh-keygen -t ed25519 -C "$user_email" -N "$ssh_password"
+
+  $DRY_RUN_CMD eval "$(ssh-agent -s)"
+
+  # Ensure default macOS program is used, so that the passphrase is stored in
+  # the macOS Keychain
+  $DRY_RUN_CMD /usr/bin/ssh-add -K "$keyfile"
+
+  [ -z "$DRY_RUN" ] && debug "SSH key generated"
+fi
+
+#-------------------------------------------------
+# Setup Nix profile
+#-------------------------------------------------
+switch_script="$dotfiles/script/switch"
+
+if [ -e "$switch_script" ]; then
+  [ -z "$DRY_RUN" ] && debug "Setting up Nix profile..."
+
+  # Ensure `script/switch` can find `nix-*` executables
+  ensure_dir_in_path "$HOME/.nix-profile/bin"
+
+  $DRY_RUN_CMD "$dotfiles/script/switch"
+else
+  debug "Can't find ~dotfiles/script/switch, skipping"
+fi
+
+debug "Bootstrap completed"
+
+# TODO: automate these
+debug <<EOF
+Manual next steps:"
+ - Remap Caps Lock to Ctrl for all keyboards"
+EOF
