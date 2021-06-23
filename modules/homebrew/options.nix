@@ -23,9 +23,7 @@ let
     ${concatStringsSep "\n" (mapAttrsToList toMas cfg.masApps)}
   '';
 
-  caskWithConfigType = submodule ({ config, ... }: let
-    prefToConfig = domain: "Library/Preferences/${domain}.plist";
-  in {
+  caskWithConfigType = submodule {
     options = {
       name = mkOption {
         description = "Name of cask";
@@ -38,33 +36,15 @@ let
         default = [];
       };
 
-      prefs = mkOption {
-        description = "Preference files to symlink, as domains";
-        type = listOf str;
-        default = [];
-      };
-
-      configs = mkOption {
-        description = "Collected files to symlink";
-        type = listOf str;
-        internal = true;
-        default = [];
-      };
-
       defaults = mkOption {
         description = "macOS defaults to set";
         type = attrs;
         default = {};
       };
     };
+  };
 
-    config = {
-      name = mkDefault config.name;
-      configs = config.files ++ (map prefToConfig config.prefs);
-    };
-  });
-
-  extractedConfigs = foldl' (acc: { configs, ... }: acc ++ configs) [] cfg.casks;
+  extractedFiles = foldl' (acc: { files, ... }: acc ++ files) [] cfg.casks;
   extractedDefaults = mkMerge (catAttrs "defaults" cfg.casks);
 
 in {
@@ -86,7 +66,7 @@ in {
     programs.zsh.sessionVariables.HOMEBREW_BUNDLE_FILE = "${bundleFile}";
 
     home = {
-      file = config.lib.symlinks.dotfiles extractedConfigs;
+      file = config.lib.symlinks.dotfiles extractedFiles;
 
       packages = [ mas ]; # make available for general use
 

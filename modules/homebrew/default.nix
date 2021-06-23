@@ -27,16 +27,53 @@ in {
   config.targets.darwin.homebrew = {
     casks = mkMerge [
       [
+        # Browsers
         "google-chrome"
         "firefox"
 
+        # Programming tools
         {
           name = "dash";
-          prefs = ["com.kapeli.dash" "com.kapeli.dashdoc"];
-          files = ["Library/Application Support/Dash/library.dash"];
+          defaults."com.kapeli.dashdoc" = {
+            syncFolderPath = "~/Library/Mobile Documents/com~apple~CloudDocs";
+            shouldSyncBookmarks = true;
+            shouldSyncDocsets = true;
+            shouldSyncGeneral = true;
+            shouldSyncView = true;
+          };
         }
         { name = "emacs"; files = ["emacs.d"]; }
-        { name = "iterm2"; prefs = ["com.googlecode.iterm2"]; }
+        {
+          name = "iterm2";
+          defaults."com.googlecode.iterm2" = let
+            toColour = parts: {
+              "Blue Component" = builtins.elemAt parts 2;
+              "Green Component" = builtins.elemAt parts 1;
+              "Red Component" = builtins.elemAt parts 0;
+            };
+            white = toColour [1 1 1];
+            black = toColour [0 0 0];
+          in {
+            AlternateMouseScroll = true;
+            Columns = 150;
+            "Custom Directory" = "Recycle";
+            "Scrollback Lines" = 0; # unlimited
+            "Unlimited Scrollback" = true;
+            "Normal Font" = "Monaco 13";
+            OpenArrangementAtStartup = false;
+            ShowNewOutputIndicator = false;
+            SUEnableAutomaticChecks = true;
+            StretchTabsToFillBar = false;
+            TabStyleWithAutomaticOption = 4;
+            SoundForEsc = false;
+            VisualIndicatorForEsc = false;
+            PreserveWindowSizeWhenTabBarVisibilityChanges = true;
+            "Background Color" = white;
+            "Foreground Color" = black;
+            "Bold Color" = black;
+            "Cursor Color" = black;
+          };
+        }
         "kdiff3"
         "xquartz"
 
@@ -50,8 +87,9 @@ in {
         "quicklook-json"
         "quicklook-csv"
 
-        { name = "1password"; prefs = ["com.agilebits.onepassword4"]; }
-        { name = "keepingyouawake"; prefs = ["info.marcel-dierkes.KeepingYouAwake"]; }
+        # Others
+        "1password"
+        "keepingyouawake"
         "betterzip"
         "imageoptim"
         "mollyguard"
@@ -61,7 +99,7 @@ in {
 
       (mkIf roles.cyberduck ["cyberduck"])
       (mkIf roles.dropbox ["dropbox"])
-      (mkIf roles.eqmac [{ name = "eqmac"; prefs = ["com.bitgapp.eqMac2"]; }])
+      (mkIf roles.eqmac ["eqmac"])
       (mkIf roles.gimp ["gimp"])
       (mkIf roles.inkscape ["inkscape"])
       (mkIf roles.ngrok ["ngrok"])
