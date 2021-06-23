@@ -1,4 +1,3 @@
-/hosts/
 /scratch/
 
 /emacs.d/auto-save-list/
@@ -11,7 +10,7 @@
 !/**/tmuxinator/default.yml
 !/**/tmuxinator/default_helper.rb
 
-/.*.old
+/*.old
 /.*.local
 /modules/*/*.local
 

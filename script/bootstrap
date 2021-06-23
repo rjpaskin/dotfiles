@@ -112,6 +112,17 @@ macos_arch="$(uname -m)"
 debug "System: macOS ${macos_major}.${macos_minor}.${macos_patch} on $macos_arch"
 
 #-------------------------------------------------
+# Set hostname
+#-------------------------------------------------
+if ! [[ "$(scutil --get ComputerName)" =~ ^rjp- ]]; then
+  [ -n "${1-}" ] || err "Provide a hostname as the argument to this script"
+
+  for name in ComputerName HostName LocalHostName; do
+    $DRY_RUN_CMD sudo scutil --set "$name" "rjp-$1"
+  done
+fi
+
+#-------------------------------------------------
 # Install macOS updates
 #-------------------------------------------------
 require_executable "softwareupdate"

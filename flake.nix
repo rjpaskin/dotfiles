@@ -67,7 +67,7 @@
     };
 
     defaultPackage.${system} = {
-      hostConfig,   # filename of extra config to use, git-ignored
+      hostConfig,   # filename of extra config to use
       dotfilesRoot, # used to access files in this repo that are git-ignored
       username, homeDirectory
     }@args: with pkgs; let

@@ -13,12 +13,9 @@ currentGeneration() {
     | awk -F- '{ print $2 }'
 }
 
-hostId="$(
-  /usr/sbin/ioreg -c IOPlatformExpertDevice -d 2 \
-    | awk -F\" '/IOPlatformSerialNumber/{ print $(NF-1) }'
-)"
+hostId="$(scutil --get LocalHostName | sed -e 's/^rjp-//')"
 
-[ -n "$hostId" ] || fail "Unable to determine serial number"
+[ -n "$hostId" ] || fail "Unable to determine hostname"
 
 command -v nix-build > /dev/null || fail "Nix not installed"
 
@@ -31,7 +28,7 @@ systemEnv="$(
   nix-build --no-out-link \
     --show-trace \
     -A defaultPackage.x86_64-darwin \
-    --argstr hostConfig "$dotfiles/hosts/$hostId/default.nix" \
+    --argstr hostConfig "$dotfiles/hosts/$hostId.nix" \
     --argstr username "$USER" \
     --argstr homeDirectory "$HOME" \
     --argstr dotfilesRoot "$dotfiles" \

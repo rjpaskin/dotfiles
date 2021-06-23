@@ -65,10 +65,16 @@ in {
 
   config = mkIf config.roles.git (mkMerge [
     {
-      programs.git = {
+      programs.git = let
+        domain = "gmail.com";
+        variant = "git";
+        username = "rjpaskin";
+      in {
         inherit aliases extraConfig ignores;
         enable = true;
         package = pkgs.git-with-helpers;
+        userEmail = "${username}+${variant}@${domain}";
+        userName = "Rob Paskin";
       };
 
       home.packages = with pkgs; [
