@@ -19,7 +19,7 @@ module ShellLib
     end
 
     def include?(matcher)
-      return self =~ matcher if matcher.is_a?(Regexp)
+      return matcher.match?(self) if matcher.is_a?(Regexp)
 
       super
     end

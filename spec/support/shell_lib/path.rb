@@ -51,14 +51,14 @@ module ShellLib
 
     def include?(matcher)
       if matcher.is_a?(Regexp)
-        content =~ matcher
+        matcher.match?(content)
       else
         read.include?(matcher)
       end
     end
 
     def blank?
-      content =~ /\A\s*\z/
+      /\A\s*\z/.match?(content)
     end
 
     def empty?
