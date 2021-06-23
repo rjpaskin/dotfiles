@@ -239,12 +239,45 @@
         "com.apple.trackpad.twoFingerDoubleTapGesture -bool false"
       ];
 
+      keyboardMappings = let
+        # See below for key codes:
+        # - https://developer.apple.com/library/archive/technotes/tn2450/_index.html#//apple_ref/doc/uid/DTS40017618-CH1-KEY_TABLE_USAGES
+        # - https://hidutil-generator.netlify.app
+        capsLock = 30064771300; # 0x700000000 | 0x39
+        # System Preferences uses Right Ctrl for "Control", so copy that
+        rightCtrl = 30064771129; # 0x700000000 | 0xE4
+      in [
+        { from = capsLock; to = rightCtrl; }
+      ];
+
+      # Ordering is weird here re: from/to <=> src/dst, but is correct
+      toKeyboardMapping = { from, to }: "<dict>
+        <key>HIDKeyboardModifierMappingSrc</key>
+        <integer>${toString to}</integer>
+        <key>HIDKeyboardModifierMappingDst</key>
+        <integer>${toString from}</integer>
+      </dict>";
+
       toDefault = domain: setting: ''
         $DRY_RUN_CMD defaults -currentHost write ${domain} ${setting}
       '';
     in lib.hm.dag.entryAfter ["setDarwinDefaults"] ''
       ${lib.concatMapStrings (toDefault "NSGlobalDomain") globalDomainSettings}
       ${toDefault "com.apple.ImageCapture" "disableHotPlug -bool true"}
+
+      # Get "<vendorID>-<productID>" tuples for all keyboards currently connected
+      keyboards="$(
+        hidutil list --matching keyboard \
+          | awk '/^Devices:/ { seenDevices = 1 } /^0x/ && seenDevices { printf "%d-%d\n", $1, $2 }'
+      )"
+
+      for keyboard in $keyboards; do
+        ${
+          toDefault "NSGlobalDomain"
+          "com.apple.keyboard.modifiermapping.\${keyboard}-0 \\
+          -array '${lib.concatMapStrings toKeyboardMapping keyboardMappings}'"
+        }
+      done
     '';
   };
 }

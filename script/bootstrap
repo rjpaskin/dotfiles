@@ -297,9 +297,3 @@ else
 fi
 
 debug "Bootstrap completed"
-
-# TODO: automate these
-debug <<EOF
-Manual next steps:"
- - Remap Caps Lock to Ctrl for all keyboards"
-EOF
