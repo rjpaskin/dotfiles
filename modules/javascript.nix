@@ -11,7 +11,7 @@ with lib;
       nodejs
     ];
 
-    programs.neovim.plugs = with pkgs.vimPlugins; [
+    programs.neovim.plugins = with pkgs.vimPlugins; [
       emmet-vim
       vim-javascript
       vim-jsx-pretty

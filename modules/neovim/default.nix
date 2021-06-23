@@ -30,16 +30,9 @@ let
   cfg = config.programs.neovim;
 
 in {
-  options.programs.neovim = {
-    plugs = mkOption {
-      description = "List of Neovim packages to add via vim-plug";
-      type = listOf package;
-    };
-
-    colours = mkOption {
-      description = "Changes to `one` colour scheme";
-      type = attrsOf colourType;
-    };
+  options.programs.neovim.colours = mkOption {
+    description = "Changes to `one` colour scheme";
+    type = attrsOf colourType;
   };
 
   config = {
@@ -47,8 +40,6 @@ in {
       enable = true;
       viAlias = true;
       vimAlias = true;
-
-      configure.plug.plugins = cfg.plugs;
 
       extraConfig = ''
         " -------------------------------------------------
@@ -77,7 +68,7 @@ in {
       };
 
       # Default packages to always use
-      plugs = with pkgs.vimPlugins; mkBefore [
+      plugins = with pkgs.vimPlugins; mkBefore [
         vim-sensible
         vim-commentary
         vim-surround
@@ -105,7 +96,7 @@ in {
         vim-airline
 
         # Project navigation
-        denite-nvim
+        { plugin = denite-nvim; optional = true; } # optional so we can `packadd` it to avoid autoloading issues
         neomru-vim
         nerdtree
         vim-nerdtree-tabs

@@ -51,7 +51,7 @@ in {
         (cfg.defaultPackage.withPackages cfg.defaultGems)
       ];
 
-      programs.neovim.plugs = with pkgs.vimPlugins; [
+      programs.neovim.plugins = with pkgs.vimPlugins; [
         splitjoin-vim
         vim-bundler
         vim-endwise

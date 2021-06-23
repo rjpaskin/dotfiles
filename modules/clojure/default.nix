@@ -11,7 +11,7 @@ with lib;
       leiningen
     ];
 
-    programs.neovim.plugs = with pkgs.vimPlugins; [
+    programs.neovim.plugins = with pkgs.vimPlugins; [
       # vim-salve
       # vim-fireplace
       conjure

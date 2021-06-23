@@ -161,6 +161,8 @@ call one#highlight('rjp_denite_insert_mode',   'ffffff', '4078f2', '')
 " Selected row in Denite's 'Normal' mode
 call one#highlight('rjp_denite_normal_mode',   'ffffff', '50a14f', '')
 
+packadd! denite.nvim " Workaround for autoloading issues
+
 call denite#custom#option('_', {
       \ 'highlight_matched_char': 'rjp_denite_matched_char',
       \ 'highlight_matched_range': 'rjp_denite_matched_range',

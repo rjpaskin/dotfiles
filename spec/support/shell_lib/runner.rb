@@ -140,9 +140,19 @@ module ShellLib
       end
     end
 
+    NEOVIM_PACKAGE_PATH = %r{
+      /
+      (
+        share/vim-plugins # vim-plug
+        |
+        pack/[^/]+/(start|opt) # native package
+      )
+      /[^/]+$
+    }x
+
     def neovim_packages
       @neovim_packages ||= Resource.new("Neovim packages") do
-        eval_neovim("&runtimepath").split(",").grep(%r{/share/vim-plugins/[^/]+$}).map! do |pkg|
+        eval_neovim("&runtimepath").split(",").grep(NEOVIM_PACKAGE_PATH).map! do |pkg|
           File.basename(pkg)
         end
       end

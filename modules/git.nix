@@ -77,7 +77,7 @@ in {
         git-when-merged
       ];
 
-      programs.neovim.plugs = with pkgs.vimPlugins; [
+      programs.neovim.plugins = with pkgs.vimPlugins; [
         vim-fugitive
         vim-rhubarb
       ];
