@@ -3,7 +3,20 @@ RSpec.describe "Tmux" do
     it { should be_a_directory.and be_readable }
 
     it "contains YAML config files" do
-      expect(subject.glob "*.yml").to_not be_empty
+      configs = subject.glob("*.yml").grep_v(/default\.yml$/)
+
+      aggregate_failures do
+        expect(configs).to_not be_empty
+        expect(configs).to all have_attributes(
+          readable?: true,
+          blank?: false,
+          in_nix_store?: false
+        )
+      end
+    end
+
+    describe home_path(".tmuxinator/default.yml") do
+      it { should be_a_file.and be_readable }
     end
 
     describe home_path(".tmuxinator/default_helper.rb") do
@@ -58,10 +71,6 @@ RSpec.describe "Tmux" do
     describe home_path(".tmux.conf") do
       it { should be_a_file.and be_readable }
       it { should_not be_blank }
-    end
-
-    describe home_path(".tmuxinator/default_helper.rb") do
-      it { should be_a_file.and be_readable }
     end
   end
 
