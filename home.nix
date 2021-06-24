@@ -1,4 +1,4 @@
-{ config, lib, dotfilesRoot, ... }:
+{ config, lib, ... }:
 
 with lib;
 
@@ -46,9 +46,9 @@ with lib;
       echo '${builtins.toJSON config.roles}' > $out/rjp/roles.json
     '';
 
-    xdg.configFile = with config.lib.file; {
-      "nix/nix.conf".source = mkOutOfStoreSymlink "${dotfilesRoot}/nix.conf";
-      "nixpkgs/overlays.nix".source = mkOutOfStoreSymlink "${dotfilesRoot}/overlays.nix";
+    xdg.configFile = {
+      "nix/nix.conf".source = ./nix.conf;
+      "nixpkgs/overlays.nix".source = ./overlays.nix;
     };
   };
 

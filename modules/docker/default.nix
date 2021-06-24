@@ -1,13 +1,13 @@
-{ config, lib, pkgs, dotfilesRoot, ... }:
+{ config, lib, pkgs, ... }:
 
 with lib;
 
 let
   exec-when-up = let
-    path = "${dotfilesRoot}/modules/docker/docker_compose_exec_when_up";
-  in pkgs.runCommandLocal (baseNameOf path) {} ''
+    name = "docker_compose_exec_when_up";
+  in pkgs.runCommandLocal name {} ''
     mkdir -p $out/bin
-    cp ${escapeShellArg path} $out/bin/${baseNameOf path}
+    ln -s ${./. + "/${name}"} $out/bin/${name}
   '';
 
 in {

@@ -26,7 +26,7 @@ with lib;
         tmuxinator
       ];
 
-      home.file.".tmux.conf".source = config.lib.file.mkOutOfStoreSymlink "${root}/tmux.conf";
+      home.file.".tmux.conf".source = ./tmux.conf;
     })
 
     (mkIf config.roles.tmate {
