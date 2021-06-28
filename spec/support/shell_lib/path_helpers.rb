@@ -48,5 +48,11 @@ module ShellLib
     def nix_profiles_path(path = nil, user: ENV["USER"])
       NIX_PROFILES.join(user, path.to_s)
     end
+
+    ICLOUD = HOME.join("Library/Mobile Documents/com~apple~CloudDocs")
+
+    def icloud_path(path = nil)
+      ICLOUD.join(path.to_s)
+    end
   end
 end

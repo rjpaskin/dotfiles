@@ -1,10 +1,7 @@
 /scratch/
 
-/emacs.d/auto-save-list/
-/emacs.d/backups/
 /emacs.d/elpa/
 /emacs.d/quelpa/
-/emacs.d/smex-items
 
 /**/tmuxinator/*.yml
 !/**/tmuxinator/default.yml

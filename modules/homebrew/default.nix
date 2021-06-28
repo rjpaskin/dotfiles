@@ -42,7 +42,6 @@ in {
             shouldSyncView = true;
           };
         }
-        { name = "emacs"; files = ["emacs.d"]; }
         {
           name = "iterm2";
           defaults."com.googlecode.iterm2" = let
