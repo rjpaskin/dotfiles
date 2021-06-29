@@ -5,6 +5,7 @@ module ShellLib
   autoload :ShellCommand, "shell_lib/shell_command"
 
   autoload :Path, "shell_lib/path"
+  autoload :EditablePath, "shell_lib/editable_path"
   autoload :PathHelpers, "shell_lib/path_helpers"
 
   autoload :Output, "shell_lib/output"

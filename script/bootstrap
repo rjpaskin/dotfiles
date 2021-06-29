@@ -95,7 +95,6 @@ else
   debug "This is a live run"
 fi
 
-# TODO: update this from `script/update-lockfile`
 NIX_VERSION="2.3.10"
 
 require_executable "curl"

@@ -1,51 +1,56 @@
-#!/usr/bin/env nix-shell
-#!nix-shell -i bash -p nixFlakes git
+#!/usr/bin/env ruby
+$LOAD_PATH << File.expand_path("../spec/support", __dir__)
+require "shell_lib"
 
-# vim: filetype=sh
-# shellcheck shell=bash
-set -euo pipefail
+class NixLockfile
+  include ShellLib::ResourceHelpers
+  include ShellLib::PathHelpers
 
-readonly dotfiles="$(CDPATH='' cd -- "$(dirname -- "$0")/.." && pwd -P)"
+  NIX_VERSION_REGEXP = /^(NIX_VERSION=['"])([^'"]+)(['"])/m
 
-# shellcheck disable=SC2154
-mkdir -p "$out" # `$out` is defined by nix-shell
+  def update
+    Dir.chdir(DOTFILES) do
+      nix("flake update", capture: false)
+      update_bootstrap_nix_version
+    end
+  end
 
-{
-  cd "$out"
-  rm -rf .git flake.{nix,lock} NIX_VERSION
+  def update_bootstrap_nix_version
+    dotfiles_path("script/bootstrap").editable.edit do |content|
+      content.gsub(NIX_VERSION_REGEXP) do
+        old_version = $2
+        puts "Nix: #{old_version} -> #{nix_version}" if old_version != nix_version
 
-  git init --quiet .
+        "#{$1}#{nix_version}#{$3}"
+      end
+    end
+  end
 
-  cp -i "$dotfiles/flake.nix" "$out"
-  git add flake.nix
+  private
 
-  for file in flake.lock NIX_VERSION; do
-    if [ -f "$dotfiles/$file" ]; then
-      cp -i "$dotfiles/$file" "$out"
-      git add "$file"
-    fi
-  done
+  def nix_version
+    @nix_version ||= nix("eval --raw .#nixpkgs.nix.version").chomp
+  end
 
-  git commit --quiet -m "wip" # remove message about Git tree being dirty
+  def nix_flakes_path
+    @nix_flakes_path ||= command!(
+      "nix-build . -A nixpkgs.nixFlakes --no-out-link"
+    ).chomp
+  end
 
-  nix --experimental-features "nix-command flakes" \
-    flake update --recreate-lock-file
+  def nix(subargs, capture: true)
+    args = [
+      "#{nix_flakes_path}/bin/nix",
+      "--experimental-features 'nix-command flakes'",
+      subargs
+    ].join(" ")
 
-  # `git status --porcelain` outputs nothing if no changes made
-  if [ -z "$(git status --porcelain)" ]; then
-    echo >&2 "No changes made"
-    exit
-  fi
+    if capture
+      command!(args)
+    else
+      system(args) or raise "failed!"
+    end
+  end
+end
 
-  # Get the `nix` version for the current nixpkgs
-  nix --experimental-features "nix-command flakes" \
-    eval --raw ".#nixpkgs.nix.version" > NIX_VERSION
-
-  for file in flake.lock NIX_VERSION; do
-    git --no-pager diff \
-      "$([ -f "$dotfiles/$file" ] && echo "$dotfiles/$file" || echo "/dev/null")" \
-      "$file" || true
-  done
-
-  cp -v flake.lock NIX_VERSION "$dotfiles"
-}
+NixLockfile.new.update if $0 == __FILE__

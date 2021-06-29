@@ -52,7 +52,7 @@
       else acc) {} (attrNames args);
   in rec {
     inherit vimPlugins; # used by `overlays.nix`
-    nixpkgs = pkgs; # used by `spec/support/deps/default.nix`
+    nixpkgs = pkgs; # used by `spec/support/deps/default.nix` and `script/update-lockfile`
 
     hmConfig = {
       hostConfig, dotfilesDirectory, privateDirectory,

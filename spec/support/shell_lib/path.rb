@@ -114,6 +114,14 @@ module ShellLib
       inside?(NIX_STORE_PATH) || (symlink? && realpath.inside?(NIX_STORE_PATH))
     end
 
+    def editable
+      EditablePath.new(self)
+    end
+
+    def readonly
+      Path.new(self)
+    end
+
     private
 
     attr_reader :pathname
