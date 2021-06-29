@@ -1,4 +1,4 @@
-{ config, lib, modulesPath, pkgs, ... }:
+{ config, lib, modulesPath, pkgs, dotfilesDirectory, ... }:
 
 with lib;
 
@@ -35,8 +35,8 @@ in {
     };
 
     # These get sorted alphabetically so we can't rely on the order
-    dirHashes = rec {
-      dotfiles = "${iCloud}/dotfiles";
+    dirHashes = {
+      dotfiles = dotfilesDirectory;
       iCloud = "$HOME/Library/Mobile Documents/com~apple~CloudDocs";
 
       # For ease of searching
@@ -57,19 +57,6 @@ in {
     # Defines `NIX_PATH`, `NIX_PROFILES` and `NIX_SSL_CERT_FILE`
     source "$HOME/.nix-profile/etc/profile.d/nix.sh"
   '';
-
-  programs.zsh.initExtra = mkMerge [
-    (mkBefore ''
-      maybe_source() {
-        [ -f "$1" ] && source "$1"
-      }
-    '')
-
-    (mkAfter ''
-      # Cleanup
-      unfunction maybe_source
-    '')
-  ];
   #### end .zshrc
 
   programs.zsh.oh-my-zsh = {

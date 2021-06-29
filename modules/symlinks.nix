@@ -1,9 +1,21 @@
-{ config, lib, pkgs, dotfilesRoot, ... }@args:
+{ config, lib, dotfilesDirectory, privateDirectory, ... }:
 
 with lib;
 with config.lib.file;
 
-{
+let
+  mkSymlink = root: file: mkOutOfStoreSymlink "${root}/${toString file}";
+
+  mkLink = root: file: let
+    fileStr = toString file;
+    prefix = if (hasPrefix "Library" fileStr) then "" else ".";
+  in {
+    "${prefix}${fileStr}".source = mkSymlink root fileStr;
+  };
+
+  mkLinks = root: files: mkMerge (map (mkLink root) files);
+
+in {
   # This differs from `mkOutOfStoreSymlink` in that the list of files
   # to be linked is produced when the activation script is run, rather
   # than when it is generated
@@ -12,15 +24,14 @@ with config.lib.file;
   };
 
   config = {
-    lib.symlinks = rec {
-      dotfile = file: let
-        fileStr = toString file;
-        prefix = if (hasPrefix "Library" fileStr) then "" else ".";
-      in {
-        "${prefix}${fileStr}".source = mkOutOfStoreSymlink "${dotfilesRoot}/${fileStr}";
-      };
+    lib.symlinks = {
+      mkDotfileSymlink = mkSymlink dotfilesDirectory;
+      dotfile = mkLink dotfilesDirectory;
+      dotfiles = mkLinks dotfilesDirectory;
 
-      dotfiles = files: mkMerge (map dotfile files);
+      mkPrivateFileSymlink = mkSymlink privateDirectory;
+      privateFile = mkLink privateDirectory;
+      privateFiles = mkLinks privateDirectory;
     };
 
     home.activation.linkPrivateFiles = lib.hm.dag.entryAfter ["linkGeneration"] ''
@@ -43,7 +54,7 @@ with config.lib.file;
 
       ${
         concatStrings (mapAttrsToList (pattern: target: ''
-          linkPrivateFiles '${target}' '${dotfilesRoot}'/${pattern}
+          linkPrivateFiles '${target}' '${privateDirectory}'/${pattern}
         '') config.privateLinks)
       }
     '';

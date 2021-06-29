@@ -79,12 +79,12 @@ RSpec.describe "ZSH" do
 
     describe nix_path_entry(:nixpkgs) do
       it { should be_present }
-      its(:path) { should be_inside("/nix/store/") }
+      its(:path) { should be_in_nix_store }
     end
 
     describe nix_path_entry(:"home-manager") do
       it { should be_present }
-      its(:path) { should be_inside("/nix/store/") }
+      its(:path) { should be_in_nix_store }
     end
 
     describe path_entry(profile_path "bin") do
@@ -109,14 +109,10 @@ RSpec.describe "ZSH" do
 
       aggregate_failures do
         expect(hashes["iCloud"]).to eq(icloud_path)
-        expect(hashes["dotfiles"]).to be_a_directory
-        expect(hashes["nixpkgs"]).to be_a_directory.and be_inside("/nix/store")
-        expect(hashes["home-manager"]).to be_a_directory.and be_inside("/nix/store")
+        expect(hashes["dotfiles"]).to eq(dotfiles_path)
+        expect(hashes["nixpkgs"]).to be_a_directory.and be_in_nix_store
+        expect(hashes["home-manager"]).to be_a_directory.and be_in_nix_store
       end
-    end
-
-    it "cleans up local functions" do
-      expect(shell_functions).to_not include("maybe_source")
     end
   end
 end

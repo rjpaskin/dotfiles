@@ -1,4 +1,4 @@
-{ config, lib, dotfilesRoot, ... }:
+{ config, lib, ... }:
 
 let
   editorConfigINI = attrs: with lib; let
@@ -10,7 +10,7 @@ let
     ${generators.toINI { inherit mkKeyValue; } attrsOfAttrs}
   '';
 
-  inherit (config.lib.file) mkOutOfStoreSymlink;
+  inherit (config.lib.symlinks) mkDotfileSymlink;
 
 in {
   programs.bash = {
@@ -101,10 +101,10 @@ in {
   '';
 
   targets.darwin.homebrew.casks = [
-    { name = "emacs"; files = ["emacs.d/elpa" "emacs.d/quelpa"]; }
+    { name = "emacs"; privateFiles = ["emacs.d/elpa" "emacs.d/quelpa"]; }
   ];
 
   home.file.".emacs.d/init.el".source = ../emacs.d/init.el;
   # This needs to be writable so can't be in the Nix store
-  home.file.".emacs.d/custom.el".source = mkOutOfStoreSymlink "${dotfilesRoot}/emacs.d/custom.el";
+  home.file.".emacs.d/custom.el".source = mkDotfileSymlink "emacs.d/custom.el";
 }

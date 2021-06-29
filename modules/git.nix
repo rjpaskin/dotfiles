@@ -90,10 +90,10 @@ in {
 
       programs.zsh.oh-my-zsh.plugins = ["git"];
 
-      home.file = config.lib.symlinks.dotfile
-        "Library/Application Support/SourceTree/sourcetree.license";
-
-      targets.darwin.homebrew.casks = ["sourcetree"];
+      targets.darwin.homebrew.casks = [{
+        name = "sourcetree";
+        privateFiles = ["Library/Application Support/SourceTree/sourcetree.license"];
+      }];
     }
 
     {

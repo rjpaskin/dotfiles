@@ -53,12 +53,14 @@ module ShellLib
       if matcher.is_a?(Regexp)
         matcher.match?(content)
       else
-        read.include?(matcher)
+        content.include?(matcher)
       end
     end
 
+    alias_method :matches?, :include?
+
     def blank?
-      /\A\s*\z/.match?(content)
+      matches?(/\A\s*\z/)
     end
 
     def empty?
@@ -109,7 +111,7 @@ module ShellLib
     NIX_STORE_PATH = "/nix/store/".freeze
 
     def in_nix_store?
-      symlink? && realpath.to_s.start_with?(NIX_STORE_PATH)
+      inside?(NIX_STORE_PATH) || (symlink? && realpath.inside?(NIX_STORE_PATH))
     end
 
     private

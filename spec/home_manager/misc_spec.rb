@@ -95,7 +95,7 @@ RSpec.describe "Misc" do
       describe home_path(".emacs.d/#{pkg_directory}") do
         it { should be_a_directory.and be_readable }
         it { should_not be_empty }
-        its(:realpath) { should be_inside(icloud_path) }
+        its(:realpath) { should be_inside(icloud_path "dotfiles") }
       end
     end
 

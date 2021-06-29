@@ -30,8 +30,8 @@ let
         type = str;
       };
 
-      files = mkOption {
-        description = "Files to symlink";
+      privateFiles = mkOption {
+        description = "Private files to symlink";
         type = listOf str;
         default = [];
       };
@@ -44,7 +44,7 @@ let
     };
   };
 
-  extractedFiles = foldl' (acc: { files, ... }: acc ++ files) [] cfg.casks;
+  extractedPrivateFiles = foldl' (acc: cask: acc ++ cask.privateFiles) [] cfg.casks;
   extractedDefaults = mkMerge (catAttrs "defaults" cfg.casks);
 
 in {
@@ -66,7 +66,7 @@ in {
     programs.zsh.sessionVariables.HOMEBREW_BUNDLE_FILE = "${bundleFile}";
 
     home = {
-      file = config.lib.symlinks.dotfiles extractedFiles;
+      file = config.lib.symlinks.privateFiles extractedPrivateFiles;
 
       packages = [ mas ]; # make available for general use
 

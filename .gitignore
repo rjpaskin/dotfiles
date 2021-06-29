@@ -1,14 +1,5 @@
 /scratch/
 
-/emacs.d/elpa/
-/emacs.d/quelpa/
-
-/**/tmuxinator/*.yml
-!/**/tmuxinator/default.yml
-!/**/tmuxinator/default_helper.rb
-
 /*.old
 /.*.local
 /modules/*/*.local
-
-/Library/

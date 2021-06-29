@@ -55,20 +55,30 @@
     nixpkgs = pkgs; # used by `spec/support/deps/default.nix`
 
     hmConfig = {
-      hostConfig, dotfilesRoot, username, homeDirectory
+      hostConfig, dotfilesDirectory, privateDirectory,
+      username, homeDirectory
     }: home-manager.lib.homeManagerConfiguration rec {
       inherit system homeDirectory username;
 
       configuration = { lib, ... }: {
         _file = ./flake.nix;
         imports = [ ./home.nix hostConfig ];
-        config._module.args = { inherit dotfilesRoot; };
+        config._module.args = {
+          inherit dotfilesDirectory privateDirectory;
+        };
       };
     };
 
     defaultPackage.${system} = {
-      hostConfig,   # filename of extra config to use
-      dotfilesRoot, # used to access files in this repo that are git-ignored
+      # filename of extra config to use
+      hostConfig,
+
+      # used to access git-ignored files in this repo or that can't be in the Nix Store
+      dotfilesDirectory,
+
+      # 'private' files stored outside this repo
+      privateDirectory,
+
       username, homeDirectory
     }@args: with pkgs; let
       inherit (hmConfig args) activationPackage;
