@@ -76,6 +76,7 @@
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs",
         "splitjoin-vim": "splitjoin-vim",
+        "thoughtbot-dotfiles": "thoughtbot-dotfiles",
         "vim-alias": "vim-alias",
         "vim-bundler": "vim-bundler",
         "vim-crystal": "vim-crystal",
@@ -103,6 +104,23 @@
       "original": {
         "owner": "AndrewRadev",
         "repo": "splitjoin.vim",
+        "type": "github"
+      }
+    },
+    "thoughtbot-dotfiles": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1613404265,
+        "narHash": "sha256-nY/S+ePTgN23HCYPoppXT6KX0YySsuBr4O7PCprtBhM=",
+        "owner": "thoughtbot",
+        "repo": "dotfiles",
+        "rev": "118e9a0e572a72ca663cb7eed1beedf2d336879a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "thoughtbot",
+        "ref": "pull/684/head",
+        "repo": "dotfiles",
         "type": "github"
       }
     },

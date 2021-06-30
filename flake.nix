@@ -34,9 +34,20 @@
       url = "github:Julian/vim-textobj-variable-segment"; flake = false;
     };
     vim-yaml-helper = { url = "github:lmeijvogel/vim-yaml-helper"; flake = false; };
+
+    thoughtbot-dotfiles = {
+      # TODO: change this back to `master` once PR merged
+      url = "github:thoughtbot/dotfiles/pull/684/head";
+      flake = false;
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, flake-compat, ... }@args: let
+  outputs = {
+    self, nixpkgs, home-manager,
+    flake-compat, # this needs to be a named argument for it to work
+    thoughtbot-dotfiles,
+    ...
+  }@args: let
     system = "x86_64-darwin";
     pkgs = nixpkgs.outputs.legacyPackages.${system};
 
@@ -54,6 +65,10 @@
     inherit vimPlugins; # used by `overlays.nix`
     nixpkgs = pkgs; # used by `spec/support/deps/default.nix` and `script/update-lockfile`
 
+    flakeRepos = {
+      inherit thoughtbot-dotfiles;
+    };
+
     hmConfig = {
       hostConfig, dotfilesDirectory, privateDirectory,
       username, homeDirectory
@@ -64,7 +79,7 @@
         _file = ./flake.nix;
         imports = [ ./home.nix hostConfig ];
         config._module.args = {
-          inherit dotfilesDirectory privateDirectory;
+          inherit dotfilesDirectory privateDirectory flakeRepos;
         };
       };
     };

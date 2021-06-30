@@ -39,6 +39,20 @@ RSpec.describe "Packages" do
         expect(result.stderr).to be_empty
       end
     end
+
+    describe xdg_config_path("ctags/config.ctags") do
+      it { should be_a_file.and be_readable }
+      it { should include(/--exclude=node_modules/) }
+    end
+
+    describe xdg_config_path("ctags/nix.ctags") do
+      it { should be_a_file.and be_readable }
+      it { should include(/--langdef=Nix/i) }
+    end
+
+    it "loads config files without warnings" do
+      expect(command! "ctags --list-languages").to be_success.and include("Nix")
+    end
   end
 
   describe program("fzf") do

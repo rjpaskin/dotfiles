@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, flakeRepos, ... }:
 
 with lib;
 
@@ -16,8 +16,21 @@ with lib;
         jq
         ncdu
         shellcheck
-        universal-ctags
       ];
+    }
+
+    {
+      home.packages = [ pkgs.universal-ctags ];
+      xdg.configFile = {
+        "ctags/config.ctags".source = "${flakeRepos.thoughtbot-dotfiles}/ctags.d/config.ctags";
+
+        # See https://github.com/universal-ctags/ctags/issues/261
+        "ctags/nix.ctags".text = ''
+          --langdef=Nix
+          --langmap=Nix:.nix
+          --regex-Nix=/([^ \t*]*)[ \t]*=.*:/\1/f/
+        '';
+      };
     }
 
     (let
