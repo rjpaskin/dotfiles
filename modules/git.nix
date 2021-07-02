@@ -16,7 +16,7 @@ let
       branch = "auto";
     };
     rebase = {
-      autoStash = true; # stach changes before rebase
+      autoStash = true; # stash changes before rebase
       autoSquash = true; # always use `--autosquash`
     };
     rerere = {
@@ -24,6 +24,7 @@ let
       autoupdate = true; # state rerere-resolved conflicts automatically
     };
     diff.colorMoved = "zebra";
+    init.defaultBranch = "main";
   };
 
   ignores = [
