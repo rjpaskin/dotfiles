@@ -15,11 +15,13 @@ confirm() {
   if [ -n "$DRY_RUN" ]; then
     echo "[DRY RUN] Script would ask '$*'"
     return 0
-  else
+  elif [ -n "$IS_INTERACTIVE" ]; then
     read -rp "$1 [y/N] " -n 1
     echo ""
 
     [[ $REPLY =~ ^[Yy]$ ]]
+  else
+    return 0
   fi
 }
 
@@ -95,6 +97,12 @@ reset_path() {
 reset_path
 
 dotfiles="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+if [ -t 0 ]; then # is stdin a tty?
+  export IS_INTERACTIVE=1
+else
+  export IS_INTERACTIVE=""
+fi
 
 if has_arg "--dry-run" "$@" || has_arg "-n" "$@"; then
   export DRY_RUN=1
@@ -297,25 +305,30 @@ else
   require_executable "ssh-keygen"
   require_executable "/usr/bin/ssh-add"
 
-  ssh_password=
+  user_email=
 
-  if [ -z "$DRY_RUN" ]; then
-    ssh_password="$(capture_secret "ssh_key_passphrase" openssl rand -base64 18)"
+  ssh_password="$(capture_secret "ssh_key_passphrase" openssl rand -base64 18)"
 
-    require_executable "security"
+  require_executable "security"
 
-    # Get email from iCloud
-    user_email="$(security find-generic-password \
-      -s com.apple.account.IdentityServices.token 2>/dev/null \
-      | awk -F\" '{if ($2 == "acct") {print $4}}')"
+  # Get email from iCloud
+  set +e
+  user_email="$(security find-generic-password \
+    -s com.apple.account.IdentityServices.token 2>/dev/null \
+    | awk -F\" '{if ($2 == "acct") {print $4}}')"
+  set -e
 
-    if [ -z "$user_email" ]; then
-      echo "Enter email for SSH key"
-      read -r user_email
-    fi
+  if [ -z "$user_email" ] && [ -z "$DRY_RUN" ]; then
+    [ -n "$IS_INTERACTIVE" ] || err "Cannot get email to create SSH key"
+
+    echo "Enter email for SSH key"
+    read -r user_email
   fi
 
-  $DRY_RUN_CMD ssh-keygen -t ed25519 -C "$user_email" -N "$ssh_password"
+  keyfile="$HOME/.ssh/id_ed25519"
+
+  $DRY_RUN_CMD mkdir -p "$HOME/.ssh"
+  $DRY_RUN_CMD ssh-keygen -t ed25519 -C "$user_email" -N "$ssh_password" -f "$keyfile"
 
   $DRY_RUN_CMD eval "$(ssh-agent -s)"
 
