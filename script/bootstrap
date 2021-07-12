@@ -124,6 +124,23 @@ macos_arch="$(uname -m)"
 debug "System: macOS ${macos_major}.${macos_minor}.${macos_patch} on $macos_arch"
 
 #-------------------------------------------------
+# `sudo` keep-alive
+#-------------------------------------------------
+if [ -z "$DRY_RUN" ] && [ -n "$IS_INTERACTIVE" ]; then
+  echo "Enter your sudo password now, so that we don't need to keep asking for it:"
+  sudo -v
+
+  # See:
+  # - https://gist.github.com/cowboy/3118588
+  # - https://github.com/mathiasbynens/dotfiles/blob/66ba9b3/.macos
+  while true; do
+    sudo -n true
+    sleep 60
+    kill -0 "$$" || exit
+  done 2>/dev/null &
+fi
+
+#-------------------------------------------------
 # Set hostname
 #-------------------------------------------------
 if ! [[ "$(scutil --get ComputerName)" =~ ^rjp- ]]; then
