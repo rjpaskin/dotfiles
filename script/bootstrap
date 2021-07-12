@@ -10,6 +10,19 @@ debug() {
   echo "[ DEBUG ] $*" >&2
 }
 
+confirm() {
+  # A dry run doesn't make any changes, so no need to get confirmation
+  if [ -n "$DRY_RUN" ]; then
+    echo "[DRY RUN] Script would ask '$*'"
+    return 0
+  else
+    read -rp "$1 [y/N] " -n 1
+    echo ""
+
+    [[ $REPLY =~ ^[Yy]$ ]]
+  fi
+}
+
 require_restart() {
   if [ -n "$DRY_RUN" ]; then
     echo "[DRY RUN] Script would ask to restart computer because '$*' and then exit"
@@ -136,9 +149,15 @@ case "$softwareupdates" in
   *)
     debug "Found the following software updates:"
     echo "$softwareupdates"
-    [ -z "$DRY_RUN" ] && debug "Installing software updates..."
-    $DRY_RUN_CMD softwareupdate --install --all
-    require_restart "Updates installed"
+
+    if confirm "Are you sure you want to install these updates?"; then
+      [ -z "$DRY_RUN" ] && debug "Installing software updates..."
+
+      $DRY_RUN_CMD softwareupdate --install --all
+      require_restart "Updates installed"
+    else
+      debug "Skipping updates"
+    fi
     ;;
 esac
 
