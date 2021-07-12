@@ -1,5 +1,3 @@
-require "open3"
-
 module ShellLib
   class Command
     class ExecutionError < StandardError; end
@@ -22,6 +20,16 @@ module ShellLib
       end
     end
 
+    MODE = begin
+      raise LoadError if ENV["DOTFILES_EXEC_MODE"] == "open3"
+
+      require "posix/spawn"
+      :posix_spawn
+    rescue LoadError
+      require "open3"
+      :open3
+    end
+
     def initialize(*args)
       @command = args.flatten
     end
@@ -40,6 +48,8 @@ module ShellLib
         def #{method}; status.#{method}; end
       RUBY
     end
+
+    alias_method :error?, :failed?
 
     def check!
       raise ExecutionError, stderr if failed?
@@ -61,21 +71,39 @@ module ShellLib
 
     attr_reader :command
 
-    def open3_args
+    def spawn_args
       command
     end
 
     def run
       return if run?
 
-      stdout, stderr, status = Open3.capture3(*open3_args)
+      stdout, stderr, status = execute
+
       @stdout = Output.new(stdout)
       @stderr = Output.new(stderr)
       @status = Status.new(status)
     end
 
     def run?
-      defined?(@status) && @status.is_a?(Process::Status)
+      defined?(@status) && @status.is_a?(Status)
+    end
+
+    if MODE == :open3
+      def execute
+        args = spawn_args.dup
+        options = args.last
+        options[:stdin_data] = options.delete(:input) if Hash === options && options.key?(:input)
+
+        Open3.capture3(*spawn_args)
+      end
+    else
+      def execute
+        child = POSIX::Spawn::Child.build(*spawn_args)
+        child.exec!
+
+        [child.out, child.err, child.status]
+      end
     end
   end
 end

@@ -9,6 +9,16 @@
     };
     version = "1.3";
   };
+  posix-spawn = {
+    groups = ["default"];
+    platforms = [];
+    source = {
+      remotes = ["https://rubygems.org"];
+      sha256 = "0cmb0svalqcxfzlzc5fvrci12b79x7bakasr8gkl3q5rz6di1q52";
+      type = "gem";
+    };
+    version = "0.3.15";
+  };
   rspec = {
     dependencies = ["rspec-core" "rspec-expectations" "rspec-mocks"];
     groups = ["default"];

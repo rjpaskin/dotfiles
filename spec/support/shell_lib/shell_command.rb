@@ -8,6 +8,8 @@ module ShellLib
     # See: https://opensource.apple.com/source/Libc/Libc-320/include/paths.h.auto.html
     DEFAULT_PATH = "/usr/bin:/bin".freeze
 
+    STDIN_KEY = (MODE == :open3 ? :stdin_data : :input)
+
     private
 
     def run
@@ -16,7 +18,7 @@ module ShellLib
       @stderr.gsub!(/\e\[.+\e\[00?m/, "") # strip prompt
     end
 
-    def open3_args
+    def spawn_args
       [
         env,
         ENV["SHELL"],
@@ -25,7 +27,7 @@ module ShellLib
         "-s", # read from stdin
         unsetenv_others: true,
         # prepend command with spaces to avoid committing to history
-        stdin_data: command.join(" ").gsub(/^/, " ")
+        STDIN_KEY => command.join(" ").gsub(/^/, " ")
       ]
     end
 
