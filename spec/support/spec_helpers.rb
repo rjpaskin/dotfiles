@@ -7,7 +7,7 @@ module SpecHelpers
 
       around do |example|
         Dir.mktmpdir do |tmp|
-          self.tmpdir = Pathname(tmp)
+          self.tmpdir = ShellLib::EditablePath.new(tmp)
           yield tmpdir, example
           example.run
         end

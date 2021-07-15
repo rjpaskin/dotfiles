@@ -69,8 +69,18 @@ module ShellLib
       entries.any? {|entry| entry === matcher }
     end
 
+    def has_entry?(matcher, at: nil)
+      return include?(matcher) unless at
+
+      at === self[matcher].index
+    end
+
     def pretty_print(pp)
       pp.pp(entries)
+    end
+
+    def empty?
+      entries.empty?
     end
 
     private

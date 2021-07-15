@@ -1,8 +1,16 @@
+require "forwardable"
 require "pathname"
 
 module ShellLib
   class Path
     include Comparable
+    extend Forwardable
+
+    def_delegators :pathname,
+      :directory?, :file?, :exist?,
+      :executable?, :symlink?,
+      :readable?, :world_readable?, :writable?,
+      :extname, :read, :to_s
 
     def initialize(path)
       @pathname = Pathname(path).expand_path
@@ -16,6 +24,8 @@ module ShellLib
         other
       when String
         Pathname(other).expand_path
+      when SearchPath::Entry
+        Pathname(other.path).expand_path
       else
         raise ArgumentError, "could not compare #{other} with #{self.class}"
       end
@@ -23,10 +33,8 @@ module ShellLib
       pathname <=> other_pathname
     end
 
-    %i[directory? file? executable? symlink? readable? writable? exist? extname read to_s].each do |method|
-      class_eval <<~RUBY, __FILE__, __LINE__ + 1
-        def #{method}(*args); pathname.#{method}(*args); end
-      RUBY
+    def only_user_readable?
+      !world_readable?
     end
 
     alias_method :to_str, :to_s
@@ -61,6 +69,10 @@ module ShellLib
 
     def blank?
       matches?(/\A\s*\z/)
+    end
+
+    def has_content?
+      !blank?
     end
 
     def empty?

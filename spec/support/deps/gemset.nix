@@ -9,6 +9,16 @@
     };
     version = "1.3";
   };
+  eventmachine = {
+    groups = ["default"];
+    platforms = [];
+    source = {
+      remotes = ["https://rubygems.org"];
+      sha256 = "0wh9aqb0skz80fhfn66lbpr4f86ya2z5rx6gm5xlfhd05bj1ch4r";
+      type = "gem";
+    };
+    version = "1.2.7";
+  };
   posix-spawn = {
     groups = ["default"];
     platforms = [];

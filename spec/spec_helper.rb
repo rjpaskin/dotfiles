@@ -3,6 +3,9 @@ require "rspec/its"
 $LOAD_PATH << File.expand_path("./support", __dir__)
 require "shell_lib"
 require "spec_helpers"
+require "mock_executables_helper"
+
+RSpec::Matchers.define_negated_matcher :not_change, :change
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
@@ -49,5 +52,14 @@ RSpec.configure do |config|
 
   config.before(:each, arm: true) do |example|
     skip("not on an ARM system") unless ShellLib.arm?
+  end
+
+  config.include MockExecutablesHelper, mock_executables: true
+
+  config.around(:each, mock_executables: true) do |example|
+    @registry = double
+    singleton_class.attr_reader :registry
+
+    MockExecutablesHelper::Server.run(registry) { example.run }
   end
 end

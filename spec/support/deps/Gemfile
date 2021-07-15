@@ -1,5 +1,6 @@
 source "https://rubygems.org"
 
+gem "eventmachine"
 gem "posix-spawn"
 gem "rspec"
 gem "rspec-its"
