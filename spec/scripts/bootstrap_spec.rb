@@ -28,6 +28,41 @@ RSpec.describe "script/bootstrap", :mock_executables do
     tmpdir.join("script/bootstrap").write(new_content).mk_executable
   end
 
+  # Although we patch the script in order to stub executables
+  # and prevent the script from making actual changes to the
+  # system, this sandbox profile acts as another safeguard
+  #
+  # Reference: https://reverse.put.as/wp-content/uploads/2011/09/Apple-Sandbox-Guide-v0.1.pdf
+  let(:sandbox_profile) do
+    permitted_commands = %w[
+      awk dirname env openssl ssh-keygen sw_vers tee touch uname which
+    ]
+
+    tmpdir.join("__sandbox.sb").write(<<~CONTENT)
+      (version 1)
+      (allow default)
+      (import "system.sb")
+
+      (deny network*)
+      (allow network*
+        (remote unix (subpath "#{dotfiles_path}")))
+
+      (deny file-write*)
+      (allow file-write*
+        (subpath "#{tmpdir.realpath}")
+        (subpath "/private/tmp"))
+
+      (deny process-exec
+        (regex #"^(/usr)?/s?bin")
+        (subpath "#{dotfiles_path}"))
+
+      (allow process-exec
+        (regex #"/usr/bin/(#{permitted_commands.join("|")})")
+        (regex #"/bin/(bash|chmod|mkdir|sh)")
+        (subpath "#{tmpdir}"))
+    CONTENT
+  end
+
   let(:bin) { tmpdir.join("__stubs") }
 
   let(:nix_installer) do
@@ -131,6 +166,7 @@ RSpec.describe "script/bootstrap", :mock_executables do
 
     to_run = [
       "env HOME=#{tmpdir}/home",
+      "sandbox-exec -f #{sandbox_profile}",
       [patched_script, *args].join(" ")
     ].join(" ")
 
