@@ -156,6 +156,27 @@ RSpec.describe "script/bootstrap", :mock_executables do
     )
   end
 
+  def fs_snapshot(root = tmpdir)
+    {}.tap do |snapshot|
+      root.children.each do |file|
+        next if %r{/__|/script/bootstrap$}.match?(file)
+
+        filename = file.to_s.sub(tmpdir, "<tmp>")
+
+        unless file.directory?
+          snapshot[filename] = File.read(file)
+          next
+        end
+
+        if file.empty?
+          snapshot[filename] = "<empty dir>"
+        else
+          snapshot.merge!(fs_snapshot file)
+        end
+      end
+    end
+  end
+
   def generate_softwareupdate_output(text)
     stdout = <<~OUTPUT
       Software Update Tool
@@ -168,6 +189,66 @@ RSpec.describe "script/bootstrap", :mock_executables do
 
   let(:nix_installer_flags) do
     %w[--no-daemon --no-modify-profile --no-channel-add]
+  end
+
+  context "dry run" do
+    let(:permitted_invocations) do
+      [
+        an_invocation_of("scutil", with: %w[--get ComputerName]),
+        an_invocation_of("softwareupdate", with: %w[--list]),
+        an_invocation_of("fdesetup", with: %w[status]),
+        an_invocation_of(
+          "security",
+          with: %w[find-generic-password -s com.apple.account.IdentityServices.token]
+        ),
+        an_invocation_of("ssh-agent", with: %w[-s])
+      ]
+    end
+
+    context "fresh install (blank slate)" do
+      before do
+        stub_command("fdesetup", args: %w[status]).and_return(
+          "FileVault is Off"
+        )
+      end
+
+      context "no hostname given" do
+        it "still errors with message asking for hostname" do
+          result = run_script("--dry-run")
+
+          aggregate_failures do
+            expect(result).to be_error
+            expect(result.stderr).to include(/provide a hostname/i)
+          end
+        end
+      end
+
+      context "hostname given" do
+        it "doesn't make any changes" do
+          aggregate_failures do
+            expect {
+              run_script!("--dry-run test-hostname")
+            }.not_to change { fs_snapshot }
+
+            expect(calls).to match_array(permitted_invocations)
+          end
+        end
+      end
+    end
+
+    context "hostname already set" do
+      before { stub_restartables }
+
+      it "doesn't make any changes" do
+        aggregate_failures do
+          expect {
+            run_script!("--dry-run")
+          }.not_to change { fs_snapshot }
+
+          expect(calls).to match_array(permitted_invocations)
+        end
+      end
+    end
   end
 
   context "fresh install (blank slate)" do

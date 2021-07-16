@@ -35,12 +35,6 @@ require_restart() {
   fi
 }
 
-has_arg() {
-  local arg="$1"; shift
-
-  [[ " $* " == *" $arg "* ]]
-}
-
 ensure_dir_in_path() {
   local dir="$1"
 
@@ -104,15 +98,28 @@ else
   export IS_INTERACTIVE=""
 fi
 
-if has_arg "--dry-run" "$@" || has_arg "-n" "$@"; then
-  export DRY_RUN=1
-  export DRY_RUN_CMD="echo [DRY RUN] Would run:"
+export DRY_RUN=""
+export DRY_RUN_CMD=""
+new_hostname=""
 
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --dry-run|-n)
+      export DRY_RUN=1
+      export DRY_RUN_CMD="echo [DRY RUN] Would run:"
+      shift
+      ;;
+    *)
+      [ -n "$new_hostname" ] && err "Too many arguments"
+      new_hostname="$1"
+      shift
+    ;;
+  esac
+done
+
+if [ -n "$DRY_RUN" ]; then
   debug "This is a dry run"
 else
-  export DRY_RUN=""
-  export DRY_RUN_CMD=""
-
   debug "This is a live run"
 fi
 
@@ -152,10 +159,10 @@ fi
 # Set hostname
 #-------------------------------------------------
 if ! [[ "$(scutil --get ComputerName)" =~ ^rjp- ]]; then
-  [ -n "${1-}" ] || err "Provide a hostname as the argument to this script"
+  [ -n "$new_hostname" ] || err "Provide a hostname as the argument to this script"
 
   for name in ComputerName HostName LocalHostName; do
-    $DRY_RUN_CMD sudo scutil --set "$name" "rjp-$1"
+    $DRY_RUN_CMD sudo scutil --set "$name" "rjp-$new_hostname"
   done
 fi
 
