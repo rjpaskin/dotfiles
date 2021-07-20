@@ -36,8 +36,7 @@
     vim-yaml-helper = { url = "github:lmeijvogel/vim-yaml-helper"; flake = false; };
 
     thoughtbot-dotfiles = {
-      # TODO: change this back to `master` once PR merged
-      url = "github:thoughtbot/dotfiles/pull/684/head";
+      url = "github:thoughtbot/dotfiles";
       flake = false;
     };
   };

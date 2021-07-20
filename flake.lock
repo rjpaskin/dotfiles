@@ -110,16 +110,15 @@
     "thoughtbot-dotfiles": {
       "flake": false,
       "locked": {
-        "lastModified": 1613404265,
-        "narHash": "sha256-nY/S+ePTgN23HCYPoppXT6KX0YySsuBr4O7PCprtBhM=",
+        "lastModified": 1626713475,
+        "narHash": "sha256-Ckv/XXffI+e5K5njr+0x+Od+HI0c4Gq8z3G4c/X3Gq4=",
         "owner": "thoughtbot",
         "repo": "dotfiles",
-        "rev": "118e9a0e572a72ca663cb7eed1beedf2d336879a",
+        "rev": "42a313bde1f4dc7a75cc276714008c77bf3821bf",
         "type": "github"
       },
       "original": {
         "owner": "thoughtbot",
-        "ref": "pull/684/head",
         "repo": "dotfiles",
         "type": "github"
       }
