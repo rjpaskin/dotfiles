@@ -8,20 +8,29 @@ class NixLockfile
 
   NIX_VERSION_REGEXP = /^(NIX_VERSION=['"])([^'"]+)(['"])/m
 
-  def update
+  def update(*inputs)
+    inputs = inputs.flatten
+
     Dir.chdir(DOTFILES) do
-      nix("flake update", capture: false)
-      update_bootstrap_nix_version
+      flake_command = if inputs.any?
+        %w[flake lock] + inputs.map {|input| "--update-input #{input}" }
+      else
+        %w[flake update]
+      end
+
+      nix(flake_command.join(" "), capture: false)
+
+      update_bootstrap_nix_version if inputs.empty? || inputs.include?("nixpkgs")
     end
   end
 
   def update_bootstrap_nix_version
     dotfiles_path("script/bootstrap").editable.edit do |content|
       content.gsub(NIX_VERSION_REGEXP) do
-        old_version = $2
+        start_quote, old_version, end_quote = Regexp.last_match.to_a
         puts "Nix: #{old_version} -> #{nix_version}" if old_version != nix_version
 
-        "#{$1}#{nix_version}#{$3}"
+        "#{start_quote}#{nix_version}#{end_quote}"
       end
     end
   end
@@ -53,4 +62,4 @@ class NixLockfile
   end
 end
 
-NixLockfile.new.update if $0 == __FILE__
+NixLockfile.new.update(ARGV) if $0 == __FILE__
