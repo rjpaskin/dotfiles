@@ -12,15 +12,17 @@ class NixLockfile
     inputs = inputs.flatten
 
     Dir.chdir(DOTFILES) do
-      flake_command = if inputs.any?
-        %w[flake lock] + inputs.map {|input| "--update-input #{input}" }
-      else
-        %w[flake update]
+      diff do
+        flake_command = if inputs.any?
+          %w[flake lock] + inputs.map {|input| "--update-input #{input}" }
+        else
+          %w[flake update]
+        end
+
+        nix(flake_command.join(" "), capture: false)
+
+        update_bootstrap_nix_version if inputs.empty? || inputs.include?("nixpkgs")
       end
-
-      nix(flake_command.join(" "), capture: false)
-
-      update_bootstrap_nix_version if inputs.empty? || inputs.include?("nixpkgs")
     end
   end
 
@@ -32,6 +34,47 @@ class NixLockfile
 
         "#{start_quote}#{nix_version}#{end_quote}"
       end
+    end
+  end
+
+  def commits_for_inputs
+    lockfile = ShellLib::StrictHash.parse_json(
+      dotfiles_path("flake.lock").contents
+    )
+
+    version = lockfile[:version]
+    raise "Unhandled version: #{version}" if version != 7
+
+    root_name = lockfile[:root]
+    nodes = lockfile[:nodes]
+
+    nodes[root_name, :inputs].each_value.each_with_object({}) do |name, inputs|
+      locked = nodes[name, :locked]
+      next if locked[:type] != "github"
+
+      inputs[name] = {
+        slug: "#{locked[:owner]}/#{locked[:repo]}",
+        commit: locked[:rev][0, 7]
+      }
+    end
+  end
+
+  def diff
+    locked_before = commits_for_inputs
+    yield
+    locked_after = commits_for_inputs
+
+    locked_before.each do |name, before|
+      after = locked_after.fetch(name, {})
+
+      if before[:slug] != after[:slug]
+        puts "Repo changed: #{before[:slug]} -> #{after[:slug]}"
+        next
+      end
+
+      next if before[:commit] == after[:commit]
+
+      puts "#{name}: https://github.com/#{before[:slug]}/compare/#{before[:commit]}...#{after[:commit]}"
     end
   end
 

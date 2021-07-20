@@ -15,6 +15,8 @@ module ShellLib
   autoload :Runner, "shell_lib/runner"
   autoload :SearchPath, "shell_lib/search_path"
 
+  autoload :StrictHash, "shell_lib/strict_hash"
+
   autoload :CachedMethods, "shell_lib/cached_methods"
 
   ARM_ARCH = "arm64".freeze
