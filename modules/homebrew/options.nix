@@ -58,11 +58,25 @@ let
         type = attrs;
         default = {};
       };
+
+      rev = mkOption {
+        description = "Revision at which to checkout the cask. Intended for deleted apps";
+        type = nullOr str;
+        default = null;
+      };
     };
   };
 
   extractedPrivateFiles = foldl' (acc: cask: acc ++ cask.privateFiles) [] cfg.casks;
   extractedDefaults = mkMerge (catAttrs "defaults" cfg.casks);
+
+  # This makes a number of assumptions:
+  # 1. That the cask is from `homebrew/cask`
+  # 2. That the name of the cask file is the same as the cask name
+  checkoutCasks = map ({ name, rev, ... }: optionalString (rev != null) ''
+    $VERBOSE_ECHO "Checking out Casks/${name}.rb @ ${rev}"
+    git checkout ${rev} -- Casks/${name}.rb
+  '') cfg.casks;
 
   archPrefix = optionalString machine.isARM "arch -arm64e";
 
@@ -94,6 +108,14 @@ in {
 
         # Ensure that `brew bundle` doesn't try to install `mas` itself
         export PATH="${mas}/bin:$PATH" HOMEBREW_NO_AUTO_UPDATE=1
+
+        ${
+          optionalString (checkoutCasks != []) ''
+            pushd "$(brew --repository homebrew/cask)" > /dev/null
+            ${concatStrings checkoutCasks}
+            popd
+          ''
+        }
 
         ${
           optionalString machine.isARM ''

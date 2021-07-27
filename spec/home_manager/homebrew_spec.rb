@@ -33,4 +33,8 @@ RSpec.describe "Homebrew" do
       its(:archs, arm: true) { should include("arm64") }
     end
   end
+
+  describe app("MollyGuard") do
+    it { should exist }
+  end
 end

@@ -91,9 +91,15 @@ in {
         "keepingyouawake"
         "betterzip"
         "imageoptim"
-        "mollyguard"
         "superduper"
         "vlc"
+
+        {
+          name = "mollyguard";
+          # Mollyguard was deleted in Homebrew/homebrew-cask#78586
+          # - this is the commit before that PR was merged
+          rev = "e53923dac85c3e3219ddf6ff33a977f3ca75ebce";
+        }
       ]
 
       (mkIf roles.cyberduck ["cyberduck"])
