@@ -40,6 +40,10 @@ module ShellLib
       run_in_shell!("print -l ${(ko)#{name}}").lines
     end
 
+    define_cached_method :archs do |path|
+      command!("lipo -archs '#{path}'").split(" ")
+    end
+
     def self.current
       Thread.current[:Runner] ||= new
     end
@@ -66,6 +70,10 @@ module ShellLib
 
     def program(name)
       Resource.new("program #{name}") { Program.new(name) }
+    end
+
+    def app(name)
+      Resource.new("#{name}.app") { App.new(name) }
     end
 
     def login_env

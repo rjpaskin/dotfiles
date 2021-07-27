@@ -10,6 +10,7 @@ module ShellLib
 
   autoload :Output, "shell_lib/output"
   autoload :Program, "shell_lib/program"
+  autoload :App, "shell_lib/app"
   autoload :Resource, "shell_lib/resource"
   autoload :ResourceHelpers, "shell_lib/resource_helpers"
   autoload :Runner, "shell_lib/runner"

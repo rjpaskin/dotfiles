@@ -1,4 +1,9 @@
 RSpec.describe "Docker", role: "docker" do
+  describe app("Docker") do
+    it { should exist }
+    its(:archs, arm: true) { should include("arm64") }
+  end
+
   describe oh_my_zsh_plugins do
     it { should include("docker", "docker-compose") }
   end

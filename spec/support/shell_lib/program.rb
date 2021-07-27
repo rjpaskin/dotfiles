@@ -38,5 +38,9 @@ module ShellLib
     def manpage
       Runner.current.manpage(name)
     end
+
+    def archs
+      Runner.current.archs(path)
+    end
   end
 end
