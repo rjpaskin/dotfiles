@@ -54,6 +54,10 @@ in {
       eval "$(PATH="" /usr/libexec/path_helper -s)"
     fi
 
+    # Run before sourcing Nix profile.d to ensure programs from
+    # Nix profile appear first in $PATH
+    [ -d /opt/homebrew ] && eval "$(/opt/homebrew/bin/brew shellenv)"
+
     # Defines `NIX_PATH`, `NIX_PROFILES` and `NIX_SSL_CERT_FILE`
     source "$HOME/.nix-profile/etc/profile.d/nix.sh"
   '';

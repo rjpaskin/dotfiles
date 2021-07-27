@@ -95,6 +95,14 @@ in {
         # Ensure that `brew bundle` doesn't try to install `mas` itself
         export PATH="${mas}/bin:$PATH" HOMEBREW_NO_AUTO_UPDATE=1
 
+        ${
+          optionalString machine.isARM ''
+            if [ -z "''${HOMEBREW_PREFIX:-}" ]; then
+              $DRY_RUN_CMD eval "$(/opt/homebrew/bin/brew shellenv)"
+            fi
+          ''
+        }
+
         $DRY_RUN_CMD ${archPrefix} brew bundle install \
           $VERBOSE_ARG \
           --no-upgrade \

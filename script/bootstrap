@@ -301,6 +301,11 @@ else
       "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
   fi
 
+  if [ -n "$on_arm64" ]; then
+    # As instructed by the installer
+    $DRY_RUN_CMD eval "$("$arch_prefix $homebrew_prefix/bin/brew" shellenv)"
+  fi
+
   debug "Finished installing Homebrew"
 fi
 
