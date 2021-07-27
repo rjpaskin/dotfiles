@@ -35,7 +35,7 @@ RSpec.describe "script/bootstrap", :mock_executables do
   # Reference: https://reverse.put.as/wp-content/uploads/2011/09/Apple-Sandbox-Guide-v0.1.pdf
   let(:sandbox_profile) do
     permitted_commands = %w[
-      awk dirname env openssl ssh-keygen sw_vers tee touch uname which
+      arch awk dirname env openssl ssh-keygen sw_vers tee touch uname which
     ]
 
     tmpdir.join("__sandbox.sb").write(<<~CONTENT)

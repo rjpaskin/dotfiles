@@ -34,6 +34,7 @@ systemEnv="$(
     --arg machine "{
       privateDirectory = \"$HOME/Library/Mobile Documents/com~apple~CloudDocs/dotfiles\";
       dotfilesDirectory = \"$dotfiles\";
+      arch = \"$(uname -v)\";
     }" \
     "$dotfiles"
 )"

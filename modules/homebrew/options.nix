@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, machine, ... }:
 
 # Based on https://github.com/LnL7/nix-darwin/blob/007d700/modules/homebrew.nix
 
@@ -47,6 +47,8 @@ let
   extractedPrivateFiles = foldl' (acc: cask: acc ++ cask.privateFiles) [] cfg.casks;
   extractedDefaults = mkMerge (catAttrs "defaults" cfg.casks);
 
+  archPrefix = optionalString machine.isARM "arch -arm64e";
+
 in {
   options.targets.darwin.homebrew = {
     casks = mkOption {
@@ -76,7 +78,7 @@ in {
         # Ensure that `brew bundle` doesn't try to install `mas` itself
         export PATH="${mas}/bin:$PATH" HOMEBREW_NO_AUTO_UPDATE=1
 
-        $DRY_RUN_CMD brew bundle install \
+        $DRY_RUN_CMD ${archPrefix} brew bundle install \
           $VERBOSE_ARG \
           --no-upgrade \
           --no-lock \

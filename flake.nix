@@ -78,7 +78,11 @@
         _file = ./flake.nix;
         imports = [ ./home.nix hostConfig ];
         config._module.args = {
-          inherit flakeRepos machine;
+          inherit flakeRepos;
+
+          machine = machine // {
+            isARM = (builtins.match "ARM64" machine.arch) != null;
+          };
         };
       };
     };

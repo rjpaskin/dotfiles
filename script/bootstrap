@@ -282,8 +282,10 @@ esac
 #-------------------------------------------------
 if [ -n "$on_arm64" ]; then
   homebrew_prefix="/opt/homebrew"
+  arch_prefix="arch -arm64e"
 else
   homebrew_prefix="/usr/local"
+  arch_prefix=""
 fi
 
 if [ -e "$homebrew_prefix/bin/brew" ]; then
@@ -292,10 +294,10 @@ else
   debug "Installing Homebrew..."
 
   if [ -n "$DRY_RUN" ]; then
-    $DRY_RUN_CMD "/bin/bash -c \
+    $DRY_RUN_CMD "$arch_prefix /bin/bash -c \
       \$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
   else
-    /bin/bash -c \
+    $arch_prefix /bin/bash -c \
       "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
   fi
 
