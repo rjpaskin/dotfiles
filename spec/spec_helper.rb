@@ -34,6 +34,8 @@ RSpec.configure do |config|
   config.warnings = true
   config.order = :random
 
+  config.example_status_persistence_file_path = "tmp/rspec_examples.txt"
+
   Kernel.srand config.seed
 
   config.include SpecHelpers
