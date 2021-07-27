@@ -6,7 +6,24 @@ with lib;
 with types;
 
 let
-  inherit (pkgs) mas;
+  runAsIntel = path: pkgs.writeShellScriptBin "${builtins.baseNameOf path}-wrapped" ''
+    arch -x86_64 ${path} "$@"
+  '';
+
+  # We need to always run `mas` under Rosetta 2, since the changes
+  # Nix makes to the executable invalidate its signature, and thus
+  # Big Sur refuses to run it.
+  mas = pkgs.buildEnv {
+    inherit (pkgs.mas) meta passthru;
+
+    name = "mas-intel";
+    paths = [ pkgs.mas (runAsIntel "${pkgs.mas}/bin/mas") ];
+
+    postBuild = ''
+      rm $out/bin/mas
+      mv $out/bin/mas-wrapped $out/bin/mas
+    '';
+  };
 
   toCask = { name, ...}: ''cask "${name}"'';
   toMas = name: id: ''mas "${name}", id: ${toString id}'';
