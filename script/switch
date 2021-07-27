@@ -31,8 +31,10 @@ systemEnv="$(
     --argstr hostConfig "$dotfiles/hosts/$hostId.nix" \
     --argstr username "$USER" \
     --argstr homeDirectory "$HOME" \
-    --argstr privateDirectory "$HOME/Library/Mobile Documents/com~apple~CloudDocs/dotfiles" \
-    --argstr dotfilesDirectory "$dotfiles" \
+    --arg machine "{
+      privateDirectory = \"$HOME/Library/Mobile Documents/com~apple~CloudDocs/dotfiles\";
+      dotfilesDirectory = \"$dotfiles\";
+    }" \
     "$dotfiles"
 )"
 

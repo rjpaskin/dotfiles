@@ -1,4 +1,4 @@
-{ config, lib, modulesPath, pkgs, dotfilesDirectory, ... }:
+{ config, lib, modulesPath, pkgs, machine, ... }:
 
 with lib;
 
@@ -36,7 +36,7 @@ in {
 
     # These get sorted alphabetically so we can't rely on the order
     dirHashes = {
-      dotfiles = dotfilesDirectory;
+      dotfiles = machine.dotfilesDirectory;
       iCloud = "$HOME/Library/Mobile Documents/com~apple~CloudDocs";
 
       # For ease of searching

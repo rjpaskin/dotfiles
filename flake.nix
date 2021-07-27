@@ -69,7 +69,7 @@
     };
 
     hmConfig = {
-      hostConfig, dotfilesDirectory, privateDirectory,
+      hostConfig, machine,
       username, homeDirectory
     }: home-manager.lib.homeManagerConfiguration rec {
       inherit system homeDirectory username;
@@ -78,7 +78,7 @@
         _file = ./flake.nix;
         imports = [ ./home.nix hostConfig ];
         config._module.args = {
-          inherit dotfilesDirectory privateDirectory flakeRepos;
+          inherit flakeRepos machine;
         };
       };
     };
@@ -87,11 +87,10 @@
       # filename of extra config to use
       hostConfig,
 
-      # used to access git-ignored files in this repo or that can't be in the Nix Store
-      dotfilesDirectory,
-
-      # 'private' files stored outside this repo
-      privateDirectory,
+      # Info about the current machine. Includes:
+      # - dotfilesDirectory: used to access git-ignored files in this repo or that can't be in the Nix Store
+      # - privateDirectory: 'private' files stored outside this repo
+      machine,
 
       username, homeDirectory
     }@args: with pkgs; let
