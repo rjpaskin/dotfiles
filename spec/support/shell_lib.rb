@@ -19,9 +19,7 @@ module ShellLib
 
   autoload :CachedMethods, "shell_lib/cached_methods"
 
-  ARM_ARCH = "arm64".freeze
-
   def self.arm?
-    Etc.uname[:machine] == ARM_ARCH
+    /arm64/i.match?(Etc.uname[:version])
   end
 end

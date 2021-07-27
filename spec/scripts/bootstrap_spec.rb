@@ -82,7 +82,7 @@ RSpec.describe "script/bootstrap", :mock_executables do
     <<~SCRIPT
       set -e
 
-      if [ "$(uname -m)" = "arm64" ]; then
+      if [[ "$(uname -v)" == *ARM64* ]]; then
         export prefix="/opt/homebrew"
       else
         export prefix="/usr/local"

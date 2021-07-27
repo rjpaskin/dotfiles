@@ -129,7 +129,10 @@ module MockExecutablesHelper
       MACOS_VERSIONS[macos_version] || macos_version
     )
 
-    stub_command("uname", args: %w[-m]).and_return(arch)
+    stub_command("uname", args: %w[-v]).and_return(
+      "Darwin Kernel Version 20.5.0: Mon Jan  1 02:34:56 PDT 2021;" \
+      " root:xnu-1234.567.8~9/RELEASE_#{arch.to_s.upcase}_T1234"
+    )
   end
 
   def calls
