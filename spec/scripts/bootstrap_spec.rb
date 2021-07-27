@@ -94,8 +94,15 @@ RSpec.describe "script/bootstrap", :mock_executables do
     SCRIPT
   end
 
-  let(:homebrew_prefix) { tmpdir.join("usr/local") }
+  let(:homebrew_prefix) do
+    tmpdir.join(ShellLib.arm? ? "opt/homebrew" : "usr/local")
+  end
+
   let(:icloud_email) { "icloud@example.test" }
+
+  let(:rosetta_2_args) do
+    a_collection_containing_exactly("--install-rosetta", "--agree-to-license")
+  end
 
   before do
     tmpdir.join("script/switch").write(<<~SCRIPT).mk_executable
@@ -237,7 +244,8 @@ RSpec.describe "script/bootstrap", :mock_executables do
           "security",
           with: %w[find-generic-password -s com.apple.account.IdentityServices.token]
         ),
-        an_invocation_of("ssh-agent", with: %w[-s])
+        an_invocation_of("ssh-agent", with: %w[-s]),
+        *(an_invocation_of("softwareupdate", with: rosetta_2_args) if ShellLib.arm?)
       ]
     end
 
@@ -357,7 +365,9 @@ RSpec.describe "script/bootstrap", :mock_executables do
 
           expect(
             outputs.join("nix-installer").contents.split(" ")
-          ).to match_array(nix_installer_flags)
+          ).to match_array(
+            [*nix_installer_flags, *("--darwin-use-unencrypted-nix-store-volume")]
+          )
 
           expect(second_run.stderr).not_to include(/homebrew/i)
         end
@@ -405,15 +415,11 @@ RSpec.describe "script/bootstrap", :mock_executables do
 
   context "on ARM with Big Sur" do
     before do
-      stub_os(macos_version: :big_sur, arch: :arm64)
+      stub_os(macos_version: :big_sur, arch: :arm64) unless ShellLib.arm?
       stub_restartables
     end
 
     let(:homebrew_prefix) { tmpdir.join("opt/homebrew") }
-
-    let(:rosetta_2_args) do
-      a_collection_containing_exactly("--install-rosetta", "--agree-to-license")
-    end
 
     it "adapts to OS and arch" do
       run_script!

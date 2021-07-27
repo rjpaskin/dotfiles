@@ -76,7 +76,7 @@ RSpec.describe "Bootstrap" do
   context "Rosetta 2", :arm do
     it "is installed" do
       expect(
-        path("/Library/Apple/System/Library/LaunchDaemons/com.apple.oahd.plist")
+        file("/Library/Apple/System/Library/LaunchDaemons/com.apple.oahd.plist")
       ).to be_a_file
     end
   end

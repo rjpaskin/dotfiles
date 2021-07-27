@@ -54,5 +54,13 @@ module ShellLib
     def icloud_path(path = nil)
       ICLOUD.join(path.to_s)
     end
+
+    HOMEBREW_PREFIX = Path.new(
+      ShellLib.arm? ? "/opt/homebrew" : "/usr/local"
+    ).freeze
+
+    def homebrew_path(path = nil)
+      HOMEBREW_PREFIX.join(path.to_s)
+    end
   end
 end

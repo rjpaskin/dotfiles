@@ -90,11 +90,16 @@ RSpec.describe "ZSH" do
     describe path_entry(profile_path "bin") do
       it { should be_present }
       it { should be_before shell_variable("PATH")["/usr/local/bin"] }
+
+      context "on ARM", :arm do
+        it { should be_before shell_variable("PATH")[homebrew_path "bin"] }
+        it { should be_before shell_variable("PATH")[homebrew_path "sbin"] }
+      end
     end
 
     describe manpath_entry(profile_path "share/man") do
       it { should be_present }
-      it { should be_before(manpath["/usr/local/share/man"]) }
+      it { should be_before(manpath[homebrew_path "share/man"]) }
       it { should be_before(manpath["/usr/share/man"]) }
     end
 

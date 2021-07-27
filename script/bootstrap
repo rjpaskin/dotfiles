@@ -340,6 +340,7 @@ else
   if [ -z "$user_email" ] && [ -z "$DRY_RUN" ]; then
     [ -n "$IS_INTERACTIVE" ] || err "Cannot get email to create SSH key"
 
+    debug "Unable to get iCloud email"
     echo "Enter email for SSH key"
     read -r user_email
   fi
