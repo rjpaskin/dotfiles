@@ -17,6 +17,17 @@ hostId="$(scutil --get LocalHostName | sed -e 's/^rjp-//')"
 
 [ -n "$hostId" ] || fail "Unable to determine hostname"
 
+if [ -z "${NIX_PROFILES:-}" ]; then
+  nix_profile_sh="$HOME/.nix-profile/etc/profile.d/nix.sh"
+
+  if [ -f "$nix_profile_sh" ]; then
+    # shellcheck disable=SC1072,SC1090
+    source "$nix_profile_sh"
+  else
+    fail "Unable to source Nix profile.sh"
+  fi
+fi
+
 command -v nix-build > /dev/null || fail "Nix not installed"
 
 # Ensure that overlays and `nix.conf` are still found even when not
