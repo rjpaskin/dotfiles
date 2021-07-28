@@ -111,6 +111,11 @@ in {
           # - this is the commit before that PR was merged
           rev = "e53923dac85c3e3219ddf6ff33a977f3ca75ebce";
           removeQuarantine = true;
+          defaults."com.imt.MollyGuard" = {
+            defaultBehavior = true; # lock keyboard AND mouse
+            displayAlert = true;
+            statusIconSet = 1; # circular icons
+          };
         }
       ]
 

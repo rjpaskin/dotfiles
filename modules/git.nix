@@ -94,6 +94,17 @@ in {
       targets.darwin.homebrew.casks = [{
         name = "sourcetree";
         privateFiles = ["Library/Application Support/SourceTree/sourcetree.license"];
+        defaults."com.torusknot.SourceTreeNotMAS" = {
+          agreedToUpdateConfig = false; # don't touch Git global config
+          bookmarksClosedOnStartup = true;
+          commitColumnGuideWidth = 80;
+          diffFontName = "Monaco";
+          diffFontSize = 12.0; # needs to be float to get <real>
+          fileStatusFilterMode = 1; # show only: "pending"
+          fileStatusStagingViewMode = 1; # "split view staging"
+          fileStatusViewMode2 = 0; # "flat list, single column"
+          useFixedWithCommitFont = true;
+        };
       }];
     }
 

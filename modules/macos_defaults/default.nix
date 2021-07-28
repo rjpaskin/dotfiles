@@ -21,7 +21,7 @@
         AppleMetricUnits = true;
         ApplePressAndHoldEnabled = false;
         AppleShowAllExtensions = true;
-        AppleShowScrollBars = "Automatic";
+        AppleShowScrollBars = "WhenScrolling";
         InitialKeyRepeat = 15;
         KeyRepeat = 2;
         NSAutomaticCapitalizationEnabled = false;
