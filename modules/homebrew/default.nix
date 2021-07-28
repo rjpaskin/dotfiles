@@ -82,9 +82,9 @@ in {
           defaults."org.n8gray.QLColorCode".pathHL = "${pkgs.highlight}/bin/highlight";
         }
         "qlcommonmark" # markdown files
-        "qlstephen" # files without extensions
-        "quicklook-json"
-        "quicklook-csv"
+        { name = "qlstephen"; removeQuarantine = true; } # files without extensions
+        { name = "quicklook-json"; removeQuarantine = true; }
+        { name = "quicklook-csv"; removeQuarantine = true; }
 
         # Others
         "1password"
@@ -99,6 +99,7 @@ in {
           # Mollyguard was deleted in Homebrew/homebrew-cask#78586
           # - this is the commit before that PR was merged
           rev = "e53923dac85c3e3219ddf6ff33a977f3ca75ebce";
+          removeQuarantine = true;
         }
       ]
 

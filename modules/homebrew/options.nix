@@ -25,7 +25,10 @@ let
     '';
   };
 
-  toCask = { name, ...}: ''cask "${name}"'';
+  toCask = { name, removeQuarantine, ...}: concatStrings [
+    ''cask "${name}"''
+    (optionalString removeQuarantine ", args: { no_quarantine: true }")
+  ];
   toMas = name: id: ''mas "${name}", id: ${toString id}'';
 
   cfg = config.targets.darwin.homebrew;
@@ -63,6 +66,12 @@ let
         description = "Revision at which to checkout the cask. Intended for deleted apps";
         type = nullOr str;
         default = null;
+      };
+
+      removeQuarantine = mkOption {
+        description = "Remove the `com.apple.quarantine` extended attribute from cask artifacts?";
+        type = bool;
+        default = false;
       };
     };
   };

@@ -102,6 +102,20 @@ module ShellLib
       user_flags.to_i(16) & HIDDEN_FLAG != 0
     end
 
+    def has_xattr?(name, recursive: false)
+      cmd = ["xattr", *("-r" if recursive), name, "'#{pathname}'"]
+
+      Runner.current.command(cmd.join " ").lines.any? do |line|
+        line.end_with?(name)
+      end
+    end
+
+    QUARANTINE_XATTR = "com.apple.quarantine"
+
+    def quarantined?
+      has_xattr?(QUARANTINE_XATTR, recursive: true)
+    end
+
     def inspect
       "#<Path #{pathname.to_s}>"
     end

@@ -1,4 +1,8 @@
 RSpec.describe "Homebrew" do
+  def self.quicklook_generator(name)
+    home_path("Library/QuickLook/#{name}.qlgenerator")
+  end
+
   describe program("mas") do
     it "runs under ARM", :arm do
       expect(
@@ -36,5 +40,21 @@ RSpec.describe "Homebrew" do
 
   describe app("MollyGuard") do
     it { should exist }
+    it { should_not be_quarantined }
+  end
+
+  describe quicklook_generator("QLStephen") do
+    it { should exist }
+    it { should_not be_quarantined }
+  end
+
+  describe quicklook_generator("QuickLookCSV") do
+    it { should exist }
+    it { should_not be_quarantined }
+  end
+
+  describe quicklook_generator("QuickLookJSON") do
+    it { should exist }
+    it { should_not be_quarantined }
   end
 end
