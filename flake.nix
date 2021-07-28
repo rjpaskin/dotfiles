@@ -80,8 +80,18 @@
         config._module.args = {
           inherit flakeRepos;
 
-          machine = machine // {
+          machine = let
+            aliases = {
+              mojave = "10.14";
+              catalina = "10.15";
+              big_sur = "11";
+            };
+          in machine // rec {
             isARM = (builtins.match "ARM64" machine.arch) != null;
+            sameOrNewerThan = version': let
+              version = lib.attrByPath [version'] version' aliases;
+            in (builtins.compareVersions machine.macOSversion version) > -1;
+            olderThan = version: ! sameOrNewerThan version;
           };
         };
       };
