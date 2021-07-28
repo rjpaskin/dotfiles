@@ -82,8 +82,13 @@ in {
         $DRY_RUN_CMD sudo sh -c "echo $shell_path >> /etc/shells"
       fi
 
+      if ! [ -e "$shell_path" ]; then
+        $VERBOSE_ECHO "Pre-installing ZSH for chsh"
+        $DRY_RUN_CMD command nix-env -f ${toString pkgs.path} $VERBOSE_ARG -iA zsh
+      fi
+
       if [ "$SHELL" != "$shell_path" ]; then
-        $VERBOSE_ECHO "Changing shell for '$LOGNAME' to '$shell_path'"
+        $VERBOSE_ECHO "Changing shell for '$LOGNAME' to '$shell_path' (was '$SHELL')"
         $DRY_RUN_CMD sudo chsh -s "$shell_path" "$LOGNAME"
       fi
     }
