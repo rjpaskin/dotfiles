@@ -58,10 +58,20 @@ RSpec.describe "Git", role: "git" do
     end
   end
 
-  describe home_path("Library/Application Support/SourceTree/sourcetree.license") do
-    it { should be_a_file.and be_readable }
-    it { should_not be_in_nix_store }
-    its(:realpath) { should be_inside(icloud_path "dotfiles") }
+  describe "SourceTree" do
+    describe home_path("Library/Application Support/SourceTree/sourcetree.license") do
+      it { should be_a_file.and be_readable }
+      it { should_not be_in_nix_store }
+      its(:realpath) { should be_inside(icloud_path "dotfiles") }
+    end
+
+    describe app("Sourcetree") do
+      it { should exist }
+    end
+
+    describe program("stree") do
+      its("--version") { should be_success }
+    end
   end
 
   describe program("hub") do
