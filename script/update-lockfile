@@ -29,7 +29,7 @@ class NixLockfile
   def update_bootstrap_nix_version
     dotfiles_path("script/bootstrap").editable.edit do |content|
       content.gsub(NIX_VERSION_REGEXP) do
-        start_quote, old_version, end_quote = Regexp.last_match.to_a
+        start_quote, old_version, end_quote = Regexp.last_match.captures
         puts "Nix: #{old_version} -> #{nix_version}" if old_version != nix_version
 
         "#{start_quote}#{nix_version}#{end_quote}"
