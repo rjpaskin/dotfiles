@@ -32,6 +32,10 @@ in {
 
     sessionVariables = {
       NIX_PATH = "nixpkgs=${nixpkgsPath}:home-manager=${hmPath}";
+
+      # Disable per-tab history from macOS' `/etc` config files
+      SHELL_SESSION_HISTORY = 0;
+      SHELL_SESSIONS_DISABLE = 1;
     };
 
     # These get sorted alphabetically so we can't rely on the order

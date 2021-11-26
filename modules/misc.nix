@@ -29,6 +29,9 @@ in {
       LSCOLORS = "Gxfxcxdxbxegedabagacad";
       GREP_OPTIONS = "--color=auto";
       IGNOREEOF = "1"; # Ctrl+D must be pressed twice to exit shell
+
+      # Disable per-tab history from macOS' `/etc` config files
+      SHELL_SESSION_HISTORY = 0;
     };
     shellAliases = {
       ".." = "cd ..";
@@ -44,6 +47,7 @@ in {
     };
   };
   xdg.dataFile."bash/.keep".text = ""; # ensure Bash has directory to write to
+  home.file.".bash_sessions_disable".text = ""; # disable per-tab history from macOS' `/etc` config files
 
   programs.direnv = {
     enable = true;
