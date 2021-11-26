@@ -17,18 +17,16 @@ hostId="$(scutil --get LocalHostName | sed -e 's/^rjp-//')"
 
 [ -n "$hostId" ] || fail "Unable to determine hostname"
 
-if [ -z "${NIX_PROFILES:-}" ]; then
-  nix_profile_sh="$HOME/.nix-profile/etc/profile.d/nix.sh"
+nixVersion="$(awk -F\" '/NIX_VERSION=/{print $2}' "$dotfiles/script/bootstrap")"
+[ -n "$nixVersion" ] || fail "Unable to get Nix version"
 
-  if [ -f "$nix_profile_sh" ]; then
-    # shellcheck disable=SC1072,SC1090
-    source "$nix_profile_sh"
-  else
-    fail "Unable to source Nix profile.sh"
-  fi
-fi
+nixPath="$(find "${NIX_STORE_DIR:="/nix/store"}" -depth 1 -name "*-nix-$nixVersion" | head -n 1)"
+[ -n "$nixPath" ] || fail "Unable to find Nix derivation in Nix store"
 
-command -v nix-build > /dev/null || fail "Nix not installed"
+# shellcheck disable=SC1072,SC1090
+[ -n "${NIX_PROFILES:-}" ] || source "$nixPath/etc/profile.d/nix.sh"
+
+command -v nix-build > /dev/null || export PATH="$nixPath/bin:$PATH"
 
 # Ensure that overlays and `nix.conf` are still found even when not
 # symlinked into `~/.config`
