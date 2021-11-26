@@ -64,8 +64,8 @@ RSpec.describe "Bootstrap" do
   context "Firewall" do
     it "is enabled" do
       expect(
-        command!("defaults read /Library/Preferences/com.apple.alf globalstate").chomp
-      ).to eq("1")
+        defaults("/Library/Preferences/com.apple.alf")["globalstate"]
+      ).to eq(1)
     end
 
     it "is running" do
@@ -76,7 +76,7 @@ RSpec.describe "Bootstrap" do
   context "Rosetta 2", :arm do
     it "is installed" do
       expect(
-        path("/Library/Apple/System/Library/LaunchDaemons/com.apple.oahd.plist")
+        file("/Library/Apple/System/Library/LaunchDaemons/com.apple.oahd.plist")
       ).to be_a_file
     end
   end
@@ -92,6 +92,12 @@ RSpec.describe "Bootstrap" do
       expect(
         home_path(".ssh").children.map(&:basename_str)
       ).to include(/^id_(rsa|ed25519)$/)
+    end
+
+    it "has a key loaded in the SSH agent" do
+      expect(
+        command!("/usr/bin/ssh-add -L").lines
+      ).to include(/^ssh-(rsa|ed25519)\s/)
     end
   end
 end

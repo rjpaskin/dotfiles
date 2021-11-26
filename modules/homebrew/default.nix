@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, machine, ... }:
 
 with lib;
 
@@ -77,23 +77,46 @@ in {
         "xquartz"
 
         # Quicklook plugins
-        {
+        (mkIf (machine.olderThan "catalina") {
           name = "qlcolorcode"; # syntax highlighting
           defaults."org.n8gray.QLColorCode".pathHL = "${pkgs.highlight}/bin/highlight";
-        }
-        "qlcommonmark" # markdown files
-        "qlstephen" # files without extensions
-        "quicklook-json"
-        "quicklook-csv"
+        })
+        (mkIf (machine.sameOrNewerThan "catalina") {
+          name = "syntax-highlight"; removeQuarantine = true;
+        })
+
+        # markdown files
+        (mkIf (machine.olderThan "catalina") {
+          name = "qlcommonmark"; removeQuarantine = true;
+        })
+        (mkIf (machine.sameOrNewerThan "catalina") {
+          name = "sbarex-qlmarkdown"; removeQuarantine = true;
+        })
+
+        { name = "qlstephen"; removeQuarantine = true; } # files without extensions
+        { name = "quicklook-json"; removeQuarantine = true; }
+        { name = "quicklook-csv"; removeQuarantine = true; }
 
         # Others
         "1password"
         "keepingyouawake"
         "betterzip"
         "imageoptim"
-        "mollyguard"
         "superduper"
         "vlc"
+
+        {
+          name = "mollyguard";
+          # Mollyguard was deleted in Homebrew/homebrew-cask#78586
+          # - this is the commit before that PR was merged
+          rev = "e53923dac85c3e3219ddf6ff33a977f3ca75ebce";
+          removeQuarantine = true;
+          defaults."com.imt.MollyGuard" = {
+            defaultBehavior = true; # lock keyboard AND mouse
+            displayAlert = true;
+            statusIconSet = 1; # circular icons
+          };
+        }
       ]
 
       (mkIf roles.cyberduck ["cyberduck"])

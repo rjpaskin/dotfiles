@@ -34,6 +34,8 @@ RSpec.configure do |config|
   config.warnings = true
   config.order = :random
 
+  config.example_status_persistence_file_path = "tmp/rspec_examples.txt"
+
   Kernel.srand config.seed
 
   config.include SpecHelpers
@@ -52,6 +54,15 @@ RSpec.configure do |config|
 
   config.before(:each, arm: true) do |example|
     skip("not on an ARM system") unless ShellLib.arm?
+  end
+
+  config.before(:each, :min_os) do |example|
+    version = example.metadata[:min_os]
+
+    if ShellLib.macos_version > version
+      name = version.to_s.split("_").map(&:capitalize).join(" ")
+      skip("only run on #{name} or newer")
+    end
   end
 
   config.include MockExecutablesHelper, mock_executables: true

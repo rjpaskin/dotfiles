@@ -1,4 +1,5 @@
 require "json"
+require "ostruct"
 require "shellwords"
 require "tempfile"
 
@@ -40,6 +41,16 @@ module ShellLib
       run_in_shell!("print -l ${(ko)#{name}}").lines
     end
 
+    define_cached_method :archs do |path|
+      command!("lipo -archs '#{path}'").split(" ")
+    end
+
+    define_cached_method :defaults do |domain|
+      Resource.new("defaults[#{domain}]") do
+        OpenStruct.new(command!("defaults export #{domain} -").as_plist)
+      end
+    end
+
     def self.current
       Thread.current[:Runner] ||= new
     end
@@ -65,7 +76,11 @@ module ShellLib
     end
 
     def program(name)
-      Resource.new("program #{name}") { Program.new(name) }
+      Program.new(name)
+    end
+
+    def app(name)
+      App.new(name)
     end
 
     def login_env

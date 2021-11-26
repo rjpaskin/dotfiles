@@ -10,18 +10,24 @@ module ShellLib
 
   autoload :Output, "shell_lib/output"
   autoload :Program, "shell_lib/program"
+  autoload :App, "shell_lib/app"
   autoload :Resource, "shell_lib/resource"
   autoload :ResourceHelpers, "shell_lib/resource_helpers"
   autoload :Runner, "shell_lib/runner"
   autoload :SearchPath, "shell_lib/search_path"
 
+  autoload :MacOSVersion, "shell_lib/macos_version"
+
+  autoload :Plist, "shell_lib/plist"
   autoload :StrictHash, "shell_lib/strict_hash"
 
   autoload :CachedMethods, "shell_lib/cached_methods"
 
-  ARM_ARCH = "arm64".freeze
-
   def self.arm?
-    Etc.uname[:machine] == ARM_ARCH
+    /arm64/i.match?(Etc.uname[:version])
+  end
+
+  def self.macos_version
+    MacOSVersion.current
   end
 end

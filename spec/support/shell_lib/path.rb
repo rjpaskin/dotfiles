@@ -1,5 +1,6 @@
 require "forwardable"
 require "pathname"
+require "uri"
 
 module ShellLib
   class Path
@@ -11,6 +12,10 @@ module ShellLib
       :executable?, :symlink?,
       :readable?, :world_readable?, :writable?,
       :extname, :read, :to_s
+
+    def self.from_uri(uri)
+      new(CGI.unescape URI.parse(uri.to_s).path)
+    end
 
     def initialize(path)
       @pathname = Pathname(path).expand_path
@@ -24,7 +29,7 @@ module ShellLib
         other
       when String
         Pathname(other).expand_path
-      when SearchPath::Entry
+      when SearchPath::Entry, App
         Pathname(other.path).expand_path
       else
         raise ArgumentError, "could not compare #{other} with #{self.class}"
@@ -102,6 +107,20 @@ module ShellLib
       user_flags.to_i(16) & HIDDEN_FLAG != 0
     end
 
+    def has_xattr?(name, recursive: false)
+      cmd = ["xattr", *("-r" if recursive), name, "'#{pathname}'"]
+
+      Runner.current.command(cmd.join " ").lines.any? do |line|
+        line.end_with?(name)
+      end
+    end
+
+    QUARANTINE_XATTR = "com.apple.quarantine"
+
+    def quarantined?
+      has_xattr?(QUARANTINE_XATTR, recursive: true)
+    end
+
     def inspect
       "#<Path #{pathname.to_s}>"
     end
@@ -118,6 +137,10 @@ module ShellLib
 
     def as_json
       @json ||= JSON.parse(content, symbolize_names: true)
+    end
+
+    def as_plist
+      @plist ||= Plist.load_file(pathname)
     end
 
     NIX_STORE_PATH = "/nix/store/".freeze

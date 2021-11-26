@@ -1,9 +1,11 @@
-{ config, lib, dotfilesDirectory, privateDirectory, ... }:
+{ config, lib, machine, ... }:
 
 with lib;
 with config.lib.file;
 
 let
+  inherit (machine) dotfilesDirectory privateDirectory;
+
   mkSymlink = root: file: mkOutOfStoreSymlink "${root}/${toString file}";
 
   mkLink = root: file: let

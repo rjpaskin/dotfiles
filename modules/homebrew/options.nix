@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, machine, ... }:
 
 # Based on https://github.com/LnL7/nix-darwin/blob/007d700/modules/homebrew.nix
 
@@ -6,9 +6,29 @@ with lib;
 with types;
 
 let
-  inherit (pkgs) mas;
+  runAsIntel = path: pkgs.writeShellScriptBin "${builtins.baseNameOf path}-wrapped" ''
+    arch -x86_64 ${path} "$@"
+  '';
 
-  toCask = { name, ...}: ''cask "${name}"'';
+  # We need to always run `mas` under Rosetta 2, since the changes
+  # Nix makes to the executable invalidate its signature, and thus
+  # Big Sur refuses to run it.
+  mas = pkgs.buildEnv {
+    inherit (pkgs.mas) meta passthru;
+
+    name = "mas-intel";
+    paths = [ pkgs.mas (runAsIntel "${pkgs.mas}/bin/mas") ];
+
+    postBuild = ''
+      rm $out/bin/mas
+      mv $out/bin/mas-wrapped $out/bin/mas
+    '';
+  };
+
+  toCask = { name, removeQuarantine, ...}: concatStrings [
+    ''cask "${name}"''
+    (optionalString removeQuarantine ", args: { no_quarantine: true }")
+  ];
   toMas = name: id: ''mas "${name}", id: ${toString id}'';
 
   cfg = config.targets.darwin.homebrew;
@@ -41,11 +61,33 @@ let
         type = attrs;
         default = {};
       };
+
+      rev = mkOption {
+        description = "Revision at which to checkout the cask. Intended for deleted apps";
+        type = nullOr str;
+        default = null;
+      };
+
+      removeQuarantine = mkOption {
+        description = "Remove the `com.apple.quarantine` extended attribute from cask artifacts?";
+        type = bool;
+        default = false;
+      };
     };
   };
 
   extractedPrivateFiles = foldl' (acc: cask: acc ++ cask.privateFiles) [] cfg.casks;
   extractedDefaults = mkMerge (catAttrs "defaults" cfg.casks);
+
+  # This makes a number of assumptions:
+  # 1. That the cask is from `homebrew/cask`
+  # 2. That the name of the cask file is the same as the cask name
+  checkoutCasks = map ({ name, rev, ... }: optionalString (rev != null) ''
+    $VERBOSE_ECHO "Checking out Casks/${name}.rb @ ${rev}"
+    git checkout ${rev} -- Casks/${name}.rb
+  '') cfg.casks;
+
+  archPrefix = optionalString machine.isARM "arch -arm64e";
 
 in {
   options.targets.darwin.homebrew = {
@@ -76,7 +118,23 @@ in {
         # Ensure that `brew bundle` doesn't try to install `mas` itself
         export PATH="${mas}/bin:$PATH" HOMEBREW_NO_AUTO_UPDATE=1
 
-        $DRY_RUN_CMD brew bundle install \
+        ${
+          optionalString (checkoutCasks != []) ''
+            pushd "$(brew --repository homebrew/cask)" > /dev/null
+            ${concatStrings checkoutCasks}
+            popd
+          ''
+        }
+
+        ${
+          optionalString machine.isARM ''
+            if [ -z "''${HOMEBREW_PREFIX:-}" ]; then
+              $DRY_RUN_CMD eval "$(/opt/homebrew/bin/brew shellenv)"
+            fi
+          ''
+        }
+
+        $DRY_RUN_CMD ${archPrefix} brew bundle install \
           $VERBOSE_ARG \
           --no-upgrade \
           --no-lock \

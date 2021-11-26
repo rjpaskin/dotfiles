@@ -31,6 +31,9 @@ in {
           ":DesktopViewSettings:IconViewSettings:arrangeBy" = "grid";
           ":FK_StandardViewSettings:IconViewSettings:arrangeBy" = "kind";
           ":StandardViewSettings:IconViewSettings:arrangeBy" = "grid";
+
+          ":DesktopViewSettings:IconViewSettings:showItemInfo" = false;
+          ":StandardViewSettings:IconViewSettings:showItemInfo" = true;
         };
 
         # Disable Ctrl+(Left,Right) shortcuts
@@ -57,6 +60,7 @@ in {
         toCmds = file: settings: concatStrings (mapAttrsToList (toCmd file) settings);
       in hm.dag.entryAfter ["setDarwinDefaults"] ''
         ${concatStrings (mapAttrsToList toCmds cfg.plists)}
+        /usr/bin/killall Finder
       '';
 
       showHiddenFolders = hm.dag.entryAfter ["installPackages"] ''

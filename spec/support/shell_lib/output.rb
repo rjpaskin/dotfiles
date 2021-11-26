@@ -46,5 +46,9 @@ module ShellLib
     def as_json
       JSON.parse(self, symbolize_names: true)
     end
+
+    def as_plist
+      Plist.parse(self)
+    end
   end
 end

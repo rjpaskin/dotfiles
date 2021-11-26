@@ -1,4 +1,14 @@
 {
+  CFPropertyList = {
+    groups = ["default"];
+    platforms = [];
+    source = {
+      remotes = ["https://rubygems.org"];
+      sha256 = "0ia09r8bj3bjhcfiyr3vlk9zx7vahfypbs2lyrxix9x1jx3lfzq4";
+      type = "gem";
+    };
+    version = "3.0.3";
+  };
   diff-lcs = {
     groups = ["default"];
     platforms = [];

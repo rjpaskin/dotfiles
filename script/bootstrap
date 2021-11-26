@@ -134,9 +134,14 @@ EOF
 
 require_executable "uname"
 
-macos_arch="$(uname -m)"
+if [[ "$(uname -v)" == *ARM64* ]]; then
+  on_arm64="1"
+else
+  on_arm64=""
+fi
 
-debug "System: macOS ${macos_major}.${macos_minor}.${macos_patch} on $macos_arch"
+debug "macOS ${macos_major}.${macos_minor}.${macos_patch}"
+debug "ARM64: ${on_arm64:-"0"}"
 
 #-------------------------------------------------
 # `sudo` keep-alive
@@ -198,7 +203,7 @@ esac
 #-------------------------------------------------
 debug "Checking if we need to install Rosetta 2..."
 
-if [ "$macos_arch" == "arm64" ]; then
+if [ -n "$on_arm64" ]; then
   if [ -f "/Library/Apple/System/Library/LaunchDaemons/com.apple.oahd.plist" ]; then
     debug "Rosetta 2 already installed"
   else
@@ -275,10 +280,12 @@ esac
 #-------------------------------------------------
 # Install Homebrew (and Xcode Command Line Tools)
 #-------------------------------------------------
-if [ "$macos_arch" == "arm64" ]; then
+if [ -n "$on_arm64" ]; then
   homebrew_prefix="/opt/homebrew"
+  arch_prefix="arch -arm64e"
 else
   homebrew_prefix="/usr/local"
+  arch_prefix=""
 fi
 
 if [ -e "$homebrew_prefix/bin/brew" ]; then
@@ -287,11 +294,16 @@ else
   debug "Installing Homebrew..."
 
   if [ -n "$DRY_RUN" ]; then
-    $DRY_RUN_CMD "/bin/bash -c \
+    $DRY_RUN_CMD "$arch_prefix /bin/bash -c \
       \$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
   else
-    /bin/bash -c \
+    $arch_prefix /bin/bash -c \
       "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+  fi
+
+  if [ -n "$on_arm64" ]; then
+    # As instructed by the installer
+    $DRY_RUN_CMD eval "$("$arch_prefix $homebrew_prefix/bin/brew" shellenv)"
   fi
 
   debug "Finished installing Homebrew"
@@ -328,6 +340,7 @@ else
   if [ -z "$user_email" ] && [ -z "$DRY_RUN" ]; then
     [ -n "$IS_INTERACTIVE" ] || err "Cannot get email to create SSH key"
 
+    debug "Unable to get iCloud email"
     echo "Enter email for SSH key"
     read -r user_email
   fi

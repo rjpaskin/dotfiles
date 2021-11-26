@@ -74,6 +74,12 @@ let
     '';
   };
 
+  appPath = name: let
+    basePath = "/Applications/${name}.app";
+  in if builtins.pathExists "/System${basePath}" # location for system apps on Big Sur
+  then "/System${basePath}"
+  else basePath; # this may not exist yet if `brew bundle` hasn't yet been run
+
 in {
   options.targets.darwin.dock = mkOption {
     type = submodule {
@@ -81,7 +87,7 @@ in {
         apps = mkOption {
           description = "Applications to put in the Dock";
           type = listOf (coercedTo str (name: {
-            path = "/Applications/${name}.app";
+            path = appPath name;
             tileType = "file";
           }) itemType);
         };
