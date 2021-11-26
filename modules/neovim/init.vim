@@ -111,69 +111,71 @@ augroup END
 " -------------------------------------------------
 " Denite
 " -------------------------------------------------
-" Prevent undo being triggered when we mess up the key sequence
-nnoremap <silent><leader>u  :Denite -buffer-name=file_rec file/rec<cr>
+if !exists('$NO_DENITE')
+  " Prevent undo being triggered when we mess up the key sequence
+  nnoremap <silent><leader>u  :Denite -buffer-name=file_rec file/rec<cr>
 
-nnoremap <silent><leader>uu :Denite -buffer-name=file_rec file/rec<cr>
-nnoremap <silent><leader>ub :Denite -buffer-name=buffers  buffer<cr>
-nnoremap <silent><leader>ul :Denite -buffer-name=line     line<cr>
-nnoremap <silent><leader>uo :Denite -buffer-name=outline  outline<cr>
-nnoremap <silent><leader>ur :Denite -buffer-name=register register<cr>
-nnoremap <silent><leader>uff :Denite -buffer-name=file_mru file_mru<cr>
+  nnoremap <silent><leader>uu :Denite -buffer-name=file_rec file/rec<cr>
+  nnoremap <silent><leader>ub :Denite -buffer-name=buffers  buffer<cr>
+  nnoremap <silent><leader>ul :Denite -buffer-name=line     line<cr>
+  nnoremap <silent><leader>uo :Denite -buffer-name=outline  outline<cr>
+  nnoremap <silent><leader>ur :Denite -buffer-name=register register<cr>
+  nnoremap <silent><leader>uff :Denite -buffer-name=file_mru file_mru<cr>
 
-nnoremap <silent><leader>up               :Denite -buffer-name=current_directory
-      \ -path=`expand('%:p:h')`
-      \ file/rec<cr>
+  nnoremap <silent><leader>up               :Denite -buffer-name=current_directory
+        \ -path=`expand('%:p:h')`
+        \ file/rec<cr>
 
-" Rails-specific
-nnoremap <silent><leader>um               :Denite -buffer-name=models
-      \ -path=`getcwd()`/app/models
-      \ file/rec<cr>
-nnoremap <silent><leader>uc               :Denite -buffer-name=controllers
-      \ -path=`getcwd()`/app/controllers
-      \ file/rec<cr>
-nnoremap <silent><leader>uv               :Denite -buffer-name=views
-      \ -path=`getcwd()`/app/views
-      \ file/rec<cr>
-nnoremap <silent><leader>uh               :Denite -buffer-name=helpers
-      \ -path=`getcwd()`/app/helpers
-      \ file/rec<cr>
-nnoremap <silent><leader>uw               :Denite -buffer-name=workers
-      \ -path=`getcwd()`/app/workers
-      \ file/rec<cr>
-nnoremap <silent><leader>uj               :Denite -buffer-name=javascripts
-      \ -source-names=hide
-      \ file/rec:`getcwd()`/app/javascript
-      \ file/rec:`getcwd()`/app/assets/javascripts<cr>
-nnoremap <silent><leader>us               :Denite -buffer-name=specs
-      \ -path=`getcwd()`/spec
-      \ file/rec<cr>
-nnoremap <silent><leader>uf               :Denite -buffer-name=factories
-      \ -path=`getcwd()`/spec/support/factories
-      \ file/rec<cr>
+  " Rails-specific
+  nnoremap <silent><leader>um               :Denite -buffer-name=models
+        \ -path=`getcwd()`/app/models
+        \ file/rec<cr>
+  nnoremap <silent><leader>uc               :Denite -buffer-name=controllers
+        \ -path=`getcwd()`/app/controllers
+        \ file/rec<cr>
+  nnoremap <silent><leader>uv               :Denite -buffer-name=views
+        \ -path=`getcwd()`/app/views
+        \ file/rec<cr>
+  nnoremap <silent><leader>uh               :Denite -buffer-name=helpers
+        \ -path=`getcwd()`/app/helpers
+        \ file/rec<cr>
+  nnoremap <silent><leader>uw               :Denite -buffer-name=workers
+        \ -path=`getcwd()`/app/workers
+        \ file/rec<cr>
+  nnoremap <silent><leader>uj               :Denite -buffer-name=javascripts
+        \ -source-names=hide
+        \ file/rec:`getcwd()`/app/javascript
+        \ file/rec:`getcwd()`/app/assets/javascripts<cr>
+  nnoremap <silent><leader>us               :Denite -buffer-name=specs
+        \ -path=`getcwd()`/spec
+        \ file/rec<cr>
+  nnoremap <silent><leader>uf               :Denite -buffer-name=factories
+        \ -path=`getcwd()`/spec/support/factories
+        \ file/rec<cr>
 
-" Char that matches search query
-call one#highlight('rjp_denite_matched_char',  'c18401', 'fff6e4', '')
-" Range of non-matching chars between two matching chars
-call one#highlight('rjp_denite_matched_range', '222222', 'fff6e4', '')
-" Selected row in Denite's 'Insert' mode
-call one#highlight('rjp_denite_insert_mode',   'ffffff', '4078f2', '')
-" Selected row in Denite's 'Normal' mode
-call one#highlight('rjp_denite_normal_mode',   'ffffff', '50a14f', '')
+  " Char that matches search query
+  call one#highlight('rjp_denite_matched_char',  'c18401', 'fff6e4', '')
+  " Range of non-matching chars between two matching chars
+  call one#highlight('rjp_denite_matched_range', '222222', 'fff6e4', '')
+  " Selected row in Denite's 'Insert' mode
+  call one#highlight('rjp_denite_insert_mode',   'ffffff', '4078f2', '')
+  " Selected row in Denite's 'Normal' mode
+  call one#highlight('rjp_denite_normal_mode',   'ffffff', '50a14f', '')
 
-packadd! denite.nvim " Workaround for autoloading issues
+  packadd! denite.nvim " Workaround for autoloading issues
 
-call denite#custom#option('_', {
-      \ 'highlight_matched_char': 'rjp_denite_matched_char',
-      \ 'highlight_matched_range': 'rjp_denite_matched_range',
-      \ 'highlight_mode_insert': 'rjp_denite_insert_mode',
-      \ 'highlight_mode_normal': 'rjp_denite_normal_mode',
-      \ })
+  call denite#custom#option('_', {
+        \ 'highlight_matched_char': 'rjp_denite_matched_char',
+        \ 'highlight_matched_range': 'rjp_denite_matched_range',
+        \ 'highlight_mode_insert': 'rjp_denite_insert_mode',
+        \ 'highlight_mode_normal': 'rjp_denite_normal_mode',
+        \ })
 
-call denite#custom#var('file/rec', 'command', [
-    \ 'ag', '--follow', '--nocolor', '--nogroup',
-    \ '--ignore', 'node_modules', '--ignore', '.git',
-    \ '--hidden', '--path-to-ignore', $HOME . '/.config/silver_searcher/ignore', '-g', ''])
+  call denite#custom#var('file/rec', 'command', [
+        \ 'ag', '--follow', '--nocolor', '--nogroup',
+        \ '--ignore', 'node_modules', '--ignore', '.git',
+        \ '--hidden', '--path-to-ignore', $HOME . '/.config/silver_searcher/ignore', '-g', ''])
+endif
 
 " ------------------------------------------------
 " Deoplete
