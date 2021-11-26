@@ -31,6 +31,9 @@ in {
           ":DesktopViewSettings:IconViewSettings:arrangeBy" = "grid";
           ":FK_StandardViewSettings:IconViewSettings:arrangeBy" = "kind";
           ":StandardViewSettings:IconViewSettings:arrangeBy" = "grid";
+
+          ":DesktopViewSettings:IconViewSettings:showItemInfo" = false;
+          ":StandardViewSettings:IconViewSettings:showItemInfo" = true;
         };
 
         # Disable Ctrl+(Left,Right) shortcuts
