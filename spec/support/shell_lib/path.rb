@@ -24,7 +24,7 @@ module ShellLib
         other
       when String
         Pathname(other).expand_path
-      when SearchPath::Entry
+      when SearchPath::Entry, App
         Pathname(other.path).expand_path
       else
         raise ArgumentError, "could not compare #{other} with #{self.class}"

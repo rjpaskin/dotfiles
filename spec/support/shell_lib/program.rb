@@ -1,7 +1,5 @@
-require "delegate"
-
 module ShellLib
-  class Program < SimpleDelegator
+  class Program
     attr_reader :name, :cmds
 
     def initialize(name)
@@ -11,16 +9,22 @@ module ShellLib
       end
     end
 
-    def __getobj__
-      __setobj__(Runner.current.which name) unless defined?(@__loaded)
-      @__loaded = true
-      super
+    def path
+      @path ||= Runner.current.which(name)
     end
 
-    alias_method :path, :__getobj__
-
     def location
-      __getobj__.dirname
+      path.dirname
+    end
+
+    def inspect
+      "#<Program #{name}>"
+    end
+
+    alias_method :to_s, :inspect
+
+    def content
+      path.content
     end
 
     def method_missing(method, *args, &block)

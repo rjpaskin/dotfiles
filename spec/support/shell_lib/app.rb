@@ -1,14 +1,32 @@
-require "delegate"
+require "forwardable"
 
 module ShellLib
-  class App < SimpleDelegator
+  class App
+    extend Forwardable
+    def_delegators :path, :exist?, :quarantined?
+
     attr_reader :name
-    alias_method :path, :__getobj__
+
+    SYSTEM = Path.new("/System")
 
     def initialize(name)
       @name = name
-      super(Path.new "/Applications/#{name}.app")
     end
+
+    def path
+      @path ||= begin
+        path = Path.new("/Applications/#{name}.app")
+
+        if ShellLib.macos_version < :big_sur
+          path
+        else
+          system_path = SYSTEM.join("Applications", "#{name}.app")
+          system_path.directory? ? system_path : path
+        end
+      end
+    end
+
+    alias_method :location, :path
 
     def executable
       @executable ||= path.join(
@@ -28,5 +46,11 @@ module ShellLib
     def info
       @info ||= path.join("Contents/Info.plist").as_plist
     end
+
+    def inspect
+      "#<App #{name}.app>"
+    end
+
+    alias_method :to_s, :inspect
   end
 end

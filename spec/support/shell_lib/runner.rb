@@ -76,11 +76,11 @@ module ShellLib
     end
 
     def program(name)
-      Resource.new("program #{name}") { Program.new(name) }
+      Program.new(name)
     end
 
     def app(name)
-      Resource.new("#{name}.app") { App.new(name) }
+      App.new(name)
     end
 
     def login_env

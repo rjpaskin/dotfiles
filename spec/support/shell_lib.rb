@@ -16,6 +16,8 @@ module ShellLib
   autoload :Runner, "shell_lib/runner"
   autoload :SearchPath, "shell_lib/search_path"
 
+  autoload :MacOSVersion, "shell_lib/macos_version"
+
   autoload :Plist, "shell_lib/plist"
   autoload :StrictHash, "shell_lib/strict_hash"
 
@@ -23,5 +25,9 @@ module ShellLib
 
   def self.arm?
     /arm64/i.match?(Etc.uname[:version])
+  end
+
+  def self.macos_version
+    MacOSVersion.current
   end
 end
