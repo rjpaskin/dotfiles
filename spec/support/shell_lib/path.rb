@@ -1,5 +1,6 @@
 require "forwardable"
 require "pathname"
+require "uri"
 
 module ShellLib
   class Path
@@ -11,6 +12,10 @@ module ShellLib
       :executable?, :symlink?,
       :readable?, :world_readable?, :writable?,
       :extname, :read, :to_s
+
+    def self.from_uri(uri)
+      new(CGI.unescape URI.parse(uri.to_s).path)
+    end
 
     def initialize(path)
       @pathname = Pathname(path).expand_path
