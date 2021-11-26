@@ -32,6 +32,7 @@ in {
 
     sessionVariables = {
       NIX_PATH = "nixpkgs=${nixpkgsPath}:home-manager=${hmPath}";
+      NIXPKGS_ALLOW_UNFREE = 1;
 
       # Disable per-tab history from macOS' `/etc` config files
       SHELL_SESSION_HISTORY = 0;
