@@ -60,6 +60,7 @@ in {
         toCmds = file: settings: concatStrings (mapAttrsToList (toCmd file) settings);
       in hm.dag.entryAfter ["setDarwinDefaults"] ''
         ${concatStrings (mapAttrsToList toCmds cfg.plists)}
+        /usr/bin/killall Finder
       '';
 
       showHiddenFolders = hm.dag.entryAfter ["installPackages"] ''
