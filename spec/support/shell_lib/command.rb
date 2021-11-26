@@ -1,6 +1,18 @@
 module ShellLib
   class Command
-    class ExecutionError < StandardError; end
+    class ExecutionError < StandardError
+      attr_reader :command
+
+      def initialize(command)
+        @command = command
+
+        message = "<err> #{command.stderr}" unless command.stderr.empty?
+        message = "<out> #{command.stdout}" unless command.stdout.empty?
+        message ||= "<Unknown error>"
+
+        super("`#{command}`\n#{message}")
+      end
+    end
 
     Status = Struct.new(:raw) do
       def ==(other)
@@ -52,7 +64,7 @@ module ShellLib
     alias_method :error?, :failed?
 
     def check!
-      raise ExecutionError, stderr if failed?
+      raise ExecutionError, self if failed?
 
       self
     end
@@ -65,6 +77,10 @@ module ShellLib
 
     def respond_to_missing?(name, include_all = false)
       stdout.respond_to?(name, include_all)
+    end
+
+    def to_s
+      command.join(" ")
     end
 
     private
