@@ -10,13 +10,23 @@ module ShellLib
       super(Path.new "/Applications/#{name}.app")
     end
 
-    # Assume executable has the same name as the app
     def executable
-      @executable ||= path.join("Contents/MacOS/#{name}")
+      @executable ||= path.join(
+        "Contents/MacOS",
+        self["CFBundleExecutable"]
+      )
+    end
+
+    def [](key)
+      info.fetch(key.to_s)
     end
 
     def archs
       Runner.current.archs(executable)
+    end
+
+    def info
+      @info ||= path.join("Contents/Info.plist").as_plist
     end
   end
 end

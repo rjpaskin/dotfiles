@@ -16,6 +16,7 @@ module ShellLib
   autoload :Runner, "shell_lib/runner"
   autoload :SearchPath, "shell_lib/search_path"
 
+  autoload :Plist, "shell_lib/plist"
   autoload :StrictHash, "shell_lib/strict_hash"
 
   autoload :CachedMethods, "shell_lib/cached_methods"

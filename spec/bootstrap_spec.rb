@@ -64,8 +64,8 @@ RSpec.describe "Bootstrap" do
   context "Firewall" do
     it "is enabled" do
       expect(
-        command!("defaults read /Library/Preferences/com.apple.alf globalstate").chomp
-      ).to eq("1")
+        defaults("/Library/Preferences/com.apple.alf")["globalstate"]
+      ).to eq(1)
     end
 
     it "is running" do

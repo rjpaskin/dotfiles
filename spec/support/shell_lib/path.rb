@@ -134,6 +134,10 @@ module ShellLib
       @json ||= JSON.parse(content, symbolize_names: true)
     end
 
+    def as_plist
+      @plist ||= Plist.load_file(pathname)
+    end
+
     NIX_STORE_PATH = "/nix/store/".freeze
 
     def in_nix_store?

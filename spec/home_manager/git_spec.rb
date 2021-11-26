@@ -72,6 +72,13 @@ RSpec.describe "Git", role: "git" do
     describe program("stree") do
       its("--version") { should be_success }
     end
+
+    # Test a few with the assumption that others are set correctly as well
+    describe defaults("com.torusknot.SourceTreeNotMAS") do
+      its("agreedToUpdateConfig") { should eq(false) }
+      its("diffFontName") { should eq("Monaco") }
+      its("diffFontSize") { should eq(12.0) }
+    end
   end
 
   describe program("hub") do
