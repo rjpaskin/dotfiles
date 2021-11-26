@@ -101,6 +101,7 @@ in {
           commitColumnGuideWidth = 80;
           diffFontName = "Monaco";
           diffFontSize = 12.0; # needs to be float to get <real>
+          diffSkipFilePatterns = ""; # show diffs for all files
           fileStatusFilterMode = 1; # show only: "pending"
           fileStatusStagingViewMode = 1; # "split view staging"
           fileStatusViewMode2 = 0; # "flat list, single column"
