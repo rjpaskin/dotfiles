@@ -74,7 +74,10 @@ in {
           };
         }
         "kdiff3"
-        "xquartz"
+        {
+          name = "xquartz";
+          defaults."org.xquartz.X11".nolisten_tcp = false; # allow network connections
+        }
 
         # Quicklook plugins
         (mkIf (machine.olderThan "catalina") {
