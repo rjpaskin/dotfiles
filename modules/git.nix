@@ -8,6 +8,7 @@ let
       quotepath = false;
       autocrlf = "input";
       editor = "nvim";
+      excludesFile = "${config.xdg.configHome}/git/ignore";
     };
     color = {
       ui = true;
