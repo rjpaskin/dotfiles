@@ -17,7 +17,7 @@ main() {
   trap "exit 0" TERM
 
   while true; do
-    until docker-compose ps "$service" 2> /dev/null | grep -i --silent "up"; do
+    until docker-compose ps "$service" 2> /dev/null | grep -Ei --silent "\b(up|running)\b"; do
       [ "$sleep_time" -eq 0 ] && echo "Waiting for $service service..."
 
       # Fibonacci
