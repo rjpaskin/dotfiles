@@ -74,7 +74,7 @@ in {
 
     plugins = [
       "history-substring-search"
-      "osx"
+      "macos"
     ];
   };
 

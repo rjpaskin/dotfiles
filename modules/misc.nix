@@ -52,7 +52,7 @@ in {
   programs.direnv = {
     enable = true;
     enableZshIntegration = true;
-    enableNixDirenvIntegration = true;
+    nix-direnv.enable = true;
     stdlib = ''
       # https://github.com/nix-community/nix-direnv/tree/b54e2f2#storing-direnv-outside-the-project-directory
       : ''${XDG_CACHE_HOME:=$HOME/.cache}

@@ -75,4 +75,14 @@ let
     vimPlugins = super.vimPlugins // (import ./default.nix).vimPlugins;
   };
 
-in [ customisations newPackages ]
+  # https://github.com/nix-community/home-manager/issues/2478
+  # https://github.com/LnL7/nix-darwin/pull/379/files
+  fixZshNixCompletions = self: super: {
+    nix-zsh-completions = super.nix-zsh-completions.overrideAttrs (old: {
+      installPhase = old.installPhase + ''
+        rm $out/share/zsh/site-functions/_nix
+      '';
+    });
+  };
+
+in [ customisations newPackages fixZshNixCompletions ]

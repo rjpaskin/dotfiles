@@ -13,7 +13,7 @@ RSpec.describe "ZSH" do
   end
 
   describe oh_my_zsh_plugins do
-    it { should include("osx", "history-substring-search") }
+    it { should include("macos", "history-substring-search") }
   end
 
   context "setup" do
