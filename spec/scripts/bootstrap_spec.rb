@@ -16,8 +16,8 @@ RSpec.describe "script/bootstrap", :mock_executables do
         line.sub(path, "#{bin}:#{path}")
       when /oahd\.plist/, /homebrew_prefix/i, %r{/nix/store}
         line.sub(path, "#{tmpdir}#{path}")
-      when /ssh-add/
-        line.sub(path, bin.join("usr-bin-ssh-add"))
+      when /(ssh-add|pgrep)/
+        line.sub(path, bin.join("usr-bin-#{$1}"))
       else
         line
       end
@@ -104,6 +104,8 @@ RSpec.describe "script/bootstrap", :mock_executables do
     a_collection_containing_exactly("--install-rosetta", "--agree-to-license")
   end
 
+  let(:rosetta_installed?) { false }
+
   before do
     tmpdir.join("script/switch").write(<<~SCRIPT).mk_executable
       #!/usr/bin/env bash
@@ -117,6 +119,19 @@ RSpec.describe "script/bootstrap", :mock_executables do
     stub_command("ssh-agent", args: %w[-s]).and_return("echo 'ssh-agent was run' >&2")
     stub_command("ssh-add")
     stub_command("usr-bin-ssh-add")
+    stub_command("pgrep")
+
+    stub_command("usr-bin-pgrep") do |input|
+      if input.args.last == "oahd"
+        if rosetta_installed?
+          { status: 0, stdout: "12345" }
+        else
+          { status: 1 }
+        end
+      else
+        raise "Unknown `pgrep` input: #{input.to_s}"
+      end
+    end
 
     stub_command("curl") do |input|
       case input.args.last
@@ -245,6 +260,7 @@ RSpec.describe "script/bootstrap", :mock_executables do
           with: %w[find-generic-password -s com.apple.account.IdentityServices.token]
         ),
         an_invocation_of("ssh-agent", with: %w[-s]),
+        an_invocation_of("usr-bin-pgrep", with: %w[oahd]),
         *(an_invocation_of("softwareupdate", with: rosetta_2_args) if ShellLib.arm?)
       ]
     end
@@ -442,11 +458,7 @@ RSpec.describe "script/bootstrap", :mock_executables do
     end
 
     context "Rosetta 2 already installed" do
-      before do
-        tmpdir.join(
-          "Library/Apple/System/Library/LaunchDaemons/com.apple.oahd.plist"
-        ).write("")
-      end
+      let(:rosetta_installed?) { true }
 
       it "doesn't try to install Rosetta 2" do
         run = run_script!

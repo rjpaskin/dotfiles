@@ -204,7 +204,7 @@ esac
 debug "Checking if we need to install Rosetta 2..."
 
 if [ -n "$on_arm64" ]; then
-  if [ -f "/Library/Apple/System/Library/LaunchDaemons/com.apple.oahd.plist" ]; then
+  if /usr/bin/pgrep oahd >/dev/null 2>&1; then
     debug "Rosetta 2 already installed"
   else
     debug "Installing Rosetta 2..."
