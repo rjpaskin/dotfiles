@@ -391,3 +391,8 @@ let g:user_emmet_settings = {
 \      'extends' : 'jsx',
 \  },
 \}
+
+" For transient settings, debugging etc.
+if filereadable($HOME . "/.config/nvim/tmp.vim")
+  source ~/.config/nvim/tmp.vim
+endif
