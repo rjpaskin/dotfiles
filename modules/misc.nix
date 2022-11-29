@@ -98,7 +98,7 @@ in {
      UseKeychain yes
      IgnoreUnknown UseKeychain
      IdentityFile ${
-       if builtins.pathExists "${config.home.homeDirectory}/.ssh/ed25519"
+       if builtins.pathExists "${config.home.homeDirectory}/.ssh/id_ed25519"
        then "~/.ssh/id_ed25519"
        else "~/.ssh/id_rsa"
      }
