@@ -17,16 +17,28 @@ hostId="$(scutil --get LocalHostName | sed -e 's/^rjp-//')"
 
 [ -n "$hostId" ] || fail "Unable to determine hostname"
 
-nixVersion="$(awk -F\" '/NIX_VERSION=/{print $2}' "$dotfiles/script/bootstrap")"
-[ -n "$nixVersion" ] || fail "Unable to get Nix version"
+hasNixBuild=""
+hasNixProfile=""
 
-nixPath="$(find "${NIX_STORE_DIR:="/nix/store"}" -depth 1 -name "*-nix-$nixVersion" | head -n 1)"
-[ -n "$nixPath" ] || fail "Unable to find Nix derivation in Nix store"
+if command -v nix-build > /dev/null; then
+  hasNixBuild="1"
+fi
 
-# shellcheck disable=SC1072,SC1090
-[ -n "${NIX_PROFILES:-}" ] || source "$nixPath/etc/profile.d/nix.sh"
+if [ -n "${NIX_PROFILES:-}" ]; then
+  hasNixProfile="1"
+fi
 
-command -v nix-build > /dev/null || export PATH="$nixPath/bin:$PATH"
+if [ -z "$hasNixBuild" ] || [ -z "$hasNixProfile" ]; then
+  nixVersion="$(awk -F\" '/NIX_VERSION=/{print $2}' "$dotfiles/script/bootstrap")"
+  [ -n "$nixVersion" ] || fail "Unable to get Nix version"
+
+  nixPath="$(find "${NIX_STORE_DIR:="/nix/store"}" -depth 1 -name "*-nix-$nixVersion" | head -n 1)"
+  [ -n "$nixPath" ] || fail "Unable to find Nix derivation in Nix store"
+
+  # shellcheck disable=SC1072,SC1090
+  [ -n "$hasNixProfile" ] || source "$nixPath/etc/profile.d/nix.sh"
+  [ -n "$hasNixBuild" ] || export PATH="$nixPath/bin:$PATH"
+fi
 
 # Ensure that overlays and `nix.conf` are still found even when not
 # symlinked into `~/.config`
