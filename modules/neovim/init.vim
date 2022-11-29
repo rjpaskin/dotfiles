@@ -182,11 +182,6 @@ endif
 " ------------------------------------------------
 let g:deoplete#enable_at_startup = 1
 
-" Ensure Deoplete doesn't crash due to https://github.com/vim/vim/issues/3117
-if has('python3')
-  silent! python3 1
-endif
-
 function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~ '\s'

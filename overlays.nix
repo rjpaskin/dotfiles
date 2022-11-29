@@ -9,44 +9,6 @@ let
     jq = super.jq.overrideAttrs (attrs: {
       meta.outputsToInstall = (attrs.meta.outputsToInstall or []) ++ [ "out" "bin" "man" "dev" "doc" ];
     });
-
-    # https://nixos.org/nixpkgs/manual/#how-to-override-a-python-package-using-overlays
-    python38 = super.python38.override {
-      packageOverrides = python-self: python-super: {
-        msgpack = python-super.msgpack.overridePythonAttrs (old: rec {
-          version = "0.6.2";
-
-          src = old.src.override {
-            inherit version;
-            sha256 = "0c0q3vx0x137567msgs5dnizghnr059qi5kfqigxbz26jf2jyg7a";
-          };
-        });
-      };
-    };
-
-    vimPlugins = super.vimPlugins // {
-      deoplete-nvim = self.vimUtils.buildVimPluginFrom2Nix rec {
-        pname = "deoplete.nvim";
-        version = "5.1";
-        src = self.fetchFromGitHub {
-          owner = "Shougo";
-          repo = pname;
-          rev = "refs/tags/${version}";
-          sha256 = "1ira7g8f1rzgjp8qzsf7vx265y58665fbh1yp28m9r19j97v2aqp";
-        };
-      };
-
-      denite-nvim = self.vimUtils.buildVimPluginFrom2Nix rec {
-        pname = "denite.nvim";
-        version = "2.1";
-        src = self.fetchFromGitHub {
-          owner = "Shougo";
-          repo = pname;
-          rev = "refs/tags/${version}";
-          sha256 = "17fsngxpfy1m0r76c99xphwlcip85s4fyf9zj3vcdvb69hdgva2s";
-        };
-      };
-    };
   };
 
   newPackages = self: super: let
