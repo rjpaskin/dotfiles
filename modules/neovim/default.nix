@@ -114,8 +114,6 @@ in {
 
         # Project navigation
         telescope-nvim
-        nerdtree
-        vim-nerdtree-tabs
 
         # Languages - move to modules?
         swift-vim
