@@ -59,7 +59,6 @@ with lib;
     ./modules/dock
     ./modules/docker
     ./modules/git.nix
-    ./modules/go.nix
     ./modules/heroku.nix
     ./modules/homebrew
     ./modules/javascript.nix
