@@ -81,10 +81,6 @@ RSpec.describe "Git", role: "git" do
     end
   end
 
-  describe program("hub") do
-    its(:location) { should eq profile_bin }
-  end
-
   describe program("git-when-merged") do
     its(:location) { should eq profile_bin }
   end

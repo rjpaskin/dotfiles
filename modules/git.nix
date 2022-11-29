@@ -80,7 +80,6 @@ in {
       };
 
       home.packages = with pkgs; [
-        gitAndTools.hub
         gitAndTools.git-filter-repo
         git-when-merged
       ];
