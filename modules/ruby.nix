@@ -26,7 +26,7 @@ in {
       defaultPackage = mkOption {
         type = types.package;
         description = "Package to use as `ruby` as default";
-        default = pkgs.ruby_2_6;
+        default = pkgs.ruby_2_7;
       };
 
       defaultGems = mkOption {

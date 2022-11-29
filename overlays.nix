@@ -51,7 +51,7 @@ let
 
   newPackages = self: super: let
     overrides = {
-      ruby = super.ruby_2_6;
+      ruby = super.ruby_2_7;
     };
 
     callPackage = super.lib.callPackageWith (super // overrides);
