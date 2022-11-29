@@ -32,7 +32,7 @@ RSpec.describe "Neovim" do
           editorconfig-vim
           vim-tmux-navigator
           ale
-          denite.nvim
+          telescope.nvim
           deoplete.nvim
           vim-airline
         ]
@@ -84,12 +84,12 @@ RSpec.describe "Neovim" do
       end
     end
 
-    context "Denite" do
+    context "telescope.nvim" do
       it "sets key bindings" do
         aggregate_failures do
           keys = %w[u uu ub uo ur up um uc us uw uv uh uf uj].map {|key| "<Space>#{key}" }
 
-          expect(neovim_keymappings["n"].slice(*keys).values).to all start_with(":Denite")
+          expect(neovim_keymappings["n"].slice(*keys).values).to all start_with(":Telescope")
         end
       end
     end

@@ -113,9 +113,7 @@ in {
         vim-airline
 
         # Project navigation
-        { plugin = denite-nvim; optional = true; } # optional so we can `packadd` it to avoid autoloading issues
         telescope-nvim
-        neomru-vim
         nerdtree
         vim-nerdtree-tabs
 
