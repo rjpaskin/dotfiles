@@ -111,7 +111,7 @@ augroup END
 " -------------------------------------------------
 " Denite
 " -------------------------------------------------
-if !exists('$NO_DENITE')
+if exists('$WITH_DENITE')
   " Prevent undo being triggered when we mess up the key sequence
   nnoremap <silent><leader>u  :Denite -buffer-name=file_rec file/rec<cr>
 
@@ -178,6 +178,25 @@ if !exists('$NO_DENITE')
 endif
 
 " ------------------------------------------------
+" Telescope.nvim
+" ------------------------------------------------
+nnoremap <silent><leader>u  :Telescope find_files<cr>
+nnoremap <silent><leader>uu :Telescope find_files<cr>
+nnoremap <silent><leader>ub :Telescope buffers<cr>
+nnoremap <silent><leader>ur :Telescope registers<cr>
+nnoremap <silent><leader>uo :Telescope current_buffer_tags<cr>
+
+nnoremap <silent><leader>up :Telescope find_files cwd=`expand('%:p:g')`<cr>
+
+nnoremap <silent><leader>um :Telescope find_files cwd=app/models<cr>
+nnoremap <silent><leader>uc :Telescope find_files cwd=app/controllers<cr>
+nnoremap <silent><leader>uv :Telescope find_files cwd=app/views<cr>
+nnoremap <silent><leader>uh :Telescope find_files cwd=app/helpers<cr>
+nnoremap <silent><leader>uw :Telescope find_files cwd=app/workers<cr>
+nnoremap <silent><leader>us :Telescope find_files cwd=spec<cr>
+nnoremap <silent><leader>uf :Telescope find_files cwd=spec/support/factories<cr>
+
+" ------------------------------------------------
 " Deoplete
 " ------------------------------------------------
 let g:deoplete#enable_at_startup = 1
@@ -198,6 +217,10 @@ inoremap <silent><expr> <S-TAB>
   \ pumvisible() ? "\<C-p>" : "\<S-TAB>"
 
 " inoremap <silent><expr> <Esc>pumvisible() ? "\<C-e>" : "\<Esc>"
+
+" Stop deoplete firing in the telescope.nvim search prompt
+" https://github.com/nvim-telescope/telescope.nvim/issues/161
+autocmd FileType TelescopePrompt call deoplete#custom#buffer_option('auto_complete', v:false)
 
 " ------------------------------------------------
 " Airline
