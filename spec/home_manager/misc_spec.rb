@@ -85,31 +85,4 @@ RSpec.describe "Misc" do
     it { should be_a_file.and be_readable }
     it { should include(/^\s+UseKeychain\s+yes/) }
   end
-
-  context "emacs" do
-    describe file("/Applications/Emacs.app") do
-      it { should exist }
-    end
-
-    %w[elpa quelpa].each do |pkg_directory|
-      describe home_path(".emacs.d/#{pkg_directory}") do
-        it { should be_a_directory.and be_readable }
-        it { should_not be_empty }
-        its(:realpath) { should be_inside(icloud_path "dotfiles") }
-      end
-    end
-
-    describe home_path(".emacs.d") do
-      it { should be_a_directory.and be_writable }
-    end
-
-    describe home_path(".emacs.d/init.el") do
-      it { should be_a_file.and be_readable }
-    end
-
-    describe home_path(".emacs.d/custom.el") do
-      it { should be_a_file }
-      its(:realpath) { should be_writable }
-    end
-  end
 end
