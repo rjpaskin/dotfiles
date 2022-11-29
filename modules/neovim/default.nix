@@ -21,18 +21,29 @@ let
     };
   };
 
-  generateOneColours = colours: let
-    genLine = name: attrs: ''
-      call one#highlight('${name}', '${attrs.foreground}', '${attrs.background}', '${attrs.modifier}')
-    '';
-  in strings.concatStrings (attrsets.mapAttrsToList genLine colours);
+  generateConfigFromAttrs = fn: attrs: concatStrings (mapAttrsToList fn attrs);
+
+  generateOneColours = generateConfigFromAttrs (name: attrs: ''
+    call one#highlight('${name}', '${attrs.foreground}', '${attrs.background}', '${attrs.modifier}')
+  '');
+
+  generateFiletypeAutocmds = generateConfigFromAttrs (glob: viml: ''
+    au BufNewFile,BufRead ${glob} ${viml}
+  '');
 
   cfg = config.programs.neovim;
 
 in {
-  options.programs.neovim.colours = mkOption {
-    description = "Changes to `one` colour scheme";
-    type = attrsOf colourType;
+  options.programs.neovim = {
+    colours = mkOption {
+      description = "Changes to `one` colour scheme";
+      type = attrsOf colourType;
+    };
+
+    filetypes = mkOption {
+      description = "Filetypes mappings";
+      type = attrsOf str;
+    };
   };
 
   config = {
@@ -66,6 +77,12 @@ in {
         DiffNewFile = { background = white; modifier = "bold"; };
         DiffFile = { background = white; modifier = "bold"; };
       };
+
+      # Redo files
+      # If shebang present, use builtin filetype detection, otherwise assume `sh`
+      filetypes."*.do" = ''
+        if getline(1) =~ '^#!' | runtime! scripts.vim | else | setlocal filetype=sh | endif
+      '';
 
       # Default packages to always use
       plugins = with pkgs.vimPlugins; mkBefore [
@@ -111,6 +128,23 @@ in {
 
     xdg.configFile."nvim/after/plugin/alias.vim".text = ''
       :Alias ag grep
+    '';
+
+    xdg.configFile."nvim/after/plugin/vim-eunuch.vim".text = ''
+      augroup RJP
+        " Don't make Redo files executable, even if they have a shebang
+        autocmd BufWritePre *.do unlet! b:chmod_post
+      augroup END
+    '';
+
+    xdg.configFile."nvim/filetype.vim".text = ''
+      if exists("did_load_filetypes")
+        finish
+      endif
+
+      augroup filetypedetect
+        ${generateFiletypeAutocmds cfg.filetypes}
+      augroup END
     '';
   };
 }
