@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 
 with lib;
 
@@ -45,6 +45,8 @@ with lib;
       # Record the roles that were used to build this generation
       echo '${builtins.toJSON config.roles}' > $out/rjp/roles.json
     '';
+
+    home.extraActivationPath = [ pkgs.gawk ];
 
     xdg.configFile = {
       "nix/nix.conf".source = ./nix.conf;

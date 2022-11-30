@@ -64,22 +64,22 @@ in {
       '';
 
       showHiddenFolders = hm.dag.entryAfter ["installPackages"] ''
-        $DRY_RUN_CMD chflags nohidden $HOME/Library
-        $DRY_RUN_CMD xattr -d com.apple.FinderInfo $HOME/Library 2>/dev/null || true
+        $DRY_RUN_CMD /usr/bin/chflags nohidden $HOME/Library
+        $DRY_RUN_CMD /usr/bin/xattr -d com.apple.FinderInfo $HOME/Library 2>/dev/null || true
 
         if [ "$(/usr/bin/stat -f '%Xf' /Volumes)" != "0" ]; then
           $VERBOSE_ECHO "Unhiding /Volumes"
-          $DRY_RUN_CMD sudo chflags nohidden /Volumes
+          $DRY_RUN_CMD sudo /usr/bin/chflags nohidden /Volumes
         fi
       '';
 
       enableFirewall = let
         domain = "/Library/Preferences/com.apple.alf";
       in hm.dag.entryAfter ["installPackages"] ''
-        if [ "$(defaults read ${domain} globalstate 2>/dev/null)" != "1" ]; then
+        if [ "$(/usr/bin/defaults read ${domain} globalstate 2>/dev/null)" != "1" ]; then
           $VERBOSE_ECHO "Enabling firewall"
-          $DRY_RUN_CMD sudo defaults write ${domain} globalstate -int 1
-          $DRY_RUN_CMD sudo launchctl load /System/Library/LaunchDaemons/com.apple.alf.agent.plist 2>/dev/null
+          $DRY_RUN_CMD sudo /usr/bin/defaults write ${domain} globalstate -int 1
+          $DRY_RUN_CMD sudo /bin/launchctl load /System/Library/LaunchDaemons/com.apple.alf.agent.plist 2>/dev/null
         fi
       '';
 
@@ -87,9 +87,9 @@ in {
         toCmd = name: value: let
           strValue = toString value;
         in ''
-          if [ "$(pmset -g | awk '($1 == "${name}"){ print $2 }')" != "${strValue}" ]; then
+          if [ "$(/usr/bin/pmset -g | awk '($1 == "${name}"){ print $2 }')" != "${strValue}" ]; then
             $VERBOSE_ECHO "Setting ${name} to ${strValue}"
-            $DRY_RUN_CMD sudo pmset -a ${name} ${strValue}
+            $DRY_RUN_CMD sudo /usr/bin/pmset -a ${name} ${strValue}
           fi
         '';
       in hm.dag.entryAfter ["installPackages"] ''

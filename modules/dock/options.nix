@@ -101,7 +101,7 @@ in {
   };
 
   config.home.activation.dock = hm.dag.entryAfter ["setDarwinDefaults"] ''
-    $DRY_RUN_CMD defaults import com.apple.dock ${plistFile}
+    $DRY_RUN_CMD /usr/bin/defaults import com.apple.dock ${plistFile}
     $DRY_RUN_CMD /usr/bin/killall Dock
   '';
 }

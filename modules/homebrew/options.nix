@@ -65,10 +65,12 @@ let
   # 2. That the name of the cask file is the same as the cask name
   checkoutCasks = map ({ name, rev, ... }: optionalString (rev != null) ''
     $VERBOSE_ECHO "Checking out Casks/${name}.rb @ ${rev}"
-    git checkout ${rev} -- Casks/${name}.rb
+    ${pkgs.git}/bin/git checkout ${rev} -- Casks/${name}.rb
   '') cfg.casks;
 
-  archPrefix = optionalString machine.isARM "arch -arm64e";
+  archPrefix = optionalString machine.isARM "/usr/bin/arch -arm64e";
+
+  homebrewPath = if machine.isARM then "/opt/homebrew" else "/usr/local";
 
 in {
   options.targets.darwin.homebrew = {
@@ -101,7 +103,7 @@ in {
 
         ${
           optionalString (checkoutCasks != []) ''
-            pushd "$(brew --repository homebrew/cask)" > /dev/null
+            pushd "$(${homebrewPath}/bin/brew --repository homebrew/cask)" > /dev/null
             ${concatStrings checkoutCasks}
             popd
           ''
@@ -115,7 +117,7 @@ in {
           ''
         }
 
-        $DRY_RUN_CMD ${archPrefix} brew bundle install \
+        $DRY_RUN_CMD ${archPrefix} ${homebrewPath}/bin/brew bundle install \
           $VERBOSE_ARG \
           --no-upgrade \
           --no-lock \

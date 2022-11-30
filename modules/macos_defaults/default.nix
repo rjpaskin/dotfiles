@@ -270,7 +270,7 @@ with lib;
       </dict>";
 
       toDefault = domain: setting: ''
-        $DRY_RUN_CMD defaults -currentHost write ${domain} ${setting}
+        $DRY_RUN_CMD /usr/bin/defaults -currentHost write ${domain} ${setting}
       '';
     in hm.dag.entryAfter ["setDarwinDefaults"] ''
       ${concatMapStrings (toDefault "NSGlobalDomain") globalDomainSettings}
@@ -278,7 +278,7 @@ with lib;
 
       # Get "<vendorID>-<productID>" tuples for all keyboards currently connected
       keyboards="$(
-        hidutil list --matching keyboard \
+        /usr/bin/hidutil list --matching keyboard \
           | awk '/^Devices:/ { seenDevices = 1 } /^0x/ && seenDevices { printf "%d-%d\n", $1, $2 }'
       )"
 
