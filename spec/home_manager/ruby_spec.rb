@@ -12,10 +12,6 @@ RSpec.describe "Ruby", role: "ruby" do
     its(:location) { should eq profile_bin }
   end
 
-  xdescribe program("rake") do
-    its(:location) { should eq profile_bin }
-  end
-
   describe "gem `byebug`" do
     it "is installed with default Ruby package" do
       result = command("#{profile_bin "ruby"} -rbyebug -e exit")
