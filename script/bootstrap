@@ -123,7 +123,7 @@ else
   debug "This is a live run"
 fi
 
-NIX_VERSION="2.4"
+NIX_VERSION="2.11.0"
 
 require_executable "curl"
 require_executable "sw_vers"
