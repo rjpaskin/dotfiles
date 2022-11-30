@@ -167,8 +167,8 @@ module ShellLib
 
     def neovim_packages
       @neovim_packages ||= Resource.new("Neovim packages") do
-        eval_neovim("&runtimepath").split(",").grep(NEOVIM_PACKAGE_PATH).map! do |pkg|
-          File.basename(pkg)
+        eval_neovim("&runtimepath").split(",").grep(NEOVIM_PACKAGE_PATH).flat_map do |path|
+          Dir[path].map {|pkg| File.basename(pkg) }
         end
       end
     end

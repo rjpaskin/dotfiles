@@ -117,7 +117,7 @@ RSpec.describe "Packages" do
     its(:location) { should eq profile_bin }
     its("--version") { should be_success }
 
-    its(:content) { should match(%r{export PATH=\S*/nix/store/[^/]+-session-manager-plugin-[^/]+/bin}) }
+    its(:content) { should match(%r{PATH=\S*/nix/store/[^/]+-session-manager-plugin-[^/]+/bin}) }
 
     describe xdg_config_path("zsh/.zshrc") do
       it { should include("source $HOME/.nix-profile/share/zsh/site-functions/aws_zsh_completer.sh") }
