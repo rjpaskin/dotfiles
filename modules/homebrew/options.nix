@@ -6,25 +6,6 @@ with lib;
 with types;
 
 let
-  runAsIntel = path: pkgs.writeShellScriptBin "${builtins.baseNameOf path}-wrapped" ''
-    arch -x86_64 ${path} "$@"
-  '';
-
-  # We need to always run `mas` under Rosetta 2, since the changes
-  # Nix makes to the executable invalidate its signature, and thus
-  # Big Sur refuses to run it.
-  mas = pkgs.buildEnv {
-    inherit (pkgs.mas) meta passthru;
-
-    name = "mas-intel";
-    paths = [ pkgs.mas (runAsIntel "${pkgs.mas}/bin/mas") ];
-
-    postBuild = ''
-      rm $out/bin/mas
-      mv $out/bin/mas-wrapped $out/bin/mas
-    '';
-  };
-
   toCask = { name, removeQuarantine, ...}: concatStrings [
     ''cask "${name}"''
     (optionalString removeQuarantine ", args: { no_quarantine: true }")
@@ -110,13 +91,13 @@ in {
     home = {
       file = config.lib.symlinks.privateFiles extractedPrivateFiles;
 
-      packages = [ mas ]; # make available for general use
+      packages = [ pkgs.mas ]; # make available for general use
 
       activation.homebrewBundle = lib.hm.dag.entryAfter ["installPackages"] ''
         $VERBOSE_ECHO "Installing Homebrew casks and MAS apps"
 
         # Ensure that `brew bundle` doesn't try to install `mas` itself
-        export PATH="${mas}/bin:$PATH" HOMEBREW_NO_AUTO_UPDATE=1
+        export PATH="${pkgs.mas}/bin:$PATH" HOMEBREW_NO_AUTO_UPDATE=1
 
         ${
           optionalString (checkoutCasks != []) ''
