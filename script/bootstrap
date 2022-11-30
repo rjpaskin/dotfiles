@@ -221,31 +221,17 @@ fi
 if [ -d "/nix/store" ] && [ -d "$HOME/.nix-profile" ]; then
   debug "Nix already installed"
 else
-  volume_flag=""
-
-  if [ "$macos_major" -gt 10 ] || { [ "$macos_major" -eq 10 ] && [ "$macos_minor" -gt 14 ]; }; then
-    volume_flag="--darwin-use-unencrypted-nix-store-volume"
-  fi
+  flags="--no-channel-add"
 
   debug "Installing Nix $NIX_VERSION..."
-  [ -n "$volume_flag" ] && debug "  using $volume_flag"
 
   if [ -n "$DRY_RUN" ]; then
-    $DRY_RUN_CMD "sh <(curl -fsSL https://releases.nixos.org/nix/nix-$NIX_VERSION/install) \
-      --no-daemon \
-      --no-modify-profile \
-      --no-channel-add \
-      $volume_flag"
+    $DRY_RUN_CMD "sh <(curl -fsSL https://releases.nixos.org/nix/nix-$NIX_VERSION/install) $flags"
   else
-    export NIX_INSTALLER_NO_MODIFY_PROFILE=1
-
     # WARNING: The Nix installer sources `<nix>/etc/profile.d/nix.sh`,
     # which adds `~/.nix-profile/bin` to $PATH
     sh <(curl -fsSL "https://releases.nixos.org/nix/nix-$NIX_VERSION/install") \
-      --no-daemon \
-      --no-modify-profile \
-      --no-channel-add \
-      $volume_flag
+      $flags
 
     reset_path
     debug "Finished installing Nix"

@@ -245,9 +245,7 @@ RSpec.describe "script/bootstrap", :mock_executables do
     { stdout: stdout, stderr: text }
   end
 
-  let(:nix_installer_flags) do
-    %w[--no-daemon --no-modify-profile --no-channel-add]
-  end
+  let(:nix_installer_flags) { %w[--no-channel-add] }
 
   context "dry run" do
     let(:permitted_invocations) do
@@ -381,9 +379,7 @@ RSpec.describe "script/bootstrap", :mock_executables do
 
           expect(
             outputs.join("nix-installer").contents.split(" ")
-          ).to match_array(
-            [*nix_installer_flags, *("--darwin-use-unencrypted-nix-store-volume")]
-          )
+          ).to match_array(nix_installer_flags)
 
           expect(second_run.stderr).not_to include(/homebrew/i)
         end
@@ -448,9 +444,7 @@ RSpec.describe "script/bootstrap", :mock_executables do
 
         expect(
           outputs.join("nix-installer").contents.split(" ")
-        ).to contain_exactly(
-          *nix_installer_flags, "--darwin-use-unencrypted-nix-store-volume"
-        )
+        ).to contain_exactly(*nix_installer_flags)
 
         expect(homebrew_prefix).to be_a_directory
         expect(homebrew_prefix.join("bin/brew")).to be_a_file.and be_an_executable
