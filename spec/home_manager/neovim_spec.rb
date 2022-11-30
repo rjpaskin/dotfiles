@@ -5,6 +5,7 @@ RSpec.describe "Neovim" do
 
   describe program("nvim") do
     its(:location) { should eq profile_bin }
+    its(:archs, arm: true) { should include("arm64") }
   end
 
   context "aliases" do

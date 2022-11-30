@@ -6,6 +6,7 @@ RSpec.describe "ZSH" do
   describe program("zsh") do
     its(:location) { should eq profile_bin }
     its(:manpage) { should be_inside profile_path("share/man") }
+    its(:archs, arm: true) { should include("arm64") }
 
     it "runs ok" do
       expect(run_in_shell("exit").stderr.gsub(" > ", "")).to be_empty

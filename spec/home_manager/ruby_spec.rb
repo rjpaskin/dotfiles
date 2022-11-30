@@ -1,6 +1,7 @@
 RSpec.describe "Ruby", role: "ruby" do
   describe program("ruby") do
     its(:location) { should eq profile_bin }
+    its(:archs, arm: true) { should include("arm64") }
   end
 
   describe program("irb") do

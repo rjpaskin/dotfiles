@@ -51,6 +51,10 @@ module ShellLib
       end
     end
 
+    define_cached_method :mime_type do |path|
+      command!("file --mime-type --brief '#{path}'").stdout.chomp
+    end
+
     def self.current
       Thread.current[:Runner] ||= new
     end
