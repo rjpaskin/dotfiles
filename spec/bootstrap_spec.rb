@@ -10,6 +10,10 @@ RSpec.describe "Bootstrap" do
       it { should be_a_directory.and be_readable }
     end
 
+    describe program("nix-daemon") do
+      it { should be_running }
+    end
+
     describe nix_profiles_path do
       it { should be_a_directory.and be_readable }
     end
@@ -69,13 +73,13 @@ RSpec.describe "Bootstrap" do
     end
 
     it "is running" do
-      expect(command "/usr/bin/pgrep -q socketfilterfw").to be_success
+      expect(program "socketfilterfw").to be_running
     end
   end
 
   context "Rosetta 2", :arm do
     it "is installed" do
-      expect(command "/usr/bin/pgrep -q oahd").to be_success
+      expect(program "oahd").to be_running
     end
   end
 

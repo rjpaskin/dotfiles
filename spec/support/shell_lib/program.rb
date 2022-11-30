@@ -19,6 +19,10 @@ module ShellLib
       path.dirname
     end
 
+    def running?
+      Runner.current.command("/usr/bin/pgrep -q #{name}").success?
+    end
+
     def inspect
       "#<Program #{name}>"
     end
