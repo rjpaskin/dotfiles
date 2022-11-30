@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/bin/bash
 set -euo pipefail
 
 dotfiles="$(CDPATH='' cd -- "$(dirname -- "$0")/.." && pwd -P)"
@@ -35,7 +35,7 @@ if [ -z "$hasNixBuild" ] || [ -z "$hasNixProfile" ]; then
   nixPath="$(find "${NIX_STORE_DIR:="/nix/store"}" -depth 1 -name "*-nix-$nixVersion" | head -n 1)"
   [ -n "$nixPath" ] || fail "Unable to find Nix derivation in Nix store"
 
-  # shellcheck disable=SC1072,SC1090
+  # shellcheck disable=SC1072,SC1091
   [ -n "$hasNixProfile" ] || source "$nixPath/etc/profile.d/nix.sh"
   [ -n "$hasNixBuild" ] || export PATH="$nixPath/bin:$PATH"
 fi
