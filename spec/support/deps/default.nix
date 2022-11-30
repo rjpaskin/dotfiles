@@ -1,4 +1,4 @@
-with (import ../../..).nixpkgs;
+with (import ../../..).legacyPackages.${builtins.currentSystem}.nixpkgs;
 
 bundlerEnv {
   ruby = ruby_2_7;

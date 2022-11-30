@@ -45,10 +45,17 @@ fi
 export NIX_PATH="nixpkgs-overlays=$dotfiles/overlays.nix"
 export NIX_CONF_DIR="$dotfiles"
 
+nixSystem="$(
+  nix --extra-experimental-features nix-command \
+    eval --impure --raw \
+    --expr builtins.currentSystem
+)"
+
+# Can't use `nix build` here, as flakes don't work with `--arg/--argstr`
 systemEnv="$(
   nix-build --no-out-link \
     --show-trace \
-    -A defaultPackage.x86_64-darwin \
+    -A "legacyPackages.$nixSystem.dotfiles" \
     --argstr hostConfig "$dotfiles/hosts/$hostId.nix" \
     --argstr username "$USER" \
     --argstr homeDirectory "$HOME" \

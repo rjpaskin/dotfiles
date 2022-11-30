@@ -47,11 +47,47 @@
     thoughtbot-dotfiles,
     ...
   }@args: let
-    system = "x86_64-darwin";
-    pkgs = nixpkgs.outputs.legacyPackages.${system};
+    hmConfig = {
+      hostConfig, machine, pkgs,
+      username, homeDirectory,
+    }: home-manager.lib.homeManagerConfiguration rec {
+      inherit pkgs;
 
-    vimPlugins = with builtins; foldl' (acc: name:
-      if (builtins.match ".*vim.*|conjure" name) != null then
+      modules = [
+        ({ lib, ... }: {
+          _file = ./flake.nix;
+          config._module.args = {
+            flakeRepos = {
+              inherit thoughtbot-dotfiles;
+            };
+
+            machine = let
+              aliases = {
+                mojave = "10.14";
+                catalina = "10.15";
+                big_sur = "11";
+              };
+            in machine // rec {
+              isARM = (builtins.match ".+ARM64.+" machine.arch) != null;
+              sameOrNewerThan = version': let
+                version = lib.attrByPath [version'] version' aliases;
+              in (builtins.compareVersions machine.macOSversion version) > -1;
+              olderThan = version: ! sameOrNewerThan version;
+            };
+          };
+        })
+        ./home.nix
+        hostConfig
+        { home = { inherit username homeDirectory; }; }
+      ];
+    };
+
+    generateOutput = system: let
+      pkgs = nixpkgs.outputs.legacyPackages.${system};
+    in {
+      # used by `overlays.nix`
+      vimPlugins = with builtins; foldl' (acc: name:
+        if (builtins.match ".*vim.*|conjure" name) != null then
         let plugin = args.${name}; in (acc // {
           ${name} = pkgs.vimUtils.buildVimPluginFrom2Nix {
             pname = name;
@@ -59,65 +95,35 @@
             src = plugin;
           };
         })
-      else acc) {} (attrNames args);
-  in rec {
-    inherit vimPlugins; # used by `overlays.nix`
-    nixpkgs = pkgs; # used by `spec/support/deps/default.nix` and `script/update-lockfile`
+        else acc) {} (attrNames args);
 
-    flakeRepos = {
-      inherit thoughtbot-dotfiles;
-    };
+      nixpkgs = pkgs; # used by `spec/support/deps/default.nix` and `script/update-lockfile`
 
-    hmConfig = {
-      hostConfig, machine,
-      username, homeDirectory
-    }: home-manager.lib.homeManagerConfiguration rec {
-      inherit system homeDirectory username;
+      dotfiles = {
+        # filename of extra config to use
+        hostConfig,
 
-      configuration = { lib, ... }: {
-        _file = ./flake.nix;
-        imports = [ ./home.nix hostConfig ];
-        config._module.args = {
-          inherit flakeRepos;
+        # Info about the current machine. Includes:
+        # - dotfilesDirectory: used to access git-ignored files in this repo or that can't be in the Nix Store
+        # - privateDirectory: 'private' files stored outside this repo
+        machine,
 
-          machine = let
-            aliases = {
-              mojave = "10.14";
-              catalina = "10.15";
-              big_sur = "11";
-            };
-          in machine // rec {
-            isARM = (builtins.match "ARM64" machine.arch) != null;
-            sameOrNewerThan = version': let
-              version = lib.attrByPath [version'] version' aliases;
-            in (builtins.compareVersions machine.macOSversion version) > -1;
-            olderThan = version: ! sameOrNewerThan version;
-          };
+        username, homeDirectory
+      }@args: with pkgs; let
+        inherit (hmConfig (args // { inherit pkgs; })) activationPackage;
+
+        systemEnv = buildEnv {
+          name = "system-env";
+          paths = [ nix cacert "${activationPackage}/home-path" ];
         };
-      };
+
+      in linkFarm "system-bundle" [
+        { name = "env"; path = systemEnv; }
+        { name = "activate"; path = "${activationPackage}/activate"; }
+      ];
     };
-
-    defaultPackage.${system} = {
-      # filename of extra config to use
-      hostConfig,
-
-      # Info about the current machine. Includes:
-      # - dotfilesDirectory: used to access git-ignored files in this repo or that can't be in the Nix Store
-      # - privateDirectory: 'private' files stored outside this repo
-      machine,
-
-      username, homeDirectory
-    }@args: with pkgs; let
-      inherit (hmConfig args) activationPackage;
-
-      systemEnv = buildEnv {
-        name = "system-env";
-        paths = [ nix cacert "${activationPackage}/home-path" ];
-      };
-
-    in linkFarm "system-bundle" [
-      { name = "env"; path = systemEnv; }
-      { name = "activate"; path = "${activationPackage}/activate"; }
-    ];
+  in {
+    legacyPackages."x86_64-darwin" = generateOutput "x86_64-darwin";
+    legacyPackages."aarch64-darwin" = generateOutput "aarch64-darwin";
   };
 }

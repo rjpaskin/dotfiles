@@ -84,15 +84,9 @@ class NixLockfile
     @nix_version ||= nix("eval --raw .#nixpkgs.nix.version").chomp
   end
 
-  def nix_flakes_path
-    @nix_flakes_path ||= command!(
-      "nix-build . -A nixpkgs.nixFlakes --no-out-link"
-    ).chomp
-  end
-
   def nix(subargs, capture: true)
     args = [
-      "#{nix_flakes_path}/bin/nix",
+      "nix",
       "--experimental-features 'nix-command flakes'",
       subargs
     ].join(" ")

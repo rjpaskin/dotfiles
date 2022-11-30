@@ -34,7 +34,9 @@ let
       };
     });
 
-    vimPlugins = super.vimPlugins // (import ./default.nix).vimPlugins;
+    vimPlugins = super.vimPlugins // (
+      import ./default.nix
+    ).legacyPackages.${super.system}.vimPlugins;
   };
 
 in [ customisations newPackages ]
