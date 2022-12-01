@@ -46,8 +46,11 @@ module ShellLib
     end
 
     define_cached_method :defaults do |domain|
-      Resource.new("defaults[#{domain}]") do
-        OpenStruct.new(command!("defaults export #{domain} -").as_plist)
+      current_host = domain.is_a?(Hash) && (domain = domain.delete(:current_host))
+      flag = current_host ? "-currentHost" : nil
+
+      Resource.new("defaults[#{[*flag, domain].join " "}]") do
+        OpenStruct.new(command!("defaults #{flag} export #{domain} -").as_plist)
       end
     end
 

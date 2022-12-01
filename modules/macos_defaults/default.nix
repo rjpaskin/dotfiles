@@ -236,46 +236,45 @@ with lib;
       })
     ];
 
-    targets.darwin.currentHostDefaults = (mkIf (machine.sameOrNewerThan "big_sur") {
-      "com.apple.controlcenter" = { BatteryShowPercentage = true; };
-    });
+    targets.darwin.currentHostDefaults = mkMerge [
+      {
+        NSGlobalDomain = {
+          "com.apple.trackpad.trackpadCornerClickBehavior" = 1;
+          "com.apple.trackpad.enableSecondaryClick" = true;
+          "com.apple.trackpad.twoFingerFromRightEdgeSwipeGesture" = false;
+          "com.apple.trackpad.twoFingerDoubleTapGesture" = false;
+        };
+        "com.apple.ImageCapture" = {
+          disableHotPlug = true;
+        };
+      }
+      (mkIf (machine.sameOrNewerThan "big_sur") {
+        "com.apple.controlcenter" = {
+          BatteryShowPercentage = true;
+        };
+      })
+    ];
 
-    home.activation.currentHostDarwinDefaults = let
-      globalDomainSettings = [
-        "com.apple.trackpad.trackpadCornerClickBehavior -int 1"
-        "com.apple.trackpad.enableSecondaryClick -bool true"
+    home.activation.keyboardMappings = let
+      # See below for key codes:
+      # - https://developer.apple.com/library/archive/technotes/tn2450/_index.html#//apple_ref/doc/uid/DTS40017618-CH1-KEY_TABLE_USAGES
+      # - https://hidutil-generator.netlify.app
+      capsLock = 30064771129; # 0x700000000 | 0x39
+      # System Preferences uses Right Ctrl for "Control", so copy that
+      rightCtrl = 30064771300; # 0x700000000 | 0xE4
 
-        # Disable some gestures
-        "com.apple.trackpad.twoFingerFromRightEdgeSwipeGesture -bool false"
-        "com.apple.trackpad.twoFingerDoubleTapGesture -bool false"
-      ];
+      toKeyboardMapping = { from, to }: "<dict>
+        <key>HIDKeyboardModifierMappingSrc</key>
+        <integer>${toString from}</integer>
+        <key>HIDKeyboardModifierMappingDst</key>
+        <integer>${toString to}</integer>
+      </dict>";
 
-      keyboardMappings = let
-        # See below for key codes:
-        # - https://developer.apple.com/library/archive/technotes/tn2450/_index.html#//apple_ref/doc/uid/DTS40017618-CH1-KEY_TABLE_USAGES
-        # - https://hidutil-generator.netlify.app
-        capsLock = 30064771300; # 0x700000000 | 0x39
-        # System Preferences uses Right Ctrl for "Control", so copy that
-        rightCtrl = 30064771129; # 0x700000000 | 0xE4
-      in [
+      keyboardMappings = [
         { from = capsLock; to = rightCtrl; }
       ];
 
-      # Ordering is weird here re: from/to <=> src/dst, but is correct
-      toKeyboardMapping = { from, to }: "<dict>
-        <key>HIDKeyboardModifierMappingSrc</key>
-        <integer>${toString to}</integer>
-        <key>HIDKeyboardModifierMappingDst</key>
-        <integer>${toString from}</integer>
-      </dict>";
-
-      toDefault = domain: setting: ''
-        $DRY_RUN_CMD /usr/bin/defaults -currentHost write ${domain} ${setting}
-      '';
     in hm.dag.entryAfter ["setDarwinDefaults"] ''
-      ${concatMapStrings (toDefault "NSGlobalDomain") globalDomainSettings}
-      ${toDefault "com.apple.ImageCapture" "disableHotPlug -bool true"}
-
       # Get "<vendorID>-<productID>" tuples for all keyboards currently connected
       keyboards="$(
         /usr/bin/hidutil list --matching keyboard \
@@ -283,11 +282,10 @@ with lib;
       )"
 
       for keyboard in $keyboards; do
-        ${
-          toDefault "NSGlobalDomain"
-          "com.apple.keyboard.modifiermapping.\${keyboard}-0 \\
-          -array '${concatMapStrings toKeyboardMapping keyboardMappings}'"
-        }
+        $DRY_RUN_CMD /usr/bin/defaults -currentHost write \
+          "NSGlobalDomain" \
+          "com.apple.keyboard.modifiermapping.$keyboard-0" \
+          -array '${concatMapStrings toKeyboardMapping keyboardMappings}'
       done
     '';
   };
