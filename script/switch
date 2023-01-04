@@ -62,7 +62,6 @@ systemEnv="$(
     --arg machine "{
       dotfilesDirectory = \"$dotfiles\";
       macOSversion = \"$(sw_vers -productVersion)\";
-      arch = \"$(uname -v)\";
     }" \
     "$dotfiles"
 )"

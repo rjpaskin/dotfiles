@@ -54,7 +54,7 @@
       inherit pkgs;
 
       modules = [
-        ({ lib, ... }: {
+        ({ lib, pkgs, ... }: {
           _file = ./flake.nix;
           config._module.args = {
             flakeRepos = {
@@ -68,7 +68,7 @@
                 big_sur = "11";
               };
             in machine // rec {
-              isARM = (builtins.match ".+ARM64.+" machine.arch) != null;
+              isARM = pkgs.stdenv.hostPlatform.isAarch;
               sameOrNewerThan = version': let
                 version = lib.attrByPath [version'] version' aliases;
               in (builtins.compareVersions machine.macOSversion version) > -1;
