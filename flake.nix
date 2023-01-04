@@ -104,8 +104,7 @@
         hostConfig,
 
         # Info about the current machine. Includes:
-        # - dotfilesDirectory: used to access git-ignored files in this repo or that can't be in the Nix Store
-        # - privateDirectory: 'private' files stored outside this repo
+        # dotfilesDirectory: used to access git-ignored files in this repo or that can't be in the Nix Store
         machine,
 
         username, homeDirectory

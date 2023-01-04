@@ -4,7 +4,7 @@ with lib;
 with config.lib.file;
 
 let
-  inherit (machine) dotfilesDirectory privateDirectory;
+  privateDirectory = "${config.home.homeDirectory}/Library/Mobile Documents/com~apple~CloudDocs/dotfiles";
 
   mkSymlink = root: file: mkOutOfStoreSymlink "${root}/${toString file}";
 
@@ -27,10 +27,6 @@ in {
 
   config = {
     lib.symlinks = {
-      mkDotfileSymlink = mkSymlink dotfilesDirectory;
-      dotfile = mkLink dotfilesDirectory;
-      dotfiles = mkLinks dotfilesDirectory;
-
       mkPrivateFileSymlink = mkSymlink privateDirectory;
       privateFile = mkLink privateDirectory;
       privateFiles = mkLinks privateDirectory;

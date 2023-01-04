@@ -1,9 +1,6 @@
 { config, lib, ... }:
 
-let
-  inherit (config.lib.symlinks) mkDotfileSymlink;
-
-in {
+{
   programs.bash = {
     enable = true;
     historyFile = "${config.xdg.dataHome}/bash/history";
