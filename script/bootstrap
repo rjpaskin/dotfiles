@@ -308,28 +308,12 @@ else
   require_executable "ssh-keygen"
   require_executable "/usr/bin/ssh-add"
 
-  user_email=
-
-  ssh_password="$(capture_secret "ssh_key_passphrase" openssl rand -base64 18)"
-
-  require_executable "security"
-
-  # Get email from iCloud
-  set +e
-  user_email="$(security find-generic-password \
-    -s com.apple.account.IdentityServices.token 2>/dev/null \
-    | awk -F\" '{if ($2 == "acct") {print $4}}')"
-  set -e
-
-  if [ -z "$user_email" ] && [ -z "$DRY_RUN" ]; then
-    [ -n "$IS_INTERACTIVE" ] || err "Cannot get email to create SSH key"
-
-    debug "Unable to get iCloud email"
-    echo "Enter email for SSH key"
-    read -r user_email
-  fi
+  email_domain="gmail.com"
+  email_username="rjpaskin"
+  user_email="${email_username}@${email_domain}"
 
   keyfile="$HOME/.ssh/id_ed25519"
+  ssh_password="$(capture_secret "ssh_key_passphrase" openssl rand -base64 18)"
 
   $DRY_RUN_CMD mkdir -p "$HOME/.ssh"
   $DRY_RUN_CMD ssh-keygen -t ed25519 -C "$user_email" -N "$ssh_password" -f "$keyfile"

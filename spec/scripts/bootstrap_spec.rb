@@ -98,7 +98,11 @@ RSpec.describe "script/bootstrap", :mock_executables do
     tmpdir.join(ShellLib.arm? ? "opt/homebrew" : "usr/local")
   end
 
-  let(:icloud_email) { "icloud@example.test" }
+  let(:icloud_email) do
+    username = dotfiles_path("modules/git.nix").contents[/username = "([^"]+)";/, 1]
+
+    "#{username}@gmail.com"
+  end
 
   let(:rosetta_2_args) do
     a_collection_containing_exactly("--install-rosetta", "--agree-to-license")
@@ -155,32 +159,6 @@ RSpec.describe "script/bootstrap", :mock_executables do
     end
 
     stub_command("scutil", args: %w[--get ComputerName]) { @hostname }
-
-    stub_command(
-      "security",
-      args: %w[find-generic-password -s com.apple.account.IdentityServices.token]
-    ).and_return(<<~OUTPUT)
-        keychain: "#{ENV["HOME"]}/Library/Keychains/login.keychain-db"
-        version: 512
-        class: "genp"
-        attributes:
-            0x00000007 <blob>="com.apple.account.IdentityServices.token"
-            0x00000008 <blob>=<NULL>
-            "acct"<blob>="#{icloud_email}"
-            "cdat"<timedate>=0x#{SecureRandom.hex(16)}  "20200101123400Z\\000"
-            "crtr"<uint32>=<NULL>
-            "cusi"<sint32>=<NULL>
-            "desc"<blob>=<NULL>
-            "gena"<blob>=0x#{SecureRandom.hex(244)}  "<?xml version="1.0" encoding="UTF-8"?>\\012<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">\\012<plist version="1.0">\\012<dict>\\012\\011<key>ACKeychainItemVersion</key>\\012\\011<integer>3</integer>\\012</dict>\\012</plist>\\012"
-            "icmt"<blob>=<NULL>
-            "invi"<sint32>=<NULL>
-            "mdat"<timedate>=0x#{SecureRandom.hex(16)}  "20200101123400Z\\000"
-            "nega"<sint32>=<NULL>
-            "prot"<blob>=<NULL>
-            "scrp"<sint32>=<NULL>
-            "svce"<blob>="com.apple.account.IdentityServices.token"
-            "type"<uint32>=<NULL>
-    OUTPUT
   end
 
   def run_script(*args)
@@ -253,10 +231,6 @@ RSpec.describe "script/bootstrap", :mock_executables do
         an_invocation_of("scutil", with: %w[--get ComputerName]),
         an_invocation_of("softwareupdate", with: %w[--list]),
         an_invocation_of("fdesetup", with: %w[status]),
-        an_invocation_of(
-          "security",
-          with: %w[find-generic-password -s com.apple.account.IdentityServices.token]
-        ),
         an_invocation_of("ssh-agent", with: %w[-s]),
         an_invocation_of("usr-bin-pgrep", with: %w[oahd]),
         *(an_invocation_of("softwareupdate", with: rosetta_2_args) if ShellLib.arm?)
