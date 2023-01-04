@@ -60,6 +60,7 @@ set showmatch                " show matching parentheses
 set textwidth=0              " disable wrapping of text in insert mode
 set diffopt+=vertical        " open diffs side-by-side by default
 set diffopt+=iwhite          " ignore whitespace in diffs
+set mouse=                   " disable mouse interaction in all modes
 let &errorformat .=',%f'     " allow a list of (only) filenames to populate the quickfix list
 
 if has("termguicolors")
