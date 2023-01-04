@@ -10,8 +10,29 @@ RSpec.describe "Git", role: "git" do
   describe xdg_config_path("git/attributes") do
     it { should be_a_file.and be_readable }
 
-    it "sets up merge driver for `schema.rb`" do
-      expect(subject.lines).to include("db/schema.rb merge=railsschema")
+    context 'merge drivers' do
+      using_tmpdir do |tmp|
+        command!("git init '#{tmp}'")
+      end
+
+      let(:files) do
+        %w[db/schema.rb db/schema_next.rb].map {|name| "'#{name}'" }.join(" ")
+      end
+
+      let(:attr) { "merge" }
+
+      let(:git_attributes) do
+        check = command!("git -C '#{tmpdir}' check-attr -z #{attr} #{files}")
+
+        # format: <file>\0<attr>\0<value>\0 (repeated)
+        check.line.split("\0").each_slice(3).with_object({}) do |(file, _, value), attrs|
+          attrs[file] = value
+        end
+      end
+
+      it "sets up merge driver for `schema.rb` and similar" do
+        expect(git_attributes).to all have_attributes(last: "railsschema")
+      end
     end
   end
 

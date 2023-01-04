@@ -117,7 +117,7 @@ in {
           name = "newer Rails schema version";
           driver = "merge-rails-schema %O %A %B %L";
         };
-        attributes = [ "db/schema.rb merge=${id}" ];
+        attributes = [ "db/*schema*.rb merge=${id}" ];
       };
     }
 
