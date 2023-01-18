@@ -1,9 +1,8 @@
 require "rspec/its"
 
-$LOAD_PATH << File.expand_path("./support", __dir__)
 require "shell_lib"
-require "spec_helpers"
-require "mock_executables_helper"
+require_relative "./support/spec_helpers"
+require_relative "./support/mock_executables_helper"
 
 RSpec::Matchers.define_negated_matcher :not_change, :change
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-$LOAD_PATH << File.expand_path("../spec/support", __dir__)
+$LOAD_PATH << File.expand_path("../rubylib", __dir__)
 require "shell_lib"
 
 class NixLockfile

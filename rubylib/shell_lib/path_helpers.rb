@@ -34,7 +34,7 @@ module ShellLib
     end
 
     DOTFILES = Path.new(
-      File.expand_path("../../..", __dir__)
+      File.expand_path("../..", __dir__)
     ).freeze
 
     def dotfiles_path(path = nil)

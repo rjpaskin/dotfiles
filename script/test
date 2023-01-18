@@ -17,6 +17,7 @@ nix-store \
   --indirect > /dev/null
 
 "$build/bin/rspec" \
+  -I ./rubylib \
   --require spec_helper \
   --format doc \
   "$@"
