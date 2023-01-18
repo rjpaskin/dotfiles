@@ -5,7 +5,10 @@ set -e
 # which doesn't have things like $HOME set, so instead
 # get the path to the build env and run in the current
 # shell
-build="$(nix-build --no-out-link spec/support/deps)"
+build="$(
+  nix-build --no-out-link \
+    --expr "(import ./.).legacyPackages.\${builtins.currentSystem}.tests"
+)"
 
 # Add GC root for build
 nix-store \

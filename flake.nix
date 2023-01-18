@@ -97,7 +97,7 @@
         })
         else acc) {} (attrNames args);
 
-      nixpkgs = pkgs; # used by `spec/support/deps/default.nix` and `script/update-lockfile`
+      nixpkgs = pkgs; # used by `script/update-lockfile`
 
       dotfiles = {
         # filename of extra config to use
@@ -120,6 +120,12 @@
         { name = "env"; path = systemEnv; }
         { name = "activate"; path = "${activationPackage}/activate"; }
       ];
+
+      tests = with pkgs; bundlerEnv {
+        ruby = ruby_2_7;
+        name = "dotfiles-specs";
+        gemdir = ./spec/support/deps;
+      };
     };
   in {
     legacyPackages."x86_64-darwin" = generateOutput "x86_64-darwin";
