@@ -123,4 +123,13 @@ RSpec.describe "Packages" do
       it { should include("source $HOME/.nix-profile/share/zsh/site-functions/aws_zsh_completer.sh") }
     end
   end
+
+  describe program("aws-vault") do
+    its(:location) { should eq profile_bin }
+    its("--version") { should be_success }
+
+    describe shell_variable("AWS_VAULT_KEYCHAIN_NAME") do
+      it { should eq("login") }
+    end
+  end
 end

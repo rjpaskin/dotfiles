@@ -55,10 +55,13 @@ with lib;
     })
 
     (mkIf config.roles.aws {
-      home.packages = [ pkgs.awscli-with-plugins ];
-      programs.zsh.initExtra = ''
-        source $HOME/.nix-profile/share/zsh/site-functions/aws_zsh_completer.sh
-      '';
+      home.packages = with pkgs; [ awscli-with-plugins aws-vault ];
+      programs.zsh = {
+        sessionVariables.AWS_VAULT_KEYCHAIN_NAME = "login";
+        initExtra = ''
+          source $HOME/.nix-profile/share/zsh/site-functions/aws_zsh_completer.sh
+        '';
+      };
     })
   ];
 }
