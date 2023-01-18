@@ -124,7 +124,7 @@
       tests = with pkgs; bundlerEnv {
         ruby = ruby_2_7;
         name = "dotfiles-specs";
-        gemdir = ./spec/support/deps;
+        gemdir = ./.;
       };
     };
   in {
