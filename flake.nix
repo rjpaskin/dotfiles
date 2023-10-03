@@ -83,7 +83,11 @@
     };
 
     generateOutput = system: let
-      pkgs = nixpkgs.outputs.legacyPackages.${system};
+      pkgs = import nixpkgs {
+        inherit system;
+        # Ensure our overlays are used in `script/switch`
+        overlays = import ./overlays.nix;
+      };
     in {
       # used by `overlays.nix`
       vimPlugins = with builtins; foldl' (acc: name:
