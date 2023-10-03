@@ -62,5 +62,7 @@ module ShellLib
     def homebrew_path(path = nil)
       HOMEBREW_PREFIX.join(path.to_s)
     end
+
+    extend self
   end
 end

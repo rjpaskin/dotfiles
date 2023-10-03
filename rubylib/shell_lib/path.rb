@@ -13,6 +13,8 @@ module ShellLib
       :readable?, :world_readable?, :writable?,
       :extname, :read, :to_s
 
+    alias_method :exists?, :exist?
+
     def self.from_uri(uri)
       new(CGI.unescape URI.parse(uri.to_s).path)
     end
@@ -135,8 +137,8 @@ module ShellLib
       @lines ||= content.split(/\r?\n/)
     end
 
-    def as_json
-      @json ||= JSON.parse(content, symbolize_names: true)
+    def as_json(**options)
+      @json ||= JSON.parse(content, symbolize_names: true, **options)
     end
 
     def as_plist
@@ -149,12 +151,16 @@ module ShellLib
       inside?(NIX_STORE_PATH) || (symlink? && realpath.inside?(NIX_STORE_PATH))
     end
 
+    def becomes(klass)
+      klass.new(self)
+    end
+
     def editable
-      EditablePath.new(self)
+      becomes(EditablePath)
     end
 
     def readonly
-      Path.new(self)
+      becomes(Path)
     end
 
     private

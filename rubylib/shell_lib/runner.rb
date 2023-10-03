@@ -78,6 +78,14 @@ module ShellLib
       run_in_shell(*args).check!
     end
 
+    def simple_command(*args)
+      SimpleCommand.new(*args)
+    end
+
+    def simple_command!(*args)
+      simple_command(*args).check!
+    end
+
     def shell_command!(*args)
       Resource.new(%{zsh -c "#{args.join " "}"}) { run_in_shell!(*args) }
     end

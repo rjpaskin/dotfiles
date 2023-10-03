@@ -1,3 +1,5 @@
+require "fileutils"
+
 module ShellLib
   class EditablePath < Path
     def mkpath(*args)
@@ -19,11 +21,15 @@ module ShellLib
     end
 
     def mk_executable
-      tap { FileUtils.chmod("a+x", pathname) }
+      chmod("a+x")
     end
 
     def mk_only_user_readable
-      tap { FileUtils.chmod("u+rw,go=", pathname) }
+      chmod("u+rw,go=")
+    end
+
+    def chmod(mode)
+      tap { FileUtils.chmod(mode, pathname) }
     end
   end
 end

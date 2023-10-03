@@ -2,27 +2,45 @@
 $LOAD_PATH << File.expand_path("../rubylib", __dir__)
 require "shell_lib"
 
-class NixLockfile
-  include ShellLib::ResourceHelpers
-  include ShellLib::PathHelpers
+class UpdateNixLockfile < ShellLib::Task
+  class Lockfile < ShellLib::Path
+    def as_json(**options)
+      super(object_class: ShellLib::StrictHash).tap do |json|
+        version = json[:version]
+        raise "Unhandled version: #{version}" if version != 7
+      end
+    end
+
+    def commits_for_inputs
+      @commits_for_inputs ||= nodes[as_json[:root], :inputs].each_value.each_with_object({}) do |name, inputs|
+        locked = nodes[name, :locked]
+        next if locked[:type] != "github"
+
+        inputs[name] = {
+          slug: "#{locked[:owner]}/#{locked[:repo]}",
+          commit: locked[:rev][0, 7]
+        }
+      end
+    end
+
+    def nodes
+      @nodes ||= as_json[:nodes]
+    end
+  end
 
   NIX_VERSION_REGEXP = /^(NIX_VERSION=['"])([^'"]+)(['"])/m
 
-  def update(*inputs)
-    inputs = inputs.flatten
-
+  def run
     Dir.chdir(DOTFILES) do
       diff do
-        flake_command = if inputs.any?
-          %w[flake lock] + inputs.map {|input| "--update-input #{input}" }
-        else
-          %w[flake update]
-        end
-
-        nix(flake_command.join(" "), capture: false)
-
-        update_bootstrap_nix_version if inputs.empty? || inputs.include?("nixpkgs")
+        nix!(
+          "flake",
+          (inputs.any? ? "lock" : "update"),
+          *inputs.map {|input| "--update-input #{input}" }
+        )
       end
+
+      update_bootstrap_nix_version if inputs.empty? || inputs.include?("nixpkgs")
     end
   end
 
@@ -37,32 +55,10 @@ class NixLockfile
     end
   end
 
-  def commits_for_inputs
-    lockfile = ShellLib::StrictHash.parse_json(
-      dotfiles_path("flake.lock").contents
-    )
-
-    version = lockfile[:version]
-    raise "Unhandled version: #{version}" if version != 7
-
-    root_name = lockfile[:root]
-    nodes = lockfile[:nodes]
-
-    nodes[root_name, :inputs].each_value.each_with_object({}) do |name, inputs|
-      locked = nodes[name, :locked]
-      next if locked[:type] != "github"
-
-      inputs[name] = {
-        slug: "#{locked[:owner]}/#{locked[:repo]}",
-        commit: locked[:rev][0, 7]
-      }
-    end
-  end
-
   def diff
-    locked_before = commits_for_inputs
+    locked_before = lockfile.commits_for_inputs
     yield
-    locked_after = commits_for_inputs
+    locked_after = lockfile.commits_for_inputs
 
     locked_before.each do |name, before|
       after = locked_after.fetch(name, {})
@@ -80,23 +76,22 @@ class NixLockfile
 
   private
 
+  def inputs
+    @inputs ||= argv.reject {|arg| arg.start_with?("-") }
+  end
+
+  def lockfile
+    dotfiles_path("flake.lock").becomes(Lockfile)
+  end
+
   def nix_version
     @nix_version ||= nix("eval --raw .#nixpkgs.nix.version").chomp
   end
 
-  def nix(subargs, capture: true)
-    args = [
-      "nix",
-      "--experimental-features 'nix-command flakes'",
-      subargs
-    ].join(" ")
-
-    if capture
-      command!(args)
-    else
-      system(args) or raise "failed!"
-    end
+  def args_for_nix(*args)
+    args[1, 0] = "--experimental-features 'nix-command flakes'"
+    args
   end
 end
 
-NixLockfile.new.update(ARGV) if $0 == __FILE__
+UpdateNixLockfile.run(ARGV) if $0 == __FILE__
