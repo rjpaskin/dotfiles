@@ -14,9 +14,15 @@ with lib;
       home.packages = with pkgs; [
         fzf
         jq
-        ncdu
         shellcheck
       ];
+    }
+
+    {
+      home.packages = [ pkgs.ncdu ];
+      xdg.configFile."ncdu/config".text = ''
+        --color off
+      '';
     }
 
     {

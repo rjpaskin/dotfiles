@@ -93,6 +93,11 @@ RSpec.describe "Packages" do
     its(:location) { should eq profile_bin }
     its(:manpage) { should be_inside nix_profile_manpath }
     its("--version") { should be_success }
+
+    describe xdg_config_path("ncdu/config") do
+      it { should be_a_file.and be_readable }
+      it { should include(/--color[= ]off/) }
+    end
   end
 
   describe program("flight"), role: "flight-plan" do
