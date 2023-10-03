@@ -21,7 +21,6 @@ let
   in {
     autoterm = callPackage ./pkgs/autoterm.nix {};
     awscli-with-plugins = callPackage ./pkgs/awscli-with-plugins.nix {};
-    flight_plan_cli = callPackage ./pkgs/flight_plan_cli {};
     git-when-merged = callPackage ./pkgs/git-when-merged.nix {};
     git-with-helpers = callPackage ./pkgs/git-with-helpers {};
     parity-gem = callPackage ./pkgs/parity {}; # already a package called "parity"

@@ -8,7 +8,6 @@ with lib;
     clojure = true;
     docker = true;
     eqmac = true;
-    flight-plan = true;
     git = true;
     git-standup = true;
     harvest = true;

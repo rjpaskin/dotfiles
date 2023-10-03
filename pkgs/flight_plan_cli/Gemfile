@@ -1,3 +1,0 @@
-source "https://rubygems.org"
-
-gem "flight_plan_cli"

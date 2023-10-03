@@ -4,7 +4,6 @@ with lib;
 
 {
   options.roles = with config.lib.roles; {
-    flight-plan = mkOptionalRole "FlightPlan tools";
     aws = mkOptionalRole "AWS tools";
   };
 
@@ -55,10 +54,6 @@ with lib;
 
     # My packages
     { home.packages = [ pkgs.autoterm ]; }
-
-    (mkIf config.roles.flight-plan {
-      home.packages = [ pkgs.flight_plan_cli ];
-    })
 
     (mkIf config.roles.aws {
       home.packages = with pkgs; [ awscli-with-plugins aws-vault ];

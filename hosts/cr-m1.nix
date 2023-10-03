@@ -7,7 +7,6 @@ with lib;
     aws = true;
     clojure = true;
     docker = true;
-    flight-plan = true;
     git = true;
     git-standup = true;
     heroku = true;
