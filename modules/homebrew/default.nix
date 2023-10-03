@@ -113,6 +113,11 @@ in {
           # Mollyguard was deleted in Homebrew/homebrew-cask#78586
           # - this is the commit before that PR was merged
           rev = "e53923dac85c3e3219ddf6ff33a977f3ca75ebce";
+          # Update deprecated `appcast` method
+          postCheckout = ''
+            echo "Applying patch ${./mollyguard.patch}"
+            ${pkgs.git}/bin/git apply ${./mollyguard.patch}
+          '';
           removeQuarantine = true;
           defaults."com.imt.MollyGuard" = {
             defaultBehavior = false; # lock keyboard AND mouse

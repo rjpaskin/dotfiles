@@ -1,0 +1,15 @@
+diff --git a/Casks/mollyguard.rb b/Casks/mollyguard.rb
+--- a/Casks/mollyguard.rb
++++ b/Casks/mollyguard.rb
+@@ -4,7 +4,10 @@ cask 'mollyguard' do
+
+   # dl.dropboxusercontent.com/s/j9kx9ufk74wtpm9 was verified as official when first introduced to the cask
+   url 'https://dl.dropboxusercontent.com/s/j9kx9ufk74wtpm9/MollyGuard.zip?dl=1'
+-  appcast 'https://dl.dropboxusercontent.com/s/sno9l4q8ncogz27/MGUpdate.xml'
++  livecheck do
++    url 'https://dl.dropboxusercontent.com/s/sno9l4q8ncogz27/MGUpdate.xml'
++    strategy :sparkle
++  end
+   name 'MollyGuard'
+   homepage 'http://mollyguard.infinitemonkeytheory.com/'
+

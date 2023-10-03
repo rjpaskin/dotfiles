@@ -49,6 +49,12 @@ let
         default = null;
       };
 
+      postCheckout = mkOption {
+        description = "Code to run after checking-out cask";
+        type = nullOr str;
+        default = null;
+      };
+
       removeQuarantine = mkOption {
         description = "Remove the `com.apple.quarantine` extended attribute from cask artifacts?";
         type = bool;
@@ -63,9 +69,10 @@ let
   # This makes a number of assumptions:
   # 1. That the cask is from `homebrew/cask`
   # 2. That the name of the cask file is the same as the cask name
-  checkoutCasks = map ({ name, rev, ... }: optionalString (rev != null) ''
+  checkoutCasks = map ({ name, rev, postCheckout, ... }: optionalString (rev != null) ''
     $VERBOSE_ECHO "Checking out Casks/${name}.rb @ ${rev}"
     ${pkgs.git}/bin/git checkout ${rev} -- Casks/${name}.rb
+    ${postCheckout}
   '') cfg.casks;
 
   archPrefix = optionalString machine.isARM "/usr/bin/arch -arm64e";
