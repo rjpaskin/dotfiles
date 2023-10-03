@@ -2,13 +2,13 @@ require "tmpdir"
 
 module SpecHelpers
   module DescribeHelpers
-    def using_tmpdir
+    def using_tmpdir(&block)
       attr_accessor :tmpdir
 
       around do |example|
         Dir.mktmpdir do |tmp|
           self.tmpdir = ShellLib::EditablePath.new(tmp)
-          yield tmpdir, example
+          instance_exec(tmpdir, example, &block)
           example.run
         end
       end
