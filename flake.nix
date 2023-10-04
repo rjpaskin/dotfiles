@@ -125,10 +125,19 @@
         { name = "activate"; path = "${activationPackage}/activate"; }
       ];
 
-      tests = with pkgs; bundlerEnv {
-        ruby = ruby_2_7;
-        name = "dotfiles-specs";
-        gemdir = ./.;
+      tests = with pkgs; let
+        gems = bundlerEnv {
+          ruby = ruby_2_7;
+          name = "dotfiles-specs";
+          gemdir = ./.;
+          postBuild = ''
+            rm $out/bin/bundle*
+          '';
+        };
+      in buildEnv {
+        name = "dotfiles-specs-with-ruby";
+        paths = [ gems gems.wrappedRuby ];
+        meta.mainProgram = "rspec";
       };
     };
   in {
