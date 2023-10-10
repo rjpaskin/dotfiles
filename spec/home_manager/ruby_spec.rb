@@ -54,10 +54,6 @@ RSpec.describe "Ruby", role: "ruby" do
     its(:location) { should eq profile_bin }
   end
 
-  describe program("ultrahook"), role: "ultrahook" do
-    its(:location) { should eq profile_bin }
-  end
-
   describe program("rubocop"), role: "rubocop" do
     its(:location) { should eq profile_bin }
     its("--version") { should start_with "0.59" }

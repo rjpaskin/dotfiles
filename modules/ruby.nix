@@ -21,7 +21,6 @@ in {
 
       mailcatcher = mkOptionalRole "MailCatcher";
       rubocop = mkOptionalRole "RuboCop";
-      ultrahook = mkOptionalRole "Ultrahook";
     };
 
     programs.ruby = {
@@ -92,10 +91,6 @@ in {
 
     (mkIf config.roles.mailcatcher {
       home.packages = [ pkgs.mailcatcher ];
-    })
-
-    (mkIf config.roles.ultrahook {
-      home.packages = [ (callRubyPackage ../pkgs/ultrahook.nix {}) ];
     })
   ];
 }

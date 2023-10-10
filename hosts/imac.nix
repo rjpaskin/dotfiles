@@ -16,7 +16,6 @@
     ruby = true;
     sql-clients = true;
     tmux = true;
-    ultrahook = true;
     virtualbox = true;
     whatsapp = true;
   };
