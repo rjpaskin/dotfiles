@@ -98,7 +98,7 @@
       vimPlugins = with builtins; foldl' (acc: name:
         if (builtins.match ".*vim.*|conjure" name) != null then
         let plugin = args.${name}; in (acc // {
-          ${name} = pkgs.vimUtils.buildVimPluginFrom2Nix {
+          ${name} = pkgs.vimUtils.buildVimPlugin {
             pname = name;
             version = substring 0 8 plugin.lastModifiedDate;
             src = plugin;
