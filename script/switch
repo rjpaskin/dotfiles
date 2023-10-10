@@ -68,14 +68,7 @@ systemEnv="$(
 
 echo "$systemEnv"
 
-coreutils="$(
-  nix-build --no-out-link \
-    --show-trace \
-    -A "legacyPackages.$nixSystem.nixpkgs.coreutils" \
-    "$dotfiles"
-)"
-
-VERBOSE=1 PATH="$coreutils/bin:$PATH" "$systemEnv/activate"
+VERBOSE=1 "$systemEnv/activate"
 
 previousGeneration="$(currentGeneration)"
 
