@@ -74,7 +74,9 @@ in {
       in {
         inherit aliases extraConfig ignores;
         enable = true;
-        package = pkgs.git-with-helpers;
+        package = pkgs.callPackage ../pkgs/git-with-helpers {
+          ruby = config.programs.ruby.defaultPackage;
+        };
         userEmail = "${username}+${variant}@${domain}";
         userName = "Rob Paskin";
       };

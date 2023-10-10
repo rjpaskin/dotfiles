@@ -53,10 +53,19 @@ with lib;
     })
 
     # My packages
-    { home.packages = [ pkgs.autoterm ]; }
+    {
+      home.packages = [
+        (pkgs.callPackage ../pkgs/autoterm.nix {
+          ruby = config.programs.ruby.defaultPackage;
+        })
+      ];
+    }
 
     (mkIf config.roles.aws {
-      home.packages = with pkgs; [ awscli-with-plugins aws-vault ];
+      home.packages = with pkgs; [
+        (callPackage ../pkgs/awscli-with-plugins.nix {})
+        aws-vault
+      ];
       programs.zsh = {
         sessionVariables.AWS_VAULT_KEYCHAIN_NAME = "login";
         initExtra = ''

@@ -10,6 +10,12 @@ let
     inherit (pkgs) nodejs;
   };
 
+  herokuWithPlugins = pkgs.callPackage ../pkgs/heroku-with-plugins.nix {};
+
+  parity = pkgs.callPackage ../pkgs/parity {
+    ruby = config.programs.ruby.defaultPackage;
+  };
+
 in {
   options = with config.lib.roles; {
     roles.heroku = mkOptionalRole "Heroku tools";
@@ -23,9 +29,9 @@ in {
 
   config = mkIf config.roles.heroku {
     home.packages = [
-      (pkgs.heroku.withPlugins cfg.plugins)
+      (herokuWithPlugins cfg.plugins)
 
-      (mkIf config.roles.parity pkgs.parity-gem)
+      (mkIf config.roles.parity parity)
     ];
 
     programs.heroku.plugins = with plugins; [

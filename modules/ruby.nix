@@ -12,6 +12,8 @@ let
     merge = mergeOneOption;
   };
 
+  callRubyPackage = lib.callPackageWith (pkgs // { ruby = cfg.defaultPackage; });
+
 in {
   options = {
     roles = with config.lib.roles; {
@@ -40,7 +42,7 @@ in {
       package = mkOption {
         type = types.package;
         description = "RuboCop package to install into profile";
-        default = pkgs.rubocop_0_59;
+        default = callRubyPackage ../pkgs/rubocop_0_59 {};
       };
     };
   };
@@ -93,7 +95,7 @@ in {
     })
 
     (mkIf config.roles.ultrahook {
-      home.packages = [ pkgs.ultrahook ];
+      home.packages = [ (callRubyPackage ../pkgs/ultrahook.nix {}) ];
     })
   ];
 }
