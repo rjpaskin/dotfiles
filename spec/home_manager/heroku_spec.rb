@@ -78,14 +78,4 @@ RSpec.describe "Heroku", role: "heroku" do
       end
     end
   end
-
-  context "parity", role: "parity" do
-    describe program("production") do
-      its(:location) { should eq profile_bin }
-    end
-
-    describe program("staging") do
-      its(:location) { should eq profile_bin }
-    end
-  end
 end

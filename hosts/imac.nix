@@ -12,7 +12,6 @@
     javascript = true;
     mailcatcher = true;
     ngrok = true;
-    parity = true;
     ruby = true;
     sql-clients = true;
     tmux = true;
