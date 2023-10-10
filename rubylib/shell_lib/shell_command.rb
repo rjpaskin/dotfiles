@@ -15,6 +15,7 @@ module ShellLib
     def run
       super
 
+      @stdout.gsub!(/\e\]\d+;?.+\e\\/, "") # strip shell integration (from Oh-My-ZSH)
       @stderr.gsub!(/\e\[.+\e\[00?m/, "") # strip prompt
     end
 
