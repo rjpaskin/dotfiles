@@ -10,9 +10,6 @@ nnoremap <silent><leader>w :write<cr>
 " zoom current window
 nnoremap <silent><leader>z :wincmd _<cr>:wincmd \|<cr>
 
-inoremap jj <esc>
-inoremap jk <esc>
-
 " change to single quotes
 nnoremap <leader>' :call PreserveWindowState("normal cs\"'")<CR>
 " change to double quotes
@@ -184,12 +181,6 @@ endif
 nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
 
 " ------------------------------------------------
-" NERDtree
-" ------------------------------------------------
-map <Leader>n <plug>NERDTreeTabsToggle<CR>
-map <Leader>nf :NERDTreeFind<CR>
-
-" ------------------------------------------------
 " EditorConfig
 " ------------------------------------------------
 " Prevent editorconfig interfering with fugitive
@@ -270,8 +261,6 @@ let g:prettier#config#single_quote = 'true'
 let g:prettier#config#bracket_spacing = 'true'
 " none|es5|all
 let g:prettier#config#trailing_comma = 'none'
-" flow|babylon|typescript|postcss|json|graphql
-let g:prettier#config#parser = 'flow'
 
 " ------------------------------------------------
 " ALE
@@ -279,8 +268,8 @@ let g:prettier#config#parser = 'flow'
 let g:ale_linters = {
       \   'Dockerfile': ['hadolint'],
       \   'haml': ['haml_lint'],
-      \   'javascript': ['eslint', 'flow'],
-      \   'jsx': ['eslint', 'flow'],
+      \   'javascript': ['eslint'],
+      \   'jsx': ['eslint'],
       \   'ruby': ['rubocop'],
       \   'vim': ['vint'],
       \   'yaml': ['yamllint'],
