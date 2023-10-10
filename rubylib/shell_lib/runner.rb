@@ -137,7 +137,8 @@ module ShellLib
 
     def home_manager_roles
       @home_manager_roles ||= nix_profiles_path(
-        "home-manager/rjp/roles.json"
+        "home-manager/rjp/roles.json",
+        xdg: true
       ).as_json
     end
 

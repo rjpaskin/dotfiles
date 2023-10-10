@@ -33,6 +33,10 @@ module ShellLib
       home_path(".local/share/#{path}")
     end
 
+    def xdg_state_path(path)
+      home_path(".local/state/#{path}")
+    end
+
     DOTFILES = Path.new(
       File.expand_path("../..", __dir__)
     ).freeze
@@ -45,8 +49,12 @@ module ShellLib
       "/nix/var/nix/profiles/per-user"
     ).freeze
 
-    def nix_profiles_path(path = nil, user: ENV["USER"])
-      NIX_PROFILES.join(user, path.to_s)
+    def nix_profiles_path(path = nil, user: ENV["USER"], xdg: false)
+      if xdg
+        file("~#{user}/.local/state/nix/profiles").join(path.to_s)
+      else
+        NIX_PROFILES.join(user, path.to_s)
+      end
     end
 
     ICLOUD = HOME.join("Library/Mobile Documents/com~apple~CloudDocs")

@@ -18,6 +18,10 @@ RSpec.describe "Bootstrap" do
       it { should be_a_directory.and be_readable }
     end
 
+    describe nix_profiles_path(xdg: true) do
+      it { should be_a_directory.and be_readable }
+    end
+
     describe nix_profiles_path("profile") do
       it { should be_a_directory.and be_in_nix_store }
     end
@@ -43,7 +47,7 @@ RSpec.describe "Bootstrap" do
     end
 
     context "home-manager" do
-      describe nix_profiles_path("home-manager") do
+      describe nix_profiles_path("home-manager", xdg: true) do
         it { should be_a_directory.and be_in_nix_store }
 
         it "links to a valid generation" do
