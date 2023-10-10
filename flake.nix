@@ -87,6 +87,11 @@
         inherit system;
         # Ensure our overlays are used in `script/switch`
         overlays = import ./overlays.nix;
+        config.permittedInsecurePackages = [
+          "ruby-2.7.8"
+          "openssl-1.1.1w"
+          "wrapped-ruby-dotfiles-specs" # because they use Ruby 2.7
+        ];
       };
     in {
       # used by `overlays.nix`
