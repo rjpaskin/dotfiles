@@ -15,7 +15,6 @@ with lib;
     javascript = true;
     ngrok = true;
     postman = true;
-    react-native = true;
     rubocop = true;
     ruby = true;
     slack = true;

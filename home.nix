@@ -68,7 +68,6 @@ with lib;
     ./modules/misc.nix
     ./modules/neovim
     ./modules/pkgs.nix
-    ./modules/react-native.nix
     ./modules/ruby.nix
     ./modules/symlinks.nix
     ./modules/tmux
