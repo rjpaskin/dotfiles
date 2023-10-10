@@ -14,14 +14,8 @@
       flake = false;
     };
 
-    conjure = { url = "github:Olical/conjure/v4.8.0"; flake = false; };
-    splitjoin-vim = { url = "github:AndrewRadev/splitjoin.vim"; flake = false; };
-    vim-alias = { url = "github:Konfekt/vim-alias"; flake = false; };
     vim-bundler = { url = "github:tpope/vim-bundler"; flake = false; };
-    vim-crystal = { url = "github:vim-crystal/vim-crystal"; flake = false; };
     vim-mkdir = { url = "github:pbrisbin/vim-mkdir"; flake = false; };
-    vim-prettier = { url = "github:prettier/vim-prettier"; flake = false; };
-    vim-rails = { url = "github:tpope/vim-rails"; flake = false; };
     vim-rspec = { url = "github:thoughtbot/vim-rspec"; flake = false; };
     vim-ruby-refactoring = {
       url = "github:ecomba/vim-ruby-refactoring/main"; flake = false;
@@ -29,9 +23,6 @@
     vim-rubyhash = { url = "github:rorymckinley/vim-rubyhash"; flake = false; };
     vim-textobj-rubyblock = {
       url = "github:nelstrom/vim-textobj-rubyblock"; flake = false;
-    };
-    vim-textobj-variable-segment = {
-      url = "github:Julian/vim-textobj-variable-segment"; flake = false;
     };
     vim-yaml-helper = { url = "github:lmeijvogel/vim-yaml-helper"; flake = false; };
 

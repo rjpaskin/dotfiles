@@ -24,7 +24,7 @@ RSpec.describe "Ruby", role: "ruby" do
   end
 
   describe neovim_packages do
-    it { should include("splitjoin-vim", "vim-rails", "vim-endwise",
+    it { should include("splitjoin.vim", "vim-rails", "vim-endwise",
                         "vim-ruby", "vim-rubyhash", "vim-yaml-helper") }
   end
 

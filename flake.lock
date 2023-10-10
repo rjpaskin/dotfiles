@@ -1,22 +1,5 @@
 {
   "nodes": {
-    "conjure": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1604235343,
-        "narHash": "sha256-Ido1+t5YVTwOnF3IavhlR27UDAYrhWGfS7OcTocOf3c=",
-        "owner": "Olical",
-        "repo": "conjure",
-        "rev": "a4c31e1c0136e943fa7dd48ecc11849158d3554e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "Olical",
-        "ref": "v4.8.0",
-        "repo": "conjure",
-        "type": "github"
-      }
-    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -71,40 +54,17 @@
     },
     "root": {
       "inputs": {
-        "conjure": "conjure",
         "flake-compat": "flake-compat",
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs",
-        "splitjoin-vim": "splitjoin-vim",
         "thoughtbot-dotfiles": "thoughtbot-dotfiles",
-        "vim-alias": "vim-alias",
         "vim-bundler": "vim-bundler",
-        "vim-crystal": "vim-crystal",
         "vim-mkdir": "vim-mkdir",
-        "vim-prettier": "vim-prettier",
-        "vim-rails": "vim-rails",
         "vim-rspec": "vim-rspec",
         "vim-ruby-refactoring": "vim-ruby-refactoring",
         "vim-rubyhash": "vim-rubyhash",
         "vim-textobj-rubyblock": "vim-textobj-rubyblock",
-        "vim-textobj-variable-segment": "vim-textobj-variable-segment",
         "vim-yaml-helper": "vim-yaml-helper"
-      }
-    },
-    "splitjoin-vim": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1693655014,
-        "narHash": "sha256-+sN2uvRojH17k5f7oKlXND4jYJbKNZAhy+6mD2OvGv8=",
-        "owner": "AndrewRadev",
-        "repo": "splitjoin.vim",
-        "rev": "53962443e4dc557e4d4c02b501adfcb5cd1368c3",
-        "type": "github"
-      },
-      "original": {
-        "owner": "AndrewRadev",
-        "repo": "splitjoin.vim",
-        "type": "github"
       }
     },
     "thoughtbot-dotfiles": {
@@ -120,22 +80,6 @@
       "original": {
         "owner": "thoughtbot",
         "repo": "dotfiles",
-        "type": "github"
-      }
-    },
-    "vim-alias": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1621974952,
-        "narHash": "sha256-oR+s4QAQWYyfLP9Ys4ir9C7+Cyl5DLuO3Ox0NWQaCrs=",
-        "owner": "Konfekt",
-        "repo": "vim-alias",
-        "rev": "9d1a86284c223fad488137075867ba1c1bd20599",
-        "type": "github"
-      },
-      "original": {
-        "owner": "Konfekt",
-        "repo": "vim-alias",
         "type": "github"
       }
     },
@@ -155,22 +99,6 @@
         "type": "github"
       }
     },
-    "vim-crystal": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1678855068,
-        "narHash": "sha256-uGtPMgMt+s0GSQvpvo97diYOfhIf+pNuOQiGQ17I9uQ=",
-        "owner": "vim-crystal",
-        "repo": "vim-crystal",
-        "rev": "dc21188ec8c2ee77bb81dffca02e1a29d87cfd9f",
-        "type": "github"
-      },
-      "original": {
-        "owner": "vim-crystal",
-        "repo": "vim-crystal",
-        "type": "github"
-      }
-    },
     "vim-mkdir": {
       "flake": false,
       "locked": {
@@ -184,38 +112,6 @@
       "original": {
         "owner": "pbrisbin",
         "repo": "vim-mkdir",
-        "type": "github"
-      }
-    },
-    "vim-prettier": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1637728663,
-        "narHash": "sha256-VGEVXTe2uOyqONxtle9hayH+2d5M6x+6Y1iX0AIcwmk=",
-        "owner": "prettier",
-        "repo": "vim-prettier",
-        "rev": "5e6cca21e12587c02e32a06bf423519eb1e9f1b2",
-        "type": "github"
-      },
-      "original": {
-        "owner": "prettier",
-        "repo": "vim-prettier",
-        "type": "github"
-      }
-    },
-    "vim-rails": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1694402972,
-        "narHash": "sha256-1I7knu0JwPn6C/YZWezlB+QR73rV6vwrM6g5XPra4k4=",
-        "owner": "tpope",
-        "repo": "vim-rails",
-        "rev": "1ad9663ce31e8c08134849d04184cda94bb42aba",
-        "type": "github"
-      },
-      "original": {
-        "owner": "tpope",
-        "repo": "vim-rails",
         "type": "github"
       }
     },
@@ -281,22 +177,6 @@
       "original": {
         "owner": "nelstrom",
         "repo": "vim-textobj-rubyblock",
-        "type": "github"
-      }
-    },
-    "vim-textobj-variable-segment": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1657976307,
-        "narHash": "sha256-rM+M043u9b9h80M4d9gQKlMNAcI3RKX5Z2cNhGgcfrs=",
-        "owner": "Julian",
-        "repo": "vim-textobj-variable-segment",
-        "rev": "51c323dca5c44f7a8e5a689b9156ef818d02188e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "Julian",
-        "repo": "vim-textobj-variable-segment",
         "type": "github"
       }
     },
