@@ -55,6 +55,7 @@ in {
           in {
             AlternateMouseScroll = true;
             Columns = 150;
+            EnableAPIServer = true; # enable Python API
             "Custom Directory" = "Recycle";
             "Scrollback Lines" = 0; # unlimited
             "Unlimited Scrollback" = true;
@@ -113,10 +114,27 @@ in {
           # Mollyguard was deleted in Homebrew/homebrew-cask#78586
           # - this is the commit before that PR was merged
           rev = "e53923dac85c3e3219ddf6ff33a977f3ca75ebce";
-          # Update deprecated `appcast` method
-          postCheckout = ''
-            echo "Applying patch ${./mollyguard.patch}"
-            ${pkgs.git}/bin/git apply ${./mollyguard.patch}
+          # Update deprecated `appcast` method - generated with:
+          # `git -C $(brew --repository homebrew/cask) diff --unified=2`
+          postCheckout = let
+            patch = pkgs.writeText "brew-cask-mollyguard.patch" ''
+              diff --git a/Casks/mollyguard.rb b/Casks/mollyguard.rb
+              --- a/Casks/mollyguard.rb
+              +++ b/Casks/mollyguard.rb
+              @@ -5,5 +5,8 @@ cask 'mollyguard' do
+                 # dl.dropboxusercontent.com/s/j9kx9ufk74wtpm9 was verified as official when first introduced to the cask
+                 url 'https://dl.dropboxusercontent.com/s/j9kx9ufk74wtpm9/MollyGuard.zip?dl=1'
+              -  appcast 'https://dl.dropboxusercontent.com/s/sno9l4q8ncogz27/MGUpdate.xml'
+              +  livecheck do
+              +    url 'https://dl.dropboxusercontent.com/s/sno9l4q8ncogz27/MGUpdate.xml'
+              +    strategy :sparkle
+              +  end
+                 name 'MollyGuard'
+                 homepage 'http://mollyguard.infinitemonkeytheory.com/'
+            '';
+          in ''
+            echo "Applying patch ${patch}"
+            ${pkgs.git}/bin/git apply ${patch}
           '';
           removeQuarantine = true;
           defaults."com.imt.MollyGuard" = {
