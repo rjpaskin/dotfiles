@@ -25,9 +25,7 @@ RSpec.describe "Docker", role: "docker" do
     its("--version") { should be_success }
 
     it "runs without errors" do
-      result = run_in_shell(
-        "echo 'MAINTAINER deprecated' | hadolint -f json -"
-      )
+      result = command("hadolint -f json -", input: "MAINTAINER deprecated")
 
       aggregate_failures do
         expect(result.stdout.as_json).to include(a_hash_including code: "DL4000")
