@@ -5,7 +5,10 @@ with lib;
 let
   cfg = config.programs.heroku;
 
-  plugins = import ../pkgs/heroku-plugins { inherit pkgs; };
+  plugins = import ../pkgs/heroku-plugins {
+    inherit pkgs;
+    inherit (pkgs) nodejs;
+  };
 
 in {
   options = with config.lib.roles; {
