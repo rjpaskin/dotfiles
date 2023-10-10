@@ -87,8 +87,6 @@
     generateOutput = system: let
       pkgs = import nixpkgs {
         inherit system;
-        # Ensure our overlays are used in `script/switch`
-        overlays = import ./overlays.nix;
         config.permittedInsecurePackages = [
           "ruby-2.7.8"
           "openssl-1.1.1w"
@@ -112,7 +110,8 @@
 
         systemEnv = buildEnv {
           name = "system-env";
-          paths = [ nix cacert "${activationPackage}/home-path" ];
+          # Prevent extra `cacert` output from continually being GC-ed and redownloaded
+          paths = [ nix cacert cacert.unbundled "${activationPackage}/home-path" ];
         };
 
       in linkFarm "system-bundle" [

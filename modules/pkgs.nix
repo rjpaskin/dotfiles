@@ -2,7 +2,12 @@
 
 with lib;
 
-{
+let
+  jq-with-all-outputs = pkgs.jq.overrideAttrs (attrs: {
+    meta.outputsToInstall = (attrs.meta.outputsToInstall or []) ++ [ "out" "bin" "man" "dev" "doc" ];
+  });
+
+in {
   options.roles = with config.lib.roles; {
     aws = mkOptionalRole "AWS tools";
   };
@@ -12,7 +17,7 @@ with lib;
     {
       home.packages = with pkgs; [
         fzf
-        jq
+        jq-with-all-outputs
         shellcheck
       ];
     }

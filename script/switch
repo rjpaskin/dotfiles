@@ -40,9 +40,8 @@ if [ -z "$hasNixBuild" ] || [ -z "$hasNixProfile" ]; then
   [ -n "$hasNixBuild" ] || export PATH="$nixPath/bin:$PATH"
 fi
 
-# Ensure that overlays and `nix.conf` are still found even when not
+# Ensure that `nix.conf` is still found even when not
 # symlinked into `~/.config`
-export NIX_PATH="nixpkgs-overlays=$dotfiles/overlays.nix"
 export NIX_CONF_DIR="$dotfiles"
 
 nixSystem="$(

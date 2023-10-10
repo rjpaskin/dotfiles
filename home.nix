@@ -48,10 +48,7 @@ with lib;
 
     home.extraActivationPath = [ pkgs.gawk ];
 
-    xdg.configFile = {
-      "nix/nix.conf".source = ./nix.conf;
-      # "nixpkgs/overlays.nix".source = ./overlays.nix;
-    };
+    xdg.configFile."nix/nix.conf".source = ./nix.conf;
   };
 
   imports = [
