@@ -79,8 +79,8 @@ in {
         userName = "Rob Paskin";
       };
 
-      home.packages = with pkgs; [
-        gitAndTools.git-filter-repo
+      home.packages = with pkgs.gitAndTools; [
+        git-filter-repo
         git-when-merged
       ];
 
