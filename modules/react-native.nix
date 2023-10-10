@@ -12,7 +12,7 @@ in {
 
   config = mkIf config.roles.react-native {
     home.packages = with pkgs; [
-      nodePackages.react-native-cli
+      # nodePackages.react-native
       watchman
     ];
 

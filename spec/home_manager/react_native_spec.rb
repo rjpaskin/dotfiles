@@ -1,5 +1,5 @@
 RSpec.describe "React Native", role: "react-native" do
-  describe program("react-native") do
+  xdescribe program("react-native") do
     its(:location) { should eq profile_bin }
     its("--version") { should be_success }
   end
