@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, flakeRepos, ... }:
 
 with lib;
 
@@ -53,16 +53,17 @@ in {
 
       programs.neovim.plugins = with pkgs.vimPlugins; [
         splitjoin-vim
-        vim-bundler
         vim-endwise
         vim-rails
-        vim-rspec
         vim-ruby
+      ] ++ (with flakeRepos.vimPlugins; [
+        vim-bundler
+        vim-rspec
         vim-ruby-refactoring
         vim-rubyhash
         vim-textobj-rubyblock
         vim-yaml-helper # Pretty much only used for i18n YAML files
-      ];
+      ]);
 
       programs.zsh = {
         oh-my-zsh.plugins = ["gem" "rails"];

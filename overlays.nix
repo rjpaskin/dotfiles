@@ -31,10 +31,6 @@ let
         inherit (super) heroku;
       };
     });
-
-    vimPlugins = super.vimPlugins // (
-      import ./default.nix
-    ).legacyPackages.${super.system}.vimPlugins;
   };
 
 in [ customisations newPackages ]

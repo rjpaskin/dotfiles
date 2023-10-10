@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, flakeRepos, ... }:
 
 with lib;
 with types;
@@ -30,6 +30,8 @@ let
   generateFiletypeAutocmds = generateConfigFromAttrs (glob: viml: ''
     au BufNewFile,BufRead ${glob} ${viml}
   '');
+
+  flakePlugins = flakeRepos.vimPlugins;
 
   cfg = config.programs.neovim;
 
@@ -95,7 +97,7 @@ in {
         vim-dispatch
         vim-eunuch
         vim-alias
-        vim-mkdir
+        flakePlugins.vim-mkdir
         vim-slash
         editorconfig-vim
 

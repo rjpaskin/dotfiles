@@ -21,8 +21,9 @@ RSpec.describe "Neovim" do
 
   context "config" do
     describe neovim_packages do
-      # Not testing everything here, just the essentials, with the assumption
-      # that if these are installed, others should be too
+      # Not testing everything here, just the essentials and those we pull in
+      # via flake.nix, with the assumption that if these are installed, others
+      # should be too
       let(:packages) do
         %w[
           vim-sensible
@@ -36,6 +37,7 @@ RSpec.describe "Neovim" do
           telescope.nvim
           deoplete.nvim
           vim-airline
+          vim-mkdir
         ]
       end
 

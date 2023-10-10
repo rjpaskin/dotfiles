@@ -50,6 +50,17 @@
           config._module.args = {
             flakeRepos = {
               inherit thoughtbot-dotfiles;
+
+              vimPlugins = builtins.foldl' (acc: name:
+                if (builtins.match ".*vim.*" name) != null then
+                let plugin = args.${name}; in (acc // {
+                  ${name} = pkgs.vimUtils.buildVimPlugin {
+                    pname = name;
+                    version = builtins.substring 0 8 plugin.lastModifiedDate;
+                    src = plugin;
+                  };
+                })
+                else acc) {} (builtins.attrNames args);
             };
 
             machine = let
@@ -85,18 +96,6 @@
         ];
       };
     in {
-      # used by `overlays.nix`
-      vimPlugins = with builtins; foldl' (acc: name:
-        if (builtins.match ".*vim.*|conjure" name) != null then
-        let plugin = args.${name}; in (acc // {
-          ${name} = pkgs.vimUtils.buildVimPlugin {
-            pname = name;
-            version = substring 0 8 plugin.lastModifiedDate;
-            src = plugin;
-          };
-        })
-        else acc) {} (attrNames args);
-
       nixpkgs = pkgs; # used by `script/update-lockfile`
 
       dotfiles = {
