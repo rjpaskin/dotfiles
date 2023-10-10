@@ -50,7 +50,7 @@ with lib;
 
     xdg.configFile = {
       "nix/nix.conf".source = ./nix.conf;
-      "nixpkgs/overlays.nix".source = ./overlays.nix;
+      # "nixpkgs/overlays.nix".source = ./overlays.nix;
     };
   };
 

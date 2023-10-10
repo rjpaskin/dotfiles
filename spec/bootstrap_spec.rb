@@ -40,7 +40,7 @@ RSpec.describe "Bootstrap" do
         it { should be_a_file.and be_readable }
       end
 
-      describe xdg_config_path("nixpkgs/overlays.nix") do
+      xdescribe xdg_config_path("nixpkgs/overlays.nix") do
         it { should be_a_symlink }
         it { should be_a_file.and be_readable }
       end
