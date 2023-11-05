@@ -44,25 +44,43 @@ fi
 # symlinked into `~/.config`
 export NIX_CONF_DIR="$dotfiles"
 
-nixSystem="$(
-  nix --extra-experimental-features nix-command \
-    eval --impure --raw \
-    --expr builtins.currentSystem
-)"
+flake="$dotfiles/hosts/current/flake.nix"
+flakeDir="$(dirname "$flake")"
+mkdir -p "$flakeDir"
 
-# Can't use `nix build` here, as flakes don't work with `--arg/--argstr`
+# https://discourse.nixos.org/t/local-personal-development-tools-with-flakes/22714/8
+cat <<EOF > "$flake"
+{
+  description = "Current host";
+  inputs.parent.url = "path:../..";
+  outputs = { self, parent }:
+    let
+      args = {
+        hostConfig = ../$hostId.nix;
+        username = "$USER";
+        homeDirectory = "$HOME";
+        machine = {
+          dotfilesDirectory = "$dotfiles";
+          macOSversion = "$(sw_vers -productVersion)";
+        };
+      };
+    in {
+      packages."x86_64-darwin".default = parent.legacyPackages."x86_64-darwin".dotfiles args;
+      packages."aarch64-darwin".default = parent.legacyPackages."aarch64-darwin".dotfiles args;
+    };
+}
+EOF
+
+git -C "$dotfiles" add --intent-to-add "$flake"
+git -C "$dotfiles" update-index --assume-unchanged "$flake"
+
 systemEnv="$(
-  nix-build --no-out-link \
+  nix build \
+    --no-link \
     --show-trace \
-    -A "legacyPackages.$nixSystem.dotfiles" \
-    --argstr hostConfig "$dotfiles/hosts/$hostId.nix" \
-    --argstr username "$USER" \
-    --argstr homeDirectory "$HOME" \
-    --arg machine "{
-      dotfilesDirectory = \"$dotfiles\";
-      macOSversion = \"$(sw_vers -productVersion)\";
-    }" \
-    "$dotfiles"
+    --print-out-paths \
+    --no-write-lock-file \
+    "$dotfiles/hosts/current"
 )"
 
 echo "$systemEnv"
@@ -84,3 +102,5 @@ if [ "$previousGeneration" = "$newGeneration" ]; then
 else
   echo "==> Now using profile generation $newGeneration"
 fi
+
+rm -rf "$flakeDir"

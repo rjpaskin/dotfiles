@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, machine, ... }:
 
 with lib;
 with types;
@@ -74,11 +74,15 @@ let
     '';
   };
 
-  appPath = name: let
-    basePath = "/Applications/${name}.app";
-  in if builtins.pathExists "/System${basePath}" # location for system apps on Big Sur
-  then "/System${basePath}"
-  else basePath; # this may not exist yet if `brew bundle` hasn't yet been run
+  systemApps = [
+    "Launchpad"
+    "Utilities/Activity Monitor"
+    "System Preferences"
+  ];
+
+  appPath = name: if machine.sameOrNewerThan "big_sur" && builtins.elem name systemApps
+  then "/System/Applications/${name}.app" # location for system apps on Big Sur
+  else "/Applications/${name}.app"; # this may not exist yet if `brew bundle` hasn't yet been run
 
 in {
   options.targets.darwin.dock = mkOption {
