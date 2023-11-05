@@ -73,6 +73,7 @@ in {
             "Bold Color" = black;
             "Cursor Color" = black;
           };
+          plists."Library/Preferences/com.googlecode.iterm2.plist".":New Bookmarks:0:Allow Title Setting" = false;
         }
         "kdiff3"
         {
