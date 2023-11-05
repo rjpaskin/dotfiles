@@ -42,39 +42,6 @@ in {
             shouldSyncView = true;
           };
         }
-        {
-          name = "iterm2";
-          defaults."com.googlecode.iterm2" = let
-            toColour = parts: {
-              "Blue Component" = builtins.elemAt parts 2;
-              "Green Component" = builtins.elemAt parts 1;
-              "Red Component" = builtins.elemAt parts 0;
-            };
-            white = toColour [1 1 1];
-            black = toColour [0 0 0];
-          in {
-            AlternateMouseScroll = true;
-            Columns = 150;
-            EnableAPIServer = true; # enable Python API
-            "Custom Directory" = "Recycle";
-            "Scrollback Lines" = 0; # unlimited
-            "Unlimited Scrollback" = true;
-            "Normal Font" = "Monaco 13";
-            OpenArrangementAtStartup = false;
-            ShowNewOutputIndicator = false;
-            SUEnableAutomaticChecks = true;
-            StretchTabsToFillBar = false;
-            TabStyleWithAutomaticOption = 4;
-            SoundForEsc = false;
-            VisualIndicatorForEsc = false;
-            PreserveWindowSizeWhenTabBarVisibilityChanges = true;
-            "Background Color" = white;
-            "Foreground Color" = black;
-            "Bold Color" = black;
-            "Cursor Color" = black;
-          };
-          plists."Library/Preferences/com.googlecode.iterm2.plist".":New Bookmarks:0:Allow Title Setting" = false;
-        }
         "kdiff3"
         {
           name = "xquartz";

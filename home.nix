@@ -60,6 +60,7 @@ with lib;
     ./modules/git.nix
     ./modules/heroku.nix
     ./modules/homebrew
+    ./modules/iterm.nix
     ./modules/javascript.nix
     ./modules/macos_defaults
     ./modules/misc.nix
