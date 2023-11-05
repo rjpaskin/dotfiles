@@ -191,12 +191,20 @@ module ShellLib
 
     def neovim_keymappings
       @neovim_keymappings ||= begin
+        last = nil
+
         eval_neovim(
           %[execute("map") . "\n" . execute("map!")]
         ).strip.split("\n").each_with_object(deep_hash) do |line, map|
+          if line.match?(/^\s{10,}/) && last
+            last << " # #{line.strip}"
+            next
+          end
+
           mode, key, function_or_special, function = line.split(/\s+/, 4)
           function ||= function_or_special
 
+          last = function
           map[mode][key] = function
         end
       end

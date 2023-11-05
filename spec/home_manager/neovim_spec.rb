@@ -92,7 +92,7 @@ RSpec.describe "Neovim" do
         aggregate_failures do
           keys = %w[u uu ub uo ur up um uc us uw uv uh uf uj].map {|key| "<Space>#{key}" }
 
-          expect(neovim_keymappings["n"].slice(*keys).values).to all start_with(":Telescope")
+          expect(neovim_keymappings["n"].slice(*keys).values).to all include(/\bTelescope\b/i)
         end
       end
     end

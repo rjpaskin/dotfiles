@@ -115,7 +115,42 @@ in {
         vim-airline
 
         # Project navigation
-        telescope-nvim
+        {
+          plugin = telescope-nvim;
+          type = "lua";
+          config = ''
+            local builtin = require"telescope.builtin"
+
+            function telescope_mapping(key_suffix, arg, options)
+              if type(arg) == "string" then
+                fn = function() return builtin.find_files{ cwd = arg } end
+                options = { desc = "Telescope in " .. arg }
+              else
+                fn = arg
+              end
+
+              return vim.keymap.set("n", "<leader>u" .. key_suffix, fn, options or {})
+            end
+
+            for key_suffix, arg in pairs{
+              u = builtin.find_files,
+              b = builtin.buffers,
+              r = builtin.registers,
+              o = builtin.current_buffer_tags,
+              m = "app/models",
+              c = "app/controllers",
+              v = "app/views",
+              h = "app/helpers",
+              w = "app/workers",
+              s = "spec",
+              f = "spec/support/factories"
+            } do telescope_mapping(key_suffix, arg) end
+
+            telescope_mapping("p", function()
+              return builtin.find_files{ cwd = vim.fn.expand("%:p:h") }
+            end, { desc = "Telescope in directory of current buffer" })
+          '';
+        }
 
         # Languages - move to modules?
         swift-vim
