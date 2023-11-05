@@ -43,6 +43,12 @@ let
         default = {};
       };
 
+      plists = mkOption {
+        description = "Plist edits to make";
+        type = attrs;
+        default = {};
+      };
+
       rev = mkOption {
         description = "Revision at which to checkout the cask. Intended for deleted apps";
         type = nullOr str;
@@ -64,7 +70,7 @@ let
   };
 
   extractedPrivateFiles = foldl' (acc: cask: acc ++ cask.privateFiles) [] cfg.casks;
-  extractedDefaults = mkMerge (catAttrs "defaults" cfg.casks);
+  extractCaskAttr = name: mkMerge (catAttrs name cfg.casks);
 
   # This makes a number of assumptions:
   # 1. That the cask is from `homebrew/cask`
@@ -93,7 +99,10 @@ in {
   };
 
   config = {
-    targets.darwin.defaults = extractedDefaults;
+    targets.darwin = {
+      defaults = extractCaskAttr "defaults";
+      plists = extractCaskAttr "plists";
+    };
 
     programs.zsh.sessionVariables.HOMEBREW_BUNDLE_FILE = "${bundleFile}";
 
