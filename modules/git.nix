@@ -26,6 +26,7 @@ let
     };
     diff.colorMoved = "zebra";
     init.defaultBranch = "main";
+    commit.verbose = true; # show changes in commit message editor
   };
 
   ignores = [
