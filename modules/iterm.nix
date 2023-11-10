@@ -27,6 +27,7 @@ in {
       SoundForEsc = false;
       StretchTabsToFillBar = false;
       TabStyleWithAutomaticOption = 4;
+      ToolbeltTools = [ "Jobs" ];
       VisualIndicatorForEsc = false;
     };
   };
@@ -39,6 +40,7 @@ in {
         Guid = profileUUID;
 
         "Allow Title Setting" = false;
+        "Brighten Bold Text" = false;
         "Columns" = 150;
         "Custom Directory" = "Recycle";
         "Scrollback Lines" = 0; # unlimited
