@@ -68,7 +68,8 @@ in {
 
     (mkIf config.roles.aws {
       home.packages = with pkgs; [
-        (callPackage ../pkgs/awscli-with-plugins.nix {})
+        awscli
+        ssm-session-manager-plugin
         aws-vault
       ];
       programs.zsh = {
