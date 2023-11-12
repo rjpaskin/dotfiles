@@ -17,18 +17,18 @@ hostId="$(scutil --get LocalHostName | sed -e 's/^rjp-//')"
 
 [ -n "$hostId" ] || fail "Unable to determine hostname"
 
-hasNixBuild=""
+hasNixCommandInPath=""
 hasNixProfile=""
 
-if command -v nix-build > /dev/null; then
-  hasNixBuild="1"
+if command -v nix > /dev/null; then
+  hasNixCommandInPath="1"
 fi
 
 if [ -n "${NIX_PROFILES:-}" ]; then
   hasNixProfile="1"
 fi
 
-if [ -z "$hasNixBuild" ] || [ -z "$hasNixProfile" ]; then
+if [ -z "$hasNixCommandInPath" ] || [ -z "$hasNixProfile" ]; then
   nixVersion="$(awk -F\" '/NIX_VERSION=/{print $2}' "$dotfiles/script/bootstrap")"
   [ -n "$nixVersion" ] || fail "Unable to get Nix version"
 
@@ -37,7 +37,7 @@ if [ -z "$hasNixBuild" ] || [ -z "$hasNixProfile" ]; then
 
   # shellcheck disable=SC1072,SC1091
   [ -n "$hasNixProfile" ] || source "$nixPath/etc/profile.d/nix.sh"
-  [ -n "$hasNixBuild" ] || export PATH="$nixPath/bin:$PATH"
+  [ -n "$hasNixCommandInPath" ] || export PATH="$nixPath/bin:$PATH"
 fi
 
 # Ensure that `nix.conf` is still found even when not
@@ -85,15 +85,9 @@ systemEnv="$(
 
 echo "$systemEnv"
 
-VERBOSE=1 "$systemEnv/activate"
-
 previousGeneration="$(currentGeneration)"
 
-echo "Installing packages to Nix profile"
-# We need to resolve the symlink to the buildEnv here, otherwise
-# Nix will use the $systemEnv buildEnv as the source of the profile
-# (meaning we get ~/.nix-profile/env and ~/.nix-profile/activate)
-nix-env --set "$(/usr/bin/readlink "$systemEnv/env")" --show-trace
+VERBOSE=1 "$systemEnv/activate"
 
 newGeneration="$(currentGeneration)"
 

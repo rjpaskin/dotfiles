@@ -89,7 +89,7 @@ in {
 
       if ! [ -e "$shell_path" ]; then
         $VERBOSE_ECHO "Pre-installing ZSH for chsh"
-        $DRY_RUN_CMD command nix-env -f ${toString pkgs.path} $VERBOSE_ARG -iA zsh
+        $DRY_RUN_CMD command nix profile install ${toString pkgs.path}#zsh $VERBOSE_ARG
       fi
 
       if [ "$SHELL" != "$shell_path" ]; then

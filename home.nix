@@ -24,18 +24,6 @@ with lib;
     programs.man.enable = false;
     home.extraOutputsToInstall = [ "man" ];
 
-    # Prevent activation script from installing packages into ~/.nix-profile
-    # - we do this ourselves later on
-    home.activation = with lib.hm; {
-      disableNixEnv = dag.entryBefore ["installPackages"] ''
-        nix-env() { echo "==> Disabled - packages installed later"; }
-      '';
-
-      reenableNixEnv = dag.entryBefore ["linkGeneration"] ''
-        unset -f nix-env
-      '';
-    };
-
     home.extraBuilderCommands = ''
       mkdir -p $out/rjp
 
