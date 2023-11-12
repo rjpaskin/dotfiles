@@ -1,6 +1,12 @@
 { config, lib, ... }:
 
 {
+  options.sshKeyType = with lib; mkOption {
+    type = types.enum [ "rsa" "ed25519" ];
+    default = "ed25519";
+    description = "Type of SSH key to use";
+  };
+
   config = {
     home.file = lib.mkMerge [
       {
@@ -11,11 +17,7 @@
            AddKeysToAgent yes
            UseKeychain yes
            IgnoreUnknown UseKeychain
-           IdentityFile ${
-             if builtins.pathExists "${config.home.homeDirectory}/.ssh/id_ed25519"
-             then "~/.ssh/id_ed25519"
-             else "~/.ssh/id_rsa"
-           }
+           IdentityFile ~/.ssh/id_${config.sshKeyType}
 
           Include config.private
         '';

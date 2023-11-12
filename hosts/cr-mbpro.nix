@@ -28,5 +28,7 @@ with lib;
     [ -n "$IN_AUTOTERM_SPEC" ] && HISTFILE=""
   '';
 
+  sshKeyType = "rsa";
+
   # ruby.rubocop.package = pkgs.rubocop_0_59;
 }

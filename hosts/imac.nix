@@ -18,4 +18,6 @@
     virtualbox = true;
     whatsapp = true;
   };
+
+  sshKeyType = "rsa";
 }

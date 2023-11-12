@@ -11,4 +11,6 @@
     whatsapp = true;
     zoom = true;
   };
+
+  sshKeyType = "rsa";
 }
