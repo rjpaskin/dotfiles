@@ -55,6 +55,7 @@ with lib;
     ./modules/neovim
     ./modules/pkgs.nix
     ./modules/ruby.nix
+    ./modules/ssh.nix
     ./modules/symlinks.nix
     ./modules/tmux
     ./modules/zsh.nix

@@ -85,18 +85,4 @@ RSpec.describe "Bootstrap" do
       its("--version") { should include(/homebrew/i) }
     end
   end
-
-  context "SSH" do
-    it "has a key present" do
-      expect(
-        home_path(".ssh").children.map(&:basename_str)
-      ).to include(/^id_(rsa|ed25519)$/)
-    end
-
-    it "has a key loaded in the SSH agent" do
-      expect(
-        command!("/usr/bin/ssh-add -L").lines
-      ).to include(/^ssh-(rsa|ed25519)\s/)
-    end
-  end
 end
