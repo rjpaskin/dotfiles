@@ -122,7 +122,7 @@ in {
       (mkIf roles.postman ["postman"])
       (mkIf roles.slack ["slack"])
       (mkIf roles.sql-clients ["sequel-pro" "tableplus"])
-      (mkIf roles.virtualbox ["virtualbox" "virtualbox-extension-pack"])
+      (mkIf (!machine.isARM && roles.virtualbox) ["virtualbox" "virtualbox-extension-pack"])
       (mkIf roles.whatsapp ["whatsapp"])
       (mkIf roles.zoom ["zoom"])
     ];
@@ -138,4 +138,11 @@ in {
       (mkIf roles.harvest { Harvest = 506189836; })
     ];
   };
+
+  config.assertions = mkIf roles.virtualbox [
+    {
+      assertion = machine.isARM;
+      message = "VirtualBox is not supported on ARM machines";
+    }
+  ];
 }
