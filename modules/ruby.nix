@@ -12,8 +12,6 @@ let
     merge = mergeOneOption;
   };
 
-  callRubyPackage = lib.callPackageWith (pkgs // { ruby = cfg.defaultPackage; });
-
 in {
   options = {
     roles = with config.lib.roles; {
@@ -41,7 +39,7 @@ in {
       package = mkOption {
         type = types.package;
         description = "RuboCop package to install into profile";
-        default = callRubyPackage ../pkgs/rubocop_0_59 {};
+        default = pkgs.rubocop.override { ruby = cfg.defaultPackage; };
       };
     };
   };

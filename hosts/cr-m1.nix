@@ -25,6 +25,4 @@ with lib;
   programs.zsh.initExtra = mkAfter ''
     [ -n "$IN_AUTOTERM_SPEC" ] && HISTFILE=""
   '';
-
-  # ruby.rubocop.package = pkgs.rubocop_0_59;
 }

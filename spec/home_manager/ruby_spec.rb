@@ -56,6 +56,6 @@ RSpec.describe "Ruby", role: "ruby" do
 
   describe program("rubocop"), role: "rubocop" do
     its(:location) { should eq profile_bin }
-    its("--version") { should start_with "0.59" }
+    its("--version") { should be_success }
   end
 end

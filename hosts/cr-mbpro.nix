@@ -29,6 +29,4 @@ with lib;
   '';
 
   sshKeyType = "rsa";
-
-  # ruby.rubocop.package = pkgs.rubocop_0_59;
 }
