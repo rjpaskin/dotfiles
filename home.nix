@@ -17,5 +17,6 @@
 
   imports = [
     ./modules/zsh.nix
+    ./modules/neovim
   ];
 }
