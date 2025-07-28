@@ -26,6 +26,11 @@
           # Set Git commit hash for darwin-version.
           system.configurationRevision = self.rev or self.dirtyRev or null;
           nixpkgs.hostPlatform = "aarch64-darwin";
+
+          roles = {
+            git = true;
+            git-standup = true;
+          };
         }
         # Use home-manager as a submodule of nix-darwin
         {

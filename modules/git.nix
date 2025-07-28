@@ -1,7 +1,5 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-
 let
   extraConfig = {
     core = {
@@ -66,7 +64,7 @@ in {
     git-standup = mkOptionalRole "git-standup";
   };
 
-  config = mkIf config.roles.git (mkMerge [
+  config = lib.mkIf config.roles.git (lib.mkMerge [
     {
       programs.git = let
         domain = "gmail.com";
@@ -92,25 +90,7 @@ in {
         vim-rhubarb
       ];
 
-      programs.zsh.oh-my-zsh.plugins = ["git"];
-
-      targets.darwin.homebrew.casks = [{
-        name = "sourcetree";
-        privateFiles = ["Library/Application Support/SourceTree/sourcetree.license"];
-        defaults."com.torusknot.SourceTreeNotMAS" = {
-          agreedToUpdateConfig = false; # don't touch Git global config
-          bookmarksClosedOnStartup = true;
-          checkRemoteStatus = false; # don't run `git fetch` in background
-          commitColumnGuideWidth = 80;
-          diffFontName = "Monaco";
-          diffFontSize = 12.0; # needs to be float to get <real>
-          diffSkipFilePatterns = ""; # show diffs for all files
-          fileStatusFilterMode = 1; # show only: "pending"
-          fileStatusStagingViewMode = 1; # "split view staging"
-          fileStatusViewMode2 = 0; # "flat list, single column"
-          useFixedWithCommitFont = true;
-        };
-      }];
+      programs.zsh.oh-my-zsh.plugins = [ "git" ];
     }
 
     {
@@ -125,16 +105,16 @@ in {
       };
     }
 
-    (mkIf config.roles.git-flow {
+    (lib.mkIf config.roles.git-flow {
       home.packages = [ pkgs.gitAndTools.gitflow ];
 
       programs.zsh = {
-        oh-my-zsh.plugins = ["git-flow"];
+        oh-my-zsh.plugins = [ "git-flow" ];
         shellAliases.gf = "git-flow"; # restore now-removed shortcut
       };
     })
 
-    (mkIf config.roles.git-standup {
+    (lib.mkIf config.roles.git-standup {
       home.packages = [ pkgs.gitAndTools.git-standup ];
     })
   ]);

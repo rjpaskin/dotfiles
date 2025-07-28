@@ -16,7 +16,10 @@
   };
 
   imports = [
+    ./modules/roles.nix
+
     ./modules/zsh.nix
     ./modules/neovim
+    ./modules/git.nix
   ];
 }
