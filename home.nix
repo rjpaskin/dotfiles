@@ -14,4 +14,8 @@
 
     home.homeDirectory = lib.mkForce "/Users/${config.home.username}";
   };
+
+  imports = [
+    ./modules/zsh.nix
+  ];
 }
