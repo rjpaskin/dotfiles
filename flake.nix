@@ -9,11 +9,6 @@
       inputs.nixpkgs.follows = "nixpkgs"; # Use our nixpkgs
     };
 
-    flake-compat = {
-      url = "github:edolstra/flake-compat";
-      flake = false;
-    };
-
     vim-bundler = { url = "github:tpope/vim-bundler"; flake = false; };
     vim-mkdir = { url = "github:pbrisbin/vim-mkdir"; flake = false; };
     vim-rspec = { url = "github:thoughtbot/vim-rspec"; flake = false; };
