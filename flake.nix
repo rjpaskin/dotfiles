@@ -28,6 +28,7 @@
           nixpkgs.hostPlatform = "aarch64-darwin";
 
           roles = {
+            docker = true;
             git = true;
             git-standup = true;
             ruby = true;

@@ -1,7 +1,5 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-
 let
   exec-when-up = let
     name = "docker_compose_exec_when_up";
@@ -13,17 +11,15 @@ let
 in {
   options.roles.docker = config.lib.roles.mkOptionalRole "Docker tools";
 
-  config = mkIf config.roles.docker {
+  config = lib.mkIf config.roles.docker {
     home.packages = with pkgs; [
       hadolint
       dive
       exec-when-up
     ];
 
-    targets.darwin.homebrew.casks = ["docker"];
-
     programs.zsh = {
-      oh-my-zsh.plugins = ["docker" "docker-compose"];
+      oh-my-zsh.plugins = [ "docker" "docker-compose" ];
 
       shellAliases = {
         dup = "docker-compose up";

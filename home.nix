@@ -22,5 +22,6 @@
     ./modules/neovim
     ./modules/git.nix
     ./modules/ruby.nix
+    ./modules/docker
   ];
 }
