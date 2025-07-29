@@ -1,12 +1,8 @@
 { lib, machine, ... }:
 
-with lib;
-
 {
-  imports = [ ./others.nix ];
-
   config = {
-    targets.darwin.defaults = mkMerge [
+    targets.darwin.defaults = lib.mkMerge [
       {
         "com.apple.universalaccess" = {
           closeViewZoomFollowsFocus = true;
@@ -151,30 +147,6 @@ with lib;
           WebKitPluginsEnabled = false;
           WebKitTabToLinksPreferenceKey = true;
         };
-        # "com.apple.spotlight" = {
-        #   orderedItems = [
-        #     "{\"enabled\" = 1;\"name\" = \"APPLICATIONS\";}"
-        #     "{\"enabled\" = 1;\"name\" = \"SYSTEM_PREFS\";}"
-        #     "{\"enabled\" = 1;\"name\" = \"DIRECTORIES\";}"
-        #     "{\"enabled\" = 1;\"name\" = \"PDF\";}"
-        #     "{\"enabled\" = 1;\"name\" = \"FONTS\";}"
-        #     "{\"enabled\" = 1;\"name\" = \"DOCUMENTS\";}"
-        #     "{\"enabled\" = 0;\"name\" = \"MESSAGES\";}"
-        #     "{\"enabled\" = 0;\"name\" = \"CONTACT\";}"
-        #     "{\"enabled\" = 0;\"name\" = \"EVENT_TODO\";}"
-        #     "{\"enabled\" = 1;\"name\" = \"IMAGES\";}"
-        #     "{\"enabled\" = 0;\"name\" = \"BOOKMARKS\";}"
-        #     "{\"enabled\" = 0;\"name\" = \"MUSIC\";}"
-        #     "{\"enabled\" = 0;\"name\" = \"MOVIES\";}"
-        #     "{\"enabled\" = 1;\"name\" = \"PRESENTATIONS\";}"
-        #     "{\"enabled\" = 1;\"name\" = \"SPREADSHEETS\";}"
-        #     "{\"enabled\" = 0;\"name\" = \"SOURCE\";}"
-        #     "{\"enabled\" = 1;\"name\" = \"MENU_DEFINITION\";}"
-        #     "{\"enabled\" = 1;\"name\" = \"MENU_OTHER\";}"
-        #     "{\"enabled\" = 1;\"name\" = \"MENU_CONVERSION\";}"
-        #     "{\"enabled\" = 1;\"name\" = \"MENU_EXPRESSION\";}"
-        #   ];
-        # };
         "com.apple.Terminal" = {
           SecureKeyboardEntry = true;
           ShowLineMarks = 0;
@@ -228,15 +200,9 @@ with lib;
           PMPrintingExpandedStateForPrint2 = true;
         };
       }
-
-      (mkIf (machine.olderThan "big_sur") {
-        "com.apple.menuextra.battery" = {
-          ShowPercent = "YES";
-        };
-      })
     ];
 
-    targets.darwin.currentHostDefaults = mkMerge [
+    targets.darwin.currentHostDefaults = lib.mkMerge [
       {
         NSGlobalDomain = {
           "com.apple.trackpad.trackpadCornerClickBehavior" = 1;
@@ -247,46 +213,10 @@ with lib;
         "com.apple.ImageCapture" = {
           disableHotPlug = true;
         };
-      }
-      (mkIf (machine.sameOrNewerThan "big_sur") {
         "com.apple.controlcenter" = {
           BatteryShowPercentage = true;
         };
-      })
+      }
     ];
-
-    home.activation.keyboardMappings = let
-      # See below for key codes:
-      # - https://developer.apple.com/library/archive/technotes/tn2450/_index.html#//apple_ref/doc/uid/DTS40017618-CH1-KEY_TABLE_USAGES
-      # - https://hidutil-generator.netlify.app
-      capsLock = 30064771129; # 0x700000000 | 0x39
-      # System Preferences uses Right Ctrl for "Control", so copy that
-      rightCtrl = 30064771300; # 0x700000000 | 0xE4
-
-      toKeyboardMapping = { from, to }: "<dict>
-        <key>HIDKeyboardModifierMappingSrc</key>
-        <integer>${toString from}</integer>
-        <key>HIDKeyboardModifierMappingDst</key>
-        <integer>${toString to}</integer>
-      </dict>";
-
-      keyboardMappings = [
-        { from = capsLock; to = rightCtrl; }
-      ];
-
-    in hm.dag.entryAfter ["setDarwinDefaults"] ''
-      # Get "<vendorID>-<productID>" tuples for all keyboards currently connected
-      keyboards="$(
-        /usr/bin/hidutil list --matching keyboard \
-          | awk '/^Devices:/ { seenDevices = 1 } /^0x/ && seenDevices { printf "%d-%d\n", $1, $2 }'
-      )"
-
-      for keyboard in $keyboards; do
-        $DRY_RUN_CMD /usr/bin/defaults -currentHost write \
-          "NSGlobalDomain" \
-          "com.apple.keyboard.modifiermapping.$keyboard-0" \
-          -array '${concatMapStrings toKeyboardMapping keyboardMappings}'
-      done
-    '';
   };
 }

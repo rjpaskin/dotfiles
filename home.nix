@@ -28,5 +28,6 @@
     ./modules/misc.nix
     ./modules/pkgs.nix
     ./modules/ssh.nix
+    ./modules/macos_defaults
   ];
 }
