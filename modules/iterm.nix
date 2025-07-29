@@ -35,4 +35,19 @@ in {
       }
     ];
   };
+
+  targets.darwin.defaults."com.googlecode.iterm2" = {
+    AlternateMouseScroll = true;
+    "Default Bookmark Guid" = profileUUID;
+    EnableAPIServer = true; # enable Python API
+    OpenArrangementAtStartup = false;
+    PreserveWindowSizeWhenTabBarVisibilityChanges = true;
+    SUEnableAutomaticChecks = true;
+    ShowNewOutputIndicator = false;
+    SoundForEsc = false;
+    StretchTabsToFillBar = false;
+    TabStyleWithAutomaticOption = 4;
+    ToolbeltTools = [ "Jobs" ];
+    VisualIndicatorForEsc = false;
+  };
 }

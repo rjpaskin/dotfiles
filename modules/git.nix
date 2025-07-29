@@ -105,6 +105,22 @@ in {
       };
     }
 
+    {
+      targets.darwin.defaults."com.torusknot.SourceTreeNotMAS" = {
+        agreedToUpdateConfig = false; # don't touch Git global config
+        bookmarksClosedOnStartup = true;
+        checkRemoteStatus = false; # don't run `git fetch` in background
+        commitColumnGuideWidth = 80;
+        diffFontName = "Monaco";
+        diffFontSize = 12.0; # needs to be float to get <real>
+        diffSkipFilePatterns = ""; # show diffs for all files
+        fileStatusFilterMode = 1; # show only: "pending"
+        fileStatusStagingViewMode = 1; # "split view staging"
+        fileStatusViewMode2 = 0; # "flat list, single column"
+        useFixedWithCommitFont = true;
+      };
+    }
+
     (lib.mkIf config.roles.git-flow {
       home.packages = [ pkgs.gitAndTools.gitflow ];
 
