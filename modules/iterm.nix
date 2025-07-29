@@ -13,25 +13,6 @@ let
   profileUUID = "A00868BC-8749-41C1-8B9E-B92BDA34E275";
 
 in {
-  targets.darwin = {
-    homebrew.casks = [ "iterm2" ];
-
-    defaults."com.googlecode.iterm2" = {
-      AlternateMouseScroll = true;
-      "Default Bookmark Guid" = profileUUID;
-      EnableAPIServer = true; # enable Python API
-      OpenArrangementAtStartup = false;
-      PreserveWindowSizeWhenTabBarVisibilityChanges = true;
-      SUEnableAutomaticChecks = true;
-      ShowNewOutputIndicator = false;
-      SoundForEsc = false;
-      StretchTabsToFillBar = false;
-      TabStyleWithAutomaticOption = 4;
-      ToolbeltTools = [ "Jobs" ];
-      VisualIndicatorForEsc = false;
-    };
-  };
-
   # https://iterm2.com/documentation-dynamic-profiles.html
   home.file."Library/Application Support/iTerm2/DynamicProfiles/rjp.json".text = builtins.toJSON {
     Profiles = [

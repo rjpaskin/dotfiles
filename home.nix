@@ -23,5 +23,6 @@
     ./modules/git.nix
     ./modules/ruby.nix
     ./modules/docker
+    ./modules/iterm.nix
   ];
 }
