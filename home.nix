@@ -24,5 +24,6 @@
     ./modules/ruby.nix
     ./modules/docker
     ./modules/iterm.nix
+    ./modules/javascript.nix
   ];
 }

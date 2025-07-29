@@ -31,6 +31,7 @@
             docker = true;
             git = true;
             git-standup = true;
+            javascript = true;
             ruby = true;
           };
         }

@@ -18,6 +18,6 @@ with lib;
       vim-prettier
     ];
 
-    programs.zsh.oh-my-zsh.plugins = ["node" "npm" "yarn"];
+    programs.zsh.oh-my-zsh.plugins = [ "node" "npm" "yarn" ];
   };
 }
