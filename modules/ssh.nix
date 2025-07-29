@@ -18,12 +18,8 @@
            UseKeychain yes
            IgnoreUnknown UseKeychain
            IdentityFile ~/.ssh/id_${config.sshKeyType}
-
-          Include config.private
         '';
       }
-
-      (config.lib.symlinks.privateFile "ssh/config.private")
     ];
   };
 }

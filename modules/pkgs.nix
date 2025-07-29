@@ -1,7 +1,5 @@
 { config, lib, pkgs, flakeRepos, ... }:
 
-with lib;
-
 let
   jq-with-all-outputs = pkgs.jq.overrideAttrs (attrs: {
     meta.outputsToInstall = (attrs.meta.outputsToInstall or []) ++ [ "out" "bin" "man" "dev" "doc" ];
@@ -12,7 +10,7 @@ in {
     aws = mkOptionalRole "AWS tools";
   };
 
-  config = mkMerge [
+  config = lib.mkMerge [
     # Basics
     {
       home.packages = with pkgs; [
@@ -32,7 +30,7 @@ in {
     {
       home.packages = [ pkgs.universal-ctags ];
       xdg.configFile = {
-        "ctags/config.ctags".source = "${flakeRepos.thoughtbot-dotfiles}/ctags.d/config.ctags";
+        # "ctags/config.ctags".source = "${flakeRepos.thoughtbot-dotfiles}/ctags.d/config.ctags";
 
         # See https://github.com/universal-ctags/ctags/issues/261
         "ctags/nix.ctags".text = ''
@@ -66,7 +64,7 @@ in {
       ];
     }
 
-    (mkIf config.roles.aws {
+    (lib.mkIf config.roles.aws {
       home.packages = with pkgs; [
         awscli
         ssm-session-manager-plugin
@@ -74,8 +72,8 @@ in {
       ];
       programs.zsh = {
         sessionVariables.AWS_VAULT_KEYCHAIN_NAME = "login";
-        initExtra = ''
-          source $HOME/.nix-profile/share/zsh/site-functions/aws_zsh_completer.sh
+        initContent = ''
+          source /etc/profiles/per-user/$USER/share/zsh/site-functions/aws_zsh_completer.sh
         '';
       };
     })

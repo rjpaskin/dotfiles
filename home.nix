@@ -25,5 +25,8 @@
     ./modules/docker
     ./modules/iterm.nix
     ./modules/javascript.nix
+    ./modules/misc.nix
+    ./modules/pkgs.nix
+    ./modules/ssh.nix
   ];
 }
