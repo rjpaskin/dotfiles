@@ -27,14 +27,6 @@
           system.configurationRevision = self.rev or self.dirtyRev or null;
           nixpkgs.hostPlatform = "aarch64-darwin";
 
-          roles = {
-            aws = true;
-            docker = true;
-            git = true;
-            git-standup = true;
-            javascript = true;
-            ruby = true;
-          };
         }
         # Use home-manager as a submodule of nix-darwin
         {
@@ -42,7 +34,18 @@
             useGlobalPkgs = true;
             useUserPackages = true;
             verbose = true;
-            users.rpaskin = ./home.nix;
+            users.rpaskin = { ... }: {
+              imports = [ ./home.nix ];
+
+              config.roles = {
+                aws = true;
+                docker = true;
+                git = true;
+                git-standup = true;
+                javascript = true;
+                ruby = true;
+              };
+            };
           };
         }
       ];
