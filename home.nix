@@ -21,5 +21,6 @@
     ./modules/zsh.nix
     ./modules/neovim
     ./modules/git.nix
+    ./modules/ruby.nix
   ];
 }

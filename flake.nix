@@ -30,6 +30,7 @@
           roles = {
             git = true;
             git-standup = true;
+            ruby = true;
           };
         }
         # Use home-manager as a submodule of nix-darwin

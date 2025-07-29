@@ -25,7 +25,7 @@ in {
       defaultPackage = mkOption {
         type = types.package;
         description = "Package to use as `ruby` as default";
-        default = pkgs.ruby_2_7;
+        default = pkgs.ruby_3_1;
       };
 
       defaultGems = mkOption {
@@ -55,19 +55,12 @@ in {
         vim-endwise
         vim-rails
         vim-ruby
-      ] ++ (with flakeRepos.vimPlugins; [
-        vim-bundler
-        vim-rspec
-        vim-ruby-refactoring
-        vim-rubyhash
-        vim-textobj-rubyblock
-        vim-yaml-helper # Pretty much only used for i18n YAML files
-      ]);
+      ];
 
       programs.zsh = {
-        oh-my-zsh.plugins = ["gem" "rails"];
+        oh-my-zsh.plugins = [ "gem" "rails" ];
 
-        initExtraBeforeCompInit = ''
+        initContent = lib.mkOrder 550 ''
           # Load completions for Bundler
           fpath+=(${pkgs.oh-my-zsh}/share/oh-my-zsh/plugins/bundler)
         '';

@@ -1,6 +1,11 @@
 #!/usr/bin/env ruby
 require 'irb/completion'
-require 'irb/ext/save-history'
+
+begin
+  require 'irb/ext/save-history'
+rescue LoadError
+end
+
 require 'rubygems'
 require 'pp'
 
