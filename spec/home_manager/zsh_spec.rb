@@ -65,6 +65,7 @@ RSpec.describe "ZSH" do
 
     it "loads Nix completions" do
       expect(shell_functions).to include("_nix-env")
+      expect(zsh_completion("nix")).to eq("_nix")
     end
 
     it "loads Nix profile script" do

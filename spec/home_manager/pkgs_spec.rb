@@ -112,6 +112,10 @@ RSpec.describe "Packages" do
       describe xdg_config_path("zsh/.zshrc") do
         it { should include(%r{source [^\n]+/share/zsh/site-functions/aws_zsh_completer.sh}) }
       end
+
+      describe zsh_completion("aws") do
+        it { should eq("_bash_complete -C aws_completer") }
+      end
     end
 
     describe program("session-manager-plugin") do

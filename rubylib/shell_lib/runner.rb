@@ -131,6 +131,12 @@ module ShellLib
       Resource.new("$FPATH -> #{path}") { shell_variable("FPATH")[path] }
     end
 
+    def zsh_completion(program)
+      Resource.new("ZSH completion -> #{program}") do
+        shell_variable("_comps[#{program}]")
+      end
+    end
+
     def oh_my_zsh_plugins
       @oh_my_zsh_plugins ||= Resource.new("Oh-My-ZSH plugins") do
         run_in_shell!("print -l $plugins").lines

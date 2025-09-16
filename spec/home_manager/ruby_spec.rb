@@ -37,6 +37,10 @@ RSpec.describe "Ruby", role: "ruby" do
     it { should include(%r{share/oh-my-zsh/plugins/bundler$}) }
   end
 
+  describe zsh_completion("bundle") do
+    it { should_not be_empty }
+  end
+
   describe home_path(".gemrc") do
     it { should be_a_file.and be_readable }
     its(:contents) { should include("--no-document") }
