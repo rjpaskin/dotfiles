@@ -13,12 +13,13 @@ RSpec.describe "Misc" do
     describe xdg_config_path("direnv/direnvrc") do
       it { should be_a_file.and be_readable }
 
-      it "loads nix-direnv" do
-        expect(subject).to include(%r{^source .+/nix-direnv/direnvrc})
-      end
-
       it "overrides direnv_layout_dir()" do
         expect(subject).to include("direnv_layout_dir()")
+      end
+
+      describe xdg_config_path("direnv/lib/hm-nix-direnv.sh") do
+        it { should be_a_file.and be_readable }
+        it { should include("use_nix").and include("use_flake") }
       end
     end
 
