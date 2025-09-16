@@ -15,7 +15,9 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, nix-darwin }: {
+  outputs = { self, nixpkgs, home-manager, nix-darwin }: let
+    forAllSystems = nixpkgs.lib.genAttrs [ "x86_64-darwin" "aarch64-darwin" ];
+  in {
     darwinConfigurations."360inmac-51320" = nix-darwin.lib.darwinSystem {
       system = "aarch64-darwin";
       modules = [
@@ -50,5 +52,29 @@
         }
       ];
     };
+
+    apps = forAllSystems (system: {
+      tests = let
+        inherit (nixpkgs.legacyPackages.${system}) bundlerEnv ruby_3_1 buildEnv;
+
+        gems = bundlerEnv {
+          ruby = ruby_3_1;
+          name = "dotfiles-specs";
+          gemdir = ./.;
+          postBuild = ''
+            rm $out/bin/bundle*
+          '';
+        };
+
+        testEnv = buildEnv {
+          name = "dotfiles-specs-with-ruby";
+          paths = [ gems gems.wrappedRuby ];
+          meta.mainProgram = "rspec";
+        };
+      in {
+        type = "app";
+        program = nixpkgs.lib.getExe testEnv;
+      };
+    });
   };
 }

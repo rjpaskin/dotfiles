@@ -1,20 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Ensures we have a GC root for specs derivation
-profile="$HOME/.cache/dotfiles/specs"
-
-mkdir -p "$(dirname "$profile")"
-
-# ...but don't protect old derivations from GC
-nix profile wipe-history \
-  --profile "$profile"
-
-nix build .#tests \
-  --profile "$profile" \
-  --no-link
-
-"$profile/bin/rspec" \
+exec nix run .#tests -- \
   -I ./rubylib \
   --require spec_helper \
   --format doc \

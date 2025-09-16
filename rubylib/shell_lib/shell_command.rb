@@ -8,8 +8,6 @@ module ShellLib
     # See: https://opensource.apple.com/source/Libc/Libc-320/include/paths.h.auto.html
     DEFAULT_PATH = "/usr/bin:/bin".freeze
 
-    STDIN_KEY = (MODE == :open3 ? :stdin_data : :input)
-
     private
 
     def run
@@ -28,7 +26,7 @@ module ShellLib
         "-s", # read from stdin
         unsetenv_others: true,
         # prepend command with spaces to avoid committing to history
-        STDIN_KEY => command.join(" ").gsub(/^/, " ")
+        stdin_data: command.join(" ").gsub(/^/, " ")
       ]
     end
 

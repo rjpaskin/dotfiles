@@ -1,3 +1,5 @@
+require "open3"
+
 module ShellLib
   class Command
     class ExecutionError < StandardError
@@ -30,16 +32,6 @@ module ShellLib
       def failed?
         !success?
       end
-    end
-
-    MODE = begin
-      raise LoadError if ENV["DOTFILES_EXEC_MODE"] == "open3"
-
-      require "posix/spawn"
-      :posix_spawn
-    rescue LoadError
-      require "open3"
-      :open3
     end
 
     def initialize(*args)
@@ -105,21 +97,12 @@ module ShellLib
       defined?(@status) && @status.is_a?(Status)
     end
 
-    if MODE == :open3
-      def execute
-        args = spawn_args.dup
-        options = args.last
-        options[:stdin_data] = options.delete(:input) if Hash === options && options.key?(:input)
+    def execute
+      args = spawn_args.dup
+      options = args.last
+      options[:stdin_data] = options.delete(:input) if Hash === options && options.key?(:input)
 
-        Open3.capture3(*spawn_args)
-      end
-    else
-      def execute
-        child = POSIX::Spawn::Child.build(*spawn_args)
-        child.exec!
-
-        [child.out, child.err, child.status]
-      end
+      Open3.capture3(*spawn_args)
     end
   end
 end

@@ -1,10 +1,4 @@
-begin
-  previous = $VERBOSE
-  $VERBOSE = 0
-  require "cfpropertylist"
-ensure
-  $VERBOSE = previous
-end
+require "cfpropertylist"
 
 module ShellLib
   module Plist
