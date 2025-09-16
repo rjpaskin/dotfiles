@@ -65,6 +65,12 @@ RSpec.describe "Packages" do
     its(:location) { should eq profile_bin }
   end
 
+  # 1Password CLI
+  describe program("op") do
+    its(:location) { should eq profile_bin }
+    its("--version") { should be_success }
+  end
+
   describe program("jq") do
     its(:location) { should eq profile_bin }
     its(:manpage) { should be_inside nix_profile_manpath }

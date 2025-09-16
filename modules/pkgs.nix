@@ -14,6 +14,7 @@ in {
     # Basics
     {
       home.packages = with pkgs; [
+        _1password-cli
         fzf
         jq-with-all-outputs
         shellcheck

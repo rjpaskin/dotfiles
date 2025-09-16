@@ -8,4 +8,7 @@
   # Let Determinate Nix handle Nix configuration
   # See: https://docs.determinate.systems/guides/nix-darwin
   nix.enable = false;
+
+  # Allows 1Password CLI to be used
+  nixpkgs.config.allowUnfree = true;
 }
