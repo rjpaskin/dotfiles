@@ -116,6 +116,14 @@ in {
           plugin = telescope-nvim;
           type = "lua";
           config = ''
+            require"telescope".setup({
+              pickers = {
+                find_files = {
+                  find_command = { "ag", "--hidden", "--path-to-ignore", vim.fs.normalize"~/.config/silver_searcher/ignore", "-l" }
+                }
+              }
+            })
+
             local builtin = require"telescope.builtin"
 
             function telescope_mapping(key_suffix, arg, options)
