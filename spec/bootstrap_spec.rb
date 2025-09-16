@@ -60,9 +60,15 @@ RSpec.describe "Bootstrap" do
 
   context "Firewall" do
     it "is enabled" do
-      expect(
-        defaults("/Library/Preferences/com.apple.alf")["globalstate"]
-      ).to eq(1)
+      if ShellLib.macos_version >= :sequoia
+        expect(
+          command!("/usr/libexec/ApplicationFirewall/socketfilterfw --getglobalstate")
+        ).to be_success.and include("enabled")
+      else
+        expect(
+          defaults("/Library/Preferences/com.apple.alf")["globalstate"]
+        ).to eq(1)
+      end
     end
 
     it "is running" do
