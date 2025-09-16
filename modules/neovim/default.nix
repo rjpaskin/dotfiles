@@ -105,7 +105,6 @@ in {
         vim-textobj-user
         vim-textobj-variable-segment
 
-        deoplete-nvim
         ale
 
         # UI
@@ -147,6 +146,20 @@ in {
             telescope_mapping("p", function()
               return builtin.find_files{ cwd = vim.fn.expand("%:p:h") }
             end, { desc = "Telescope in directory of current buffer" })
+          '';
+        }
+
+        {
+          plugin = blink-cmp;
+          type = "lua";
+          config = ''
+            require"blink-cmp".setup({
+              keymap = {
+                preset = "enter",
+                ["<Tab>"] = { "select_next", "fallback" },
+                ["<S-Tab>"] = { "select_prev", "fallback" }
+              }
+            })
           '';
         }
 

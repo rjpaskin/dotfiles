@@ -35,7 +35,7 @@ RSpec.describe "Neovim" do
           vim-tmux-navigator
           ale
           telescope.nvim
-          deoplete.nvim
+          blink-cmp
           vim-airline
           vim-mkdir
         ]
@@ -73,17 +73,6 @@ RSpec.describe "Neovim" do
         expect(neovim_variable "g:colors_name").to eq("one")
         expect(neovim_variable "&background").to eq("light")
         expect(neovim_variable "g:airline_theme").to eq("one")
-      end
-    end
-
-    context "Deoplete" do
-      it "enables Deoplete at startup and adds key bindings" do
-        aggregate_failures do
-          expect(neovim_variable "g:deoplete#enable_at_startup").to eq(1)
-
-          expect(neovim_keymappings["i"]["<Tab>"]).to include("check_back_space", "deoplete#manual_complete()")
-          expect(neovim_keymappings["i"]["<S-Tab>"]).to include("pumvisible()")
-        end
       end
     end
 
