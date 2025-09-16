@@ -125,4 +125,14 @@
     };
     version = "3.13.4";
   };
+  warning = {
+    groups = ["default"];
+    platforms = [];
+    source = {
+      remotes = ["https://rubygems.org"];
+      sha256 = "0lwcf7fsz1sda1fdbqq1i4q9kzg4f5vwrzgfg1vpa1hcxagw84hg";
+      type = "gem";
+    };
+    version = "1.5.0";
+  };
 }

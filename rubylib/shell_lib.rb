@@ -1,5 +1,12 @@
 require "etc"
 
+begin
+  require "warning"
+
+  Warning.ignore(/rbCFPropertyList.rb:\d+: warning: assigned but unused variable - temp/)
+rescue LoadError
+end
+
 module ShellLib
   autoload :Command, "shell_lib/command"
   autoload :ShellCommand, "shell_lib/shell_command"

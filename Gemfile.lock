@@ -26,6 +26,7 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
     rspec-support (3.13.4)
+    warning (1.5.0)
 
 PLATFORMS
   arm64-darwin-24
@@ -35,6 +36,7 @@ DEPENDENCIES
   eventmachine
   rspec
   rspec-its
+  warning
 
 BUNDLED WITH
    2.3.27
