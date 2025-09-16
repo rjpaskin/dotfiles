@@ -40,6 +40,16 @@ RSpec.describe "Git", role: "git" do
     it { should be_a_file.and be_readable }
   end
 
+  # Created by SourceTree unless we stop it from managing Git config files
+  describe home_path(".gitconfig") do
+    it { should be_absent }
+  end
+
+  # Created by SourceTree unless we stop it from managing Git config files
+  describe home_path(".gitignore_global") do
+    it { should be_absent }
+  end
+
   describe xdg_config_path("git/config") do
     it { should be_a_file.and be_readable }
 
@@ -80,12 +90,6 @@ RSpec.describe "Git", role: "git" do
   end
 
   describe "SourceTree" do
-    describe home_path("Library/Application Support/SourceTree/sourcetree.license") do
-      it { should be_a_file.and be_readable }
-      it { should_not be_in_nix_store }
-      its(:realpath) { should be_inside(icloud_path "dotfiles") }
-    end
-
     describe app("Sourcetree") do
       it { should exist }
     end
