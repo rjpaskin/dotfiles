@@ -31,7 +31,12 @@ module ShellLib
     end
 
     def env
-      ENV.slice(*LOGIN_ENV_KEYS).merge("PATH" => DEFAULT_PATH)
+      ENV.slice(
+        *LOGIN_ENV_KEYS,
+        # Prevent error: "can't find terminal definition for xterm-ghostty"
+        # on setting `TERMINFO_DIRS` or `TERM` in nix-darwin script sourced by /etc/zshenv
+        *("TERMINFO" if ENV["TERM_PROGRAM"] == "ghostty")
+      ).merge("PATH" => DEFAULT_PATH)
     end
   end
 end
