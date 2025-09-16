@@ -20,7 +20,7 @@ module ShellLib
 
     define_cached_method :shell_variable do |name|
       Resource.new("$#{name}") do
-        output = run_in_shell!("echo $#{name}").stdout.chomp
+        output = run_in_shell!("echo $#{name}").stdout.line
 
         if name =~ /^(F|NIX_)?PATH$/
           raise "Expected $#{name} to be set" if output.to_s.empty?

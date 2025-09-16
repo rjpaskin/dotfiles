@@ -31,7 +31,7 @@ module ShellLib
     def as_vars(separator: "=")
       lines.each_with_object({}) do |line, env|
         name, value = line.split(separator, 2)
-        env[name] = value.gsub(/(^'|'$)/, "") # strip surrounding quotes
+        env[name] = self.class.new(value.gsub(/(^'|'$)/, "")) # strip surrounding quotes
       end
     end
 
