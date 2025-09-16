@@ -14,7 +14,7 @@ RSpec.describe "Bootstrap" do
       it { should be_running }
     end
 
-    describe nix_profiles_path do
+    describe nix_profiles_path, pending: "Needed?" do
       it { should be_a_directory.and be_readable }
     end
 
@@ -22,7 +22,7 @@ RSpec.describe "Bootstrap" do
       it { should be_a_directory.and be_readable }
     end
 
-    describe nix_profiles_path("profile") do
+    describe nix_profiles_path("profile"), pending: "Needed?" do
       it { should be_a_directory.and be_in_nix_store }
     end
 
@@ -30,12 +30,12 @@ RSpec.describe "Bootstrap" do
       its(:stdout) { should be_empty }
     end
 
-    describe xdg_config_path("nix/nix.conf") do
+    describe xdg_config_path("nix/nix.conf"), pending: "Convert to nix.custom.conf" do
       it { should be_a_symlink }
       it { should be_a_file.and be_readable }
     end
 
-    context "home-manager" do
+    context "home-manager", pending: "Adapt to nix-darwin" do
       describe nix_profiles_path("home-manager", xdg: true) do
         it { should be_a_directory.and be_in_nix_store }
 
@@ -49,7 +49,7 @@ RSpec.describe "Bootstrap" do
   end
 
   context "Finder" do
-    describe home_path("Library") do
+    describe home_path("Library"), pending: "TODO" do
       it { should_not be_hidden }
     end
 

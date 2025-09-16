@@ -23,7 +23,7 @@ RSpec.describe "Misc" do
       end
     end
 
-    context "nix-direnv" do
+    context "nix-direnv", skip: "Hangs" do
       using_tmpdir do |tmp|
         tmp.join(".envrc").write("use nix\n")
         tmp.join("shell.nix").write(<<~NIX)

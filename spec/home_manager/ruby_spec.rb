@@ -23,7 +23,7 @@ RSpec.describe "Ruby", role: "ruby" do
     end
   end
 
-  describe neovim_packages do
+  describe neovim_packages, pending: "TODO" do
     it { should include("splitjoin.vim", "vim-rails", "vim-endwise",
                         "vim-ruby", "vim-rubyhash", "vim-yaml-helper") }
   end

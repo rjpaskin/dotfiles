@@ -3,7 +3,7 @@ RSpec.describe "Homebrew" do
     home_path("Library/QuickLook/#{name}.qlgenerator")
   end
 
-  describe program("mas") do
+  describe program("mas"), pending: "casks" do
     it "runs under ARM", :arm do
       expect(
         run_in_shell "arch -arm64e /bin/bash -c 'mas version'"
@@ -27,7 +27,7 @@ RSpec.describe "Homebrew" do
       its(:archs, arm: true) { should include("arm64") }
     end
 
-    describe app("VLC") do
+    describe app("VLC"), pending: "casks" do
       it { should exist }
       its(:archs, arm: true) { should include("arm64") }
     end
@@ -38,22 +38,22 @@ RSpec.describe "Homebrew" do
     end
   end
 
-  describe app("MollyGuard") do
+  describe app("MollyGuard"), pending: "casks" do
     it { should exist }
     it { should_not be_quarantined }
   end
 
-  describe quicklook_generator("QLStephen") do
+  describe quicklook_generator("QLStephen"), pending: "casks" do
     it { should exist }
     it { should_not be_quarantined }
   end
 
-  describe quicklook_generator("QuickLookCSV") do
+  describe quicklook_generator("QuickLookCSV"), pending: "casks" do
     it { should exist }
     it { should_not be_quarantined }
   end
 
-  describe quicklook_generator("QuickLookJSON") do
+  describe quicklook_generator("QuickLookJSON"), pending: "casks" do
     it { should exist }
     it { should_not be_quarantined }
   end

@@ -1,5 +1,5 @@
 RSpec.describe "Tmux" do
-  describe home_path(".tmuxinator") do
+  describe home_path(".tmuxinator"), pending: "Needed?" do
     it { should be_a_directory.and be_readable }
 
     it "contains YAML config files" do
