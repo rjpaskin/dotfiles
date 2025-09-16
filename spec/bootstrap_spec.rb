@@ -26,10 +26,6 @@ RSpec.describe "Bootstrap" do
       it { should be_a_directory.and be_in_nix_store }
     end
 
-    describe home_path(".nix-profile") do
-      it { should be_a_directory.and be_in_nix_store }
-    end
-
     describe shell_command!("nix-channel --list") do
       its(:stdout) { should be_empty }
     end

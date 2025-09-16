@@ -7,7 +7,7 @@ module ShellLib
     alias_method :directory, :file
 
     HOME = Path.new("~").freeze
-    NIX_PROFILE = HOME.join(".nix-profile").freeze
+    NIX_PROFILE = Path.new("/etc/profiles/per-user/#{ENV["USER"]}").freeze
 
     def profile_path(path)
       NIX_PROFILE.join(path)

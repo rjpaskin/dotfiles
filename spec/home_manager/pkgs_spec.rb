@@ -110,7 +110,7 @@ RSpec.describe "Packages" do
       its("--version") { should be_success }
 
       describe xdg_config_path("zsh/.zshrc") do
-        it { should include("source $HOME/.nix-profile/share/zsh/site-functions/aws_zsh_completer.sh") }
+        it { should include(%r{source [^\n]+/share/zsh/site-functions/aws_zsh_completer.sh}) }
       end
     end
 
