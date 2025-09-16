@@ -44,7 +44,7 @@ module ShellLib
     end
 
     def info
-      @info ||= path.join("Contents/Info.plist").as_plist
+      @info ||= path.exist!.join("Contents/Info.plist").as_plist
     end
 
     def inspect

@@ -23,6 +23,8 @@ module ShellLib
         output = run_in_shell!("echo $#{name}").stdout.chomp
 
         if name =~ /^(F|NIX_)?PATH$/
+          raise "Expected $#{name} to be set" if output.to_s.empty?
+
           output.as_search_path
         elsif output =~ %r{\A[0-9]+\z}
           Integer(output)
@@ -42,7 +44,7 @@ module ShellLib
     end
 
     define_cached_method :archs do |path|
-      command!("lipo -archs '#{path}'").split(" ")
+      command!("lipo -archs '#{path.exist!}'").split(" ")
     end
 
     define_cached_method :defaults do |domain|

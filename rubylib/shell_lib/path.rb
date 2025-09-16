@@ -94,6 +94,12 @@ module ShellLib
       !exist?
     end
 
+    def exist!
+      raise Errno::ENOENT, to_s if absent?
+
+      block_given? ? yield : self
+    end
+
     def in?(other)
       to_s.start_with?(other.to_s)
     end
@@ -104,16 +110,19 @@ module ShellLib
 
     # See https://unix.stackexchange.com/a/438359
     def hidden?
-      user_flags = Runner.current.command!("/usr/bin/stat -f '%Xf' '#{pathname}'")
-
-      user_flags.to_i(16) & HIDDEN_FLAG != 0
+      exist! do
+        user_flags = Runner.current.command!("/usr/bin/stat -f '%Xf' '#{pathname}'")
+        user_flags.to_i(16) & HIDDEN_FLAG != 0
+      end
     end
 
     def has_xattr?(name, recursive: false)
-      cmd = ["xattr", *("-r" if recursive), name, "'#{pathname}'"]
+      exist! do
+        cmd = ["xattr", *("-r" if recursive), name, "'#{pathname}'"]
 
-      Runner.current.command(cmd.join " ").lines.any? do |line|
-        line.end_with?(name)
+        Runner.current.command(cmd.join " ").lines.any? do |line|
+          line.end_with?(name)
+        end
       end
     end
 
