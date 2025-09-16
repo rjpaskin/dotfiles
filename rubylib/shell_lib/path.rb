@@ -1,6 +1,7 @@
 require "forwardable"
 require "pathname"
 require "uri"
+require "yaml"
 
 module ShellLib
   class Path
@@ -150,9 +151,19 @@ module ShellLib
       @json ||= JSON.parse(content, symbolize_names: true, **options)
     end
 
+    alias_method :json_content, :as_json
+
     def as_plist
       @plist ||= Plist.load_file(pathname)
     end
+
+    alias_method :plist_content, :as_plist
+
+    def as_yaml
+      @yaml ||= YAML.load(content)
+    end
+
+    alias_method :yaml_content, :as_yaml
 
     NIX_STORE_PATH = "/nix/store/".freeze
 

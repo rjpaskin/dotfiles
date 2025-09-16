@@ -89,6 +89,20 @@ RSpec.describe "Git", role: "git" do
     end
   end
 
+  describe "GitHub CLI" do
+    describe program("gh") do
+      its("--version") { should be_success }
+    end
+
+    describe zsh_completion("gh") do
+      it { should eq("_gh") }
+    end
+
+    describe xdg_config_path("gh/config.yml") do
+      its(:yaml_content) { should include("git_protocol" => "ssh", "editor" => "nvim") }
+    end
+  end
+
   describe "SourceTree" do
     describe app("Sourcetree") do
       it { should exist }

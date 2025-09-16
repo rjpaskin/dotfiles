@@ -106,6 +106,16 @@ in {
     }
 
     {
+      programs.gh = {
+        enable = true;
+        settings = {
+          git_protocol = "ssh";
+          editor = "nvim";
+        };
+      };
+    }
+
+    {
       targets.darwin.defaults."com.torusknot.SourceTreeNotMAS" = {
         agreedToUpdateConfig = false; # don't touch Git global config
         bookmarksClosedOnStartup = true;
