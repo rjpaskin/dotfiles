@@ -175,6 +175,7 @@ in {
         swift-vim
         vim-crystal
         vim-nix
+        vim-terraform
       ];
     };
 
