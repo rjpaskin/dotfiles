@@ -14,6 +14,11 @@
 
     home.homeDirectory = lib.mkForce "/Users/${config.home.username}";
 
+    # Disable `man` so that we don't get `pkgs.man` and all its accompanying executables,
+    # but still add `man` to `extraOutputsToInstall` as the `man` module does
+    programs.man.enable = false;
+    home.extraOutputsToInstall = [ "man" ];
+
     # Record the roles that were used
     xdg.configFile."dotfiles/roles.json".text = builtins.toJSON config.roles;
   };

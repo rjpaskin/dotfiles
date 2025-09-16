@@ -15,7 +15,7 @@ module ShellLib
     end
 
     define_cached_method :manpage do |name|
-      run_in_shell!("man --path #{name}").as_path
+      run_in_shell!("/usr/bin/man -w #{name}").as_path
     end
 
     define_cached_method :shell_variable do |name|
