@@ -63,8 +63,8 @@ RSpec.describe "Neovim" do
         expect(neovim_keymappings["n"]["<Space>="]).to include("PreserveWindowState", "gg=G", "<CR>")
 
         # From vim-tmux-navigator
-        expect(neovim_keymappings[""]["<C-H>"]).to include("TmuxNavigateLeft")
-        expect(neovim_keymappings[""]["<C-L>"]).to include("TmuxNavigateRight")
+        expect(neovim_keymappings["n"]["<C-H>"]).to include("TmuxNavigateLeft")
+        expect(neovim_keymappings["n"]["<C-L>"]).to include("TmuxNavigateRight")
       end
     end
 
