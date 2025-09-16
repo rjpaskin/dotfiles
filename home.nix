@@ -13,6 +13,9 @@
     home.stateVersion = "25.05";
 
     home.homeDirectory = lib.mkForce "/Users/${config.home.username}";
+
+    # Record the roles that were used
+    xdg.configFile."dotfiles/roles.json".text = builtins.toJSON config.roles;
   };
 
   imports = [

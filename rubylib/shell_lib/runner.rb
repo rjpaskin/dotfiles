@@ -136,17 +136,16 @@ module ShellLib
     end
 
     def home_manager_roles
-      @home_manager_roles ||= nix_profiles_path(
-        "home-manager/rjp/roles.json",
-        xdg: true
-      ).as_json
+      @home_manager_roles ||= xdg_config_path("dotfiles/roles.json").as_json
     end
 
     def role_enabled?(role)
       @role_overrides ||= ENV["ENABLED_ROLES"].to_s.split(",")
       return true if @role_overrides.include?(role.to_s)
 
-      home_manager_roles.fetch(role.to_sym) { raise "No role defined: '#{role}'" }
+      # FIXME - revert back to strict role checking
+      # home_manager_roles.fetch(role.to_sym) { raise "No role defined: '#{role}'" }
+      home_manager_roles.fetch(role.to_sym, false)
     end
 
     def nix_path_entry(name)
