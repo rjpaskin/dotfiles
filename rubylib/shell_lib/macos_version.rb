@@ -5,6 +5,10 @@ module ShellLib
     include Comparable
 
     VERSIONS = {
+      sequoia:  "15",
+      sonoma:   "14",
+      ventura:  "13",
+      monterey: "12",
       big_sur:  "11",
       catalina: "10.15",
       mojave:   "10.14"
