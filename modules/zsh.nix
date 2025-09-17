@@ -1,10 +1,6 @@
-{ config, lib, modulesPath, pkgs, ... }:
+{ config, lib, modulesPath, pkgs, dotfiles, ... }:
 
-let
-  # hmPath = dirOf modulesPath;
-  # nixpkgsPath = toString pkgs.path;
-
-in {
+{
   programs.zsh = {
     enable = true;
     dotDir = "${config.xdg.configHome}/zsh";
@@ -41,9 +37,7 @@ in {
       iCloud = "$HOME/Library/Mobile Documents/com~apple~CloudDocs";
 
       # For ease of searching
-      # home-manager = hmPath;
-      # nixpkgs = nixpkgsPath;
-    };
+    } // (builtins.removeAttrs dotfiles.inputPaths [ "self" ]);
 
     # This needs to appear at the very top of the file
     initContent = lib.mkBefore ''

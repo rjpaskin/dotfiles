@@ -95,17 +95,19 @@ RSpec.describe "ZSH" do
       it { should eq("robbyrussell") }
     end
 
-    it "defines valid directory hashes", pending: "FIXME" do
+    it "defines valid directory hashes" do
       hashes = run_in_shell!("hash -d").as_vars.transform_values(&:as_path)
 
-      expect(hashes).to include("iCloud", "dotfiles", "nixpkgs", "home-manager")
+      a_nix_store_directory = be_a_directory.and be_in_nix_store
 
-      aggregate_failures do
-        expect(hashes["iCloud"]).to eq(icloud_path)
-        expect(hashes["dotfiles"]).to eq(dotfiles_path)
-        expect(hashes["nixpkgs"]).to be_a_directory.and be_in_nix_store
-        expect(hashes["home-manager"]).to be_a_directory.and be_in_nix_store
-      end
+      expect(hashes).to include(
+        # FIXME
+        # "dotfiles" => dotfiles_path,
+        "iCloud" => icloud_path,
+        "nixpkgs" => a_nix_store_directory,
+        "nix-darwin" => a_nix_store_directory,
+        "home-manager" => a_nix_store_directory
+      )
     end
   end
 end

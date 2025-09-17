@@ -15,20 +15,23 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, nix-darwin }: let
+  outputs = { self, nixpkgs, home-manager, nix-darwin }@inputs: let
     forAllSystems = nixpkgs.lib.genAttrs [ "x86_64-darwin" "aarch64-darwin" ];
+    dotfilesModule = { ... }: {
+      _module.args.dotfiles.inputPaths = builtins.mapAttrs (_: input: input.outPath) inputs;
+    };
   in {
     darwinConfigurations."360inmac-51320" = nix-darwin.lib.darwinSystem {
       system = "aarch64-darwin";
       modules = [
         ./configuration.nix
         home-manager.darwinModules.home-manager
+        dotfilesModule
         # Specific to this host and file
         {
           # Set Git commit hash for darwin-version.
           system.configurationRevision = self.rev or self.dirtyRev or null;
           nixpkgs.hostPlatform = "aarch64-darwin";
-
         }
         # Use home-manager as a submodule of nix-darwin
         {
@@ -37,7 +40,7 @@
             useUserPackages = true;
             verbose = true;
             users.rpaskin = { ... }: {
-              imports = [ ./home.nix ];
+              imports = [ ./home.nix dotfilesModule ];
 
               config.roles = {
                 aws = true;
