@@ -24,7 +24,7 @@ RSpec.describe "Neovim" do
   end
 
   context "config" do
-    describe neovim_packages, pending: "FIXME" do
+    describe neovim_packages do
       # Not testing everything here, just the essentials and those we pull in
       # via flake.nix, with the assumption that if these are installed, others
       # should be too
@@ -39,7 +39,7 @@ RSpec.describe "Neovim" do
           vim-tmux-navigator
           ale
           telescope.nvim
-          blink-cmp
+          blink.cmp
           vim-airline
           vim-mkdir
         ]

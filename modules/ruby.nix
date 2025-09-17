@@ -1,4 +1,4 @@
-{ config, lib, pkgs, flakeRepos, ... }:
+{ config, lib, pkgs, dotfiles, ... }:
 
 with lib;
 
@@ -55,7 +55,14 @@ in {
         vim-endwise
         vim-rails
         vim-ruby
-      ];
+      ] ++ (with dotfiles.packages; [
+        vim-bundler
+        vim-rspec
+        vim-ruby-refactoring
+        vim-rubyhash
+        vim-textobj-rubyblock
+        vim-yaml-helper # Pretty much only used for i18n YAML files
+      ]);
 
       programs.zsh = {
         oh-my-zsh.plugins = [ "gem" "rails" ];

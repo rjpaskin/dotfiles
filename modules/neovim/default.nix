@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, dotfiles, ... }:
 
 with lib;
 with types;
@@ -95,7 +95,7 @@ in {
         vim-dispatch
         vim-eunuch
         vim-alias
-        # flakePlugins.vim-mkdir
+        dotfiles.packages.vim-mkdir
         vim-slash
         editorconfig-vim
 

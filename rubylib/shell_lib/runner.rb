@@ -182,7 +182,7 @@ module ShellLib
     def neovim_packages
       @neovim_packages ||= Resource.new("Neovim packages") do
         eval_neovim("&runtimepath").split(",").grep(NEOVIM_PACKAGE_PATH).flat_map do |path|
-          Dir[path].map {|pkg| File.basename(pkg) }
+          Dir[path].map {|pkg| File.basename(pkg).delete_prefix("vimplugin-") }
         end
       end
     end

@@ -17,8 +17,11 @@
 
   outputs = { self, nixpkgs, home-manager, nix-darwin }@inputs: let
     forAllSystems = nixpkgs.lib.genAttrs [ "x86_64-darwin" "aarch64-darwin" ];
-    dotfilesModule = { ... }: {
-      _module.args.dotfiles.inputPaths = builtins.mapAttrs (_: input: input.outPath) inputs;
+    dotfilesModule = { pkgs, ... }: {
+      _module.args.dotfiles = {
+        inputPaths = builtins.mapAttrs (_: input: input.outPath) inputs;
+        packages = self.packages.${pkgs.system};
+      };
     };
   in {
     darwinConfigurations."360inmac-51320" = nix-darwin.lib.darwinSystem {
@@ -55,6 +58,10 @@
         }
       ];
     };
+
+    packages = forAllSystems (system:
+      builtins.removeAttrs (nixpkgs.legacyPackages.${system}.callPackage ./pkgs/vim-plugins.nix {}) [ "override" "overrideDerivation" ]
+    );
 
     apps = forAllSystems (system: {
       tests = let
