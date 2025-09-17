@@ -8,6 +8,10 @@ RSpec.describe "Neovim" do
     its(:archs, arm: true) { should include("arm64") }
   end
 
+  describe shell_variable("EDITOR") do
+    it { should eq("nvim") }
+  end
+
   context "aliases" do
     let(:version_output) { run_in_shell!("nvim --version").stdout }
 
