@@ -46,6 +46,30 @@ RSpec.describe "Bootstrap" do
         end
       end
     end
+
+    describe file("/etc/nix/registry.json") do
+      it "pins nixpkgs to locked input for dotfiles" do
+        flake_url = command!("nix flake metadata --json '#{dotfiles_path}'").as_json.fetch(:url)
+
+        nixpkgs_path = command!("nix eval --json --file -", input: <<~NIX).as_json
+          (builtins.getFlake "#{flake_url}").inputs.nixpkgs.outPath
+        NIX
+
+        # Sanity check
+        expect(file(nixpkgs_path)).to exist.and be_in_nix_store
+
+        expect(subject.as_json.fetch(:flakes)).to include(
+          from: { type: "indirect", id: "nixpkgs" },
+          to: { type: "path", path: nixpkgs_path }
+        )
+      end
+    end
+
+    describe "NIX_PATH" do
+      it "redirects to flake registry" do
+        expect(command!("nix config show nix-path").line).to eq("nixpkgs=flake:nixpkgs")
+      end
+    end
   end
 
   context "Finder" do
