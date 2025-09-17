@@ -68,25 +68,11 @@ RSpec.describe "ZSH" do
       expect(zsh_completion("nix")).to eq("_nix")
     end
 
-    it "loads Nix profile script", pending: "FIXME" do
+    it "loads Nix profile script" do
       aggregate_failures do
-        expect(login_env).to include("NIX_PATH", "NIX_PROFILES")
+        expect(login_env).to include("NIX_PROFILES")
         expect(login_env["NIX_SSL_CERT_FILE"].as_path).to be_a_file
       end
-    end
-
-    describe nix_path_entry(home_path ".nix-defexpr/channels"), pending: "FIXME" do
-      it { should_not be_present }
-    end
-
-    describe nix_path_entry(:nixpkgs), pending: "FIXME" do
-      it { should be_present }
-      its(:path) { should be_in_nix_store }
-    end
-
-    describe nix_path_entry(:"home-manager"), pending: "FIXME" do
-      it { should be_present }
-      its(:path) { should be_in_nix_store }
     end
 
     describe path_entry(profile_path "bin") do

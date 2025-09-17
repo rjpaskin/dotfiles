@@ -22,7 +22,7 @@ module ShellLib
       Resource.new("$#{name}") do
         output = run_in_shell!("echo $#{name}").stdout.line
 
-        if name =~ /^(F|NIX_)?PATH$/
+        if name =~ /^F?PATH$/
           raise "Expected $#{name} to be set" if output.to_s.empty?
 
           output.as_search_path
@@ -154,15 +154,6 @@ module ShellLib
       # FIXME - revert back to strict role checking
       # home_manager_roles.fetch(role.to_sym) { raise "No role defined: '#{role}'" }
       home_manager_roles.fetch(role.to_sym, false)
-    end
-
-    def nix_path_entry(name)
-      if name.is_a?(Symbol)
-        Resource.new("$NIX_PATH -> <#{name}>") { shell_variable("NIX_PATH")[name] }
-      else
-        path = file(name)
-        Resource.new("$NIX_PATH -> #{path}") { shell_variable("NIX_PATH")[path] }
-      end
     end
 
     EVAL_NEOVIM_EXPRESSION = "redir @\">|silent echo %{expression}|redir END" \

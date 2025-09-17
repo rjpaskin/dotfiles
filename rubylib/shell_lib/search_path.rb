@@ -1,8 +1,8 @@
 module ShellLib
   class SearchPath
-    Entry = Struct.new(:path, :index, :name) do
+    Entry = Struct.new(:path, :index) do
       def inspect
-        [*name, "#{path.inspect}@#{index}"].join("=")
+        "#{path.inspect}@#{index}"
       end
 
       def pretty_print(pp)
@@ -27,8 +27,6 @@ module ShellLib
           other.match?(path.to_s)
         when String, Path
           path == other
-        when Symbol
-          name.to_s == other
         else
           raise ArgumentError
         end
@@ -43,8 +41,7 @@ module ShellLib
 
     def initialize(entries)
       @entries = entries.each_with_index.map do |entry, index|
-        path, name = entry.split("=", 2).reverse
-        Entry.new(Path.new(path), index, name)
+        Entry.new(Path.new(entry), index)
       end.freeze
     end
 
@@ -58,8 +55,6 @@ module ShellLib
         entries[value] || NULL_ENTRY
       when String, Path
         entries.find {|entry| entry.path == value } || NULL_ENTRY
-      when Symbol
-        entries.find {|entry| entry.name == value.to_s } || NULL_ENTRY
       else
         raise ArgumentError
       end
