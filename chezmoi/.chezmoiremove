@@ -1,0 +1,5 @@
+# vim: ft=gitignore
+
+# Created by SourceTree, but interferes with our XDG config files
+/.gitconfig
+/.gitignore_global
