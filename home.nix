@@ -37,6 +37,6 @@
     ./modules/pkgs.nix
     ./modules/ssh.nix
     ./modules/macos_defaults
-    ./modules/homebrew
+    ./modules/homebrew.nix
   ];
 }
