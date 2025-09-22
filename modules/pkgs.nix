@@ -5,6 +5,13 @@ let
     meta.outputsToInstall = (attrs.meta.outputsToInstall or []) ++ [ "out" "bin" "man" "dev" "doc" ];
   });
 
+  thoughtbot-dotfiles = pkgs.fetchFromGitHub {
+    owner = "thoughtbot";
+    repo = "dotfiles";
+    rev = "07bff4faab635a461a49b37705a5961f7dbcf123";
+    hash = "sha256-coht351cMoD3umPkvdFmsm3Dek1M/5+VkUjebsNjDyc=";
+  };
+
 in {
   options.roles = with config.lib.roles; {
     aws = mkOptionalRole "AWS tools";
@@ -31,7 +38,7 @@ in {
     {
       home.packages = [ pkgs.universal-ctags ];
       xdg.configFile = {
-        # "ctags/config.ctags".source = "${flakeRepos.thoughtbot-dotfiles}/ctags.d/config.ctags";
+        "ctags/config.ctags".source = "${thoughtbot-dotfiles}/ctags.d/config.ctags";
 
         # See https://github.com/universal-ctags/ctags/issues/261
         "ctags/nix.ctags".text = ''
