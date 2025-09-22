@@ -35,6 +35,11 @@ RSpec.describe "Bootstrap" do
       it { should be_a_file.and be_readable }
     end
 
+    describe file("/etc/nix-darwin/flake.nix") do
+      it { should be_a_symlink }
+      its(:realpath) { should eq(dotfiles_path "flake.nix") }
+    end
+
     context "home-manager", pending: "Adapt to nix-darwin" do
       describe nix_profiles_path("home-manager", xdg: true) do
         it { should be_a_directory.and be_in_nix_store }
