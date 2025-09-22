@@ -75,7 +75,7 @@ in {
 
     (lib.mkIf config.roles.aws {
       home.packages = with pkgs; [
-        awscli
+        awscli2
         ssm-session-manager-plugin
         aws-vault
         git-remote-codecommit
@@ -86,6 +86,10 @@ in {
           source /etc/profiles/per-user/$USER/share/zsh/site-functions/aws_zsh_completer.sh
         '';
       };
+
+      home.extraProfileCommands = ''
+        mv $out/bin/aws_zsh_completer.sh $out/share/zsh/site-functions
+      '';
     })
   ];
 }

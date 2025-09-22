@@ -135,10 +135,20 @@ RSpec.describe "Packages" do
   context 'AWS CLI', role: "aws" do
     describe program("aws") do
       its(:location) { should eq profile_bin }
-      its("--version") { should be_success }
+      its("--version") { should be_success.and start_with("aws-cli/2.") }
 
       describe xdg_config_path("zsh/.zshrc") do
-        it { should include(%r{source [^\n]+/share/zsh/site-functions/aws_zsh_completer.sh}) }
+        let(:zsh_completion_script) do
+          %r{source ([^\n]+/share/zsh/site-functions/aws_zsh_completer.sh)}
+        end
+
+        it "sources AWS completion script" do
+          expect(subject).to include(zsh_completion_script)
+
+          script_path = file(subject.contents[zsh_completion_script, 1].sub("$USER", ENV["USER"]))
+
+          expect(script_path).to exist.and include("compinit")
+        end
       end
 
       describe zsh_completion("aws") do
