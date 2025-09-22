@@ -5,3 +5,5 @@
 /modules/*/*.local
 
 /tmp/
+
+/hosts/chezmoi/*

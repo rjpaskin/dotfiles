@@ -23,6 +23,28 @@ RSpec.describe "Packages" do
     end
   end
 
+  describe program("chezmoi") do
+    its(:location) { should eq profile_bin }
+    its("--version") { should be_success }
+
+    describe zsh_completion("chezmoi") do
+      it { should eq("_chezmoi") }
+    end
+
+    describe xdg_data_path("chezmoi") do
+      it { should be_a_symlink }
+      its(:realpath) { should eq(dotfiles_path) }
+    end
+
+    describe xdg_config_path("chezmoi/chezmoi.toml") do
+      # What nix-darwin uses for by default for `darwinConfigurations` key
+      let(:hostname) { command!("scutil --get LocalHostName").line }
+
+      it { should be_a_symlink }
+      its(:realpath) { should eq(dotfiles_path "hosts/chezmoi/#{hostname}.toml").and exist }
+    end
+  end
+
   describe program("ctags") do
     its(:location) { should eq profile_bin }
     its("--version") { should include(/universal ctags/i) }

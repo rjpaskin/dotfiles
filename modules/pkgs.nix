@@ -22,6 +22,7 @@ in {
     {
       home.packages = with pkgs; [
         _1password-cli
+        chezmoi
         fzf
         jq-with-all-outputs
         shellcheck
