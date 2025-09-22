@@ -27,7 +27,7 @@ RSpec.describe "Homebrew" do
       its(:archs, arm: true) { should include("arm64") }
     end
 
-    describe app("VLC"), pending: "casks" do
+    describe app("VLC"), role: "vlc" do
       it { should exist }
       its(:archs, arm: true) { should include("arm64") }
     end
@@ -38,22 +38,17 @@ RSpec.describe "Homebrew" do
     end
   end
 
-  describe app("MollyGuard"), pending: "casks" do
+  describe quicklook_generator("QLStephen") do
     it { should exist }
     it { should_not be_quarantined }
   end
 
-  describe quicklook_generator("QLStephen"), pending: "casks" do
+  describe quicklook_generator("QuickLookCSV") do
     it { should exist }
     it { should_not be_quarantined }
   end
 
-  describe quicklook_generator("QuickLookCSV"), pending: "casks" do
-    it { should exist }
-    it { should_not be_quarantined }
-  end
-
-  describe quicklook_generator("QuickLookJSON"), pending: "casks" do
+  describe quicklook_generator("QuickLookJSON") do
     it { should exist }
     it { should_not be_quarantined }
   end

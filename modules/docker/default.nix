@@ -18,6 +18,8 @@ in {
       exec-when-up
     ];
 
+    nix-darwin.homebrew.casks = [ "docker-desktop" ];
+
     programs.zsh = {
       oh-my-zsh.plugins = [ "docker" "docker-compose" ];
 

@@ -17,55 +17,105 @@
 
   outputs = { self, nixpkgs, home-manager, nix-darwin }@inputs: let
     forAllSystems = nixpkgs.lib.genAttrs [ "x86_64-darwin" "aarch64-darwin" ];
-    dotfilesModule = { pkgs, ... }: {
-      _module.args.dotfiles = {
-        inputPaths = builtins.mapAttrs (_: input: input.outPath) inputs;
-        packages = self.packages.${pkgs.system};
+    forAllSystemsWithPkgs = fn: forAllSystems (system: fn system nixpkgs.legacyPackages.${system});
+
+    filterDerivations = nixpkgs.lib.filterAttrs (_: value: nixpkgs.lib.isDerivation value);
+
+    mkDarwinSystem = {
+      macOS,
+      system ? "aarch64-darwin",
+      user ? "rob",
+      roles
+    }: let
+      dotfilesModule = {
+        _file = ./flake.nix;
+        config._module.args.dotfiles = {
+          inputPaths = builtins.mapAttrs (_: input: input.outPath) inputs;
+          packages = self.packages.${system};
+          os = let
+            aliases = {
+              mojave = "10.14";
+              catalina = "10.15";
+              big_sur = "11";
+              monterey = "12";
+              ventura = "13";
+              sonoma = "14";
+              sequoia = "15";
+            };
+            macOSNameToVersion = name: nixpkgs.lib.attrByPath [ name ] name aliases;
+            currentVersion = macOSNameToVersion macOS;
+
+            sameOrNewerThan = version: let
+            in (builtins.compareVersions currentVersion (macOSNameToVersion version)) > -1;
+          in {
+            inherit sameOrNewerThan;
+            isARM = system == "aarch64-darwin";
+            olderThan = version: ! sameOrNewerThan version;
+          };
+        };
       };
-    };
-  in {
-    darwinConfigurations."360inmac-51320" = nix-darwin.lib.darwinSystem {
-      system = "aarch64-darwin";
+    in nix-darwin.lib.darwinSystem {
+      inherit system;
+
       modules = [
         ./configuration.nix
+        ./modules/roles.nix
         home-manager.darwinModules.home-manager
         dotfilesModule
-        # Specific to this host and file
-        {
-          # Set Git commit hash for darwin-version.
-          system.configurationRevision = self.rev or self.dirtyRev or null;
-          nixpkgs.hostPlatform = "aarch64-darwin";
-        }
-        # Use home-manager as a submodule of nix-darwin
-        {
+        ({ modulesPath, config, options, lib, ... }: {
+          _file = ./flake.nix;
+
+          inherit (config.home-manager.users.${user}.nix-darwin) homebrew;
+
+          nixpkgs.hostPlatform = system;
+
+          system = {
+            # Set Git commit hash for darwin-version.
+            configurationRevision = self.rev or self.dirtyRev or null;
+            primaryUser = user;
+          };
+
+          # Use home-manager as a submodule of nix-darwin
           home-manager = {
             useGlobalPkgs = true;
             useUserPackages = true;
             verbose = true;
-            users.rpaskin = { ... }: {
+            users.${user} = { lib, ... }: {
               imports = [ ./home.nix dotfilesModule ];
+              config = { inherit roles; };
 
-              config.roles = {
-                aws = true;
-                docker = true;
-                git = true;
-                git-standup = true;
-                javascript = true;
-                ruby = true;
+              options.nix-darwin.homebrew.casks = lib.mkOption {
+                type = lib.types.listOf lib.types.anything;
               };
             };
           };
-        }
+        })
       ];
     };
 
-    packages = forAllSystems (system:
-      builtins.removeAttrs (nixpkgs.legacyPackages.${system}.callPackage ./pkgs/vim-plugins.nix {}) [ "override" "overrideDerivation" ]
-    );
+  in {
+    darwinConfigurations."360inmac-51320" = mkDarwinSystem {
+      user = "rpaskin";
+      macOS = "sequoia";
 
-    apps = forAllSystems (system: {
+      roles = {
+        aws = true;
+        dash = true;
+        docker = true;
+        git = true;
+        git-standup = true;
+        javascript = true;
+        ngrok = true;
+        ruby = true;
+        sql-clients = true;
+      };
+    };
+
+    packages = forAllSystemsWithPkgs (system: pkgs: filterDerivations (pkgs.callPackage ./pkgs/vim-plugins.nix {}));
+
+    apps = forAllSystemsWithPkgs (system: pkgs: {
       tests = let
-        inherit (nixpkgs.legacyPackages.${system}) bundlerEnv ruby_3_1 buildEnv;
+        inherit (pkgs) bundlerEnv ruby_3_1 buildEnv;
 
         gems = bundlerEnv {
           ruby = ruby_3_1;
@@ -84,6 +134,7 @@
       in {
         type = "app";
         program = nixpkgs.lib.getExe testEnv;
+        meta.description = "Test suite env for dotfiles";
       };
     });
   };

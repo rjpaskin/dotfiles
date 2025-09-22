@@ -36,6 +36,8 @@ in {
     ];
   };
 
+  nix-darwin.homebrew.casks = [ "iterm2" ];
+
   targets.darwin.defaults."com.googlecode.iterm2" = {
     AlternateMouseScroll = true;
     "Default Bookmark Guid" = profileUUID;

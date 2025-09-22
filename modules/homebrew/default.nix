@@ -1,15 +1,14 @@
-{ config, lib, pkgs, machine, ... }:
-
-with lib;
+{ config, lib, pkgs, dotfiles, ... }:
 
 let
   inherit (config) roles;
+  inherit (lib) mkIf mkMerge;
+  inherit (dotfiles) os;
 
 in {
-  imports = [ ./options.nix ];
-
   options.roles = with config.lib.roles; {
     cyberduck = mkOptionalRole "Cyberduck";
+    dash = mkOptionalRole "Dash";
     dropbox = mkOptionalRole "Dropbox";
     eqmac = mkOptionalRole "eqMac";
     gimp = mkOptionalRole "GIMP";
@@ -18,131 +17,105 @@ in {
     ngrok = mkOptionalRole "ngrok";
     postman = mkOptionalRole "Postman";
     slack = mkOptionalRole "Slack";
-    sql-clients = mkOptionalRole "SQL clients (Sequel Pro, TablePlus)";
+    sql-clients = mkOptionalRole "SQL clients (TablePlus)";
     virtualbox = mkOptionalRole "Virtual Box with extensions";
     whatsapp = mkOptionalRole "WhatsApp";
+    vlc = mkOptionalRole "VLC";
     zoom = mkOptionalRole "Zoom app";
   };
 
-  config.targets.darwin.homebrew = {
-    casks = mkMerge [
-      [
-        # Browsers
-        "google-chrome"
-        "firefox"
-
-        # Programming tools
-        {
-          name = "dash";
-          defaults."com.kapeli.dashdoc" = {
-            syncFolderPath = "~/Library/Mobile Documents/com~apple~CloudDocs";
-            shouldSyncBookmarks = true;
-            shouldSyncDocsets = true;
-            shouldSyncGeneral = true;
-            shouldSyncView = true;
-          };
-        }
-        "kdiff3"
-        {
-          name = "xquartz";
-          defaults."org.xquartz.X11".nolisten_tcp = false; # allow network connections
-        }
-
-        # Quicklook plugins
-        (mkIf (machine.olderThan "catalina") {
-          name = "qlcolorcode"; # syntax highlighting
-          defaults."org.n8gray.QLColorCode".pathHL = "${pkgs.highlight}/bin/highlight";
-        })
-        (mkIf (machine.sameOrNewerThan "catalina") {
-          name = "syntax-highlight"; removeQuarantine = true;
-        })
-
-        # markdown files
-        (mkIf (machine.olderThan "catalina") {
-          name = "qlcommonmark"; removeQuarantine = true;
-        })
-        (mkIf (machine.sameOrNewerThan "catalina") {
-          name = "sbarex-qlmarkdown"; removeQuarantine = true;
-        })
-
-        { name = "qlstephen"; removeQuarantine = true; } # files without extensions
-        { name = "quicklook-json"; removeQuarantine = true; }
-        { name = "quicklook-csv"; removeQuarantine = true; }
-
-        # Others
-        "1password"
-        "keepingyouawake"
-        "betterzip"
-        "imageoptim"
-        "superduper"
-        "vlc"
-
-        {
-          name = "mollyguard";
-          # Mollyguard was deleted in Homebrew/homebrew-cask#78586
-          # - this is the commit before that PR was merged
-          rev = "e53923dac85c3e3219ddf6ff33a977f3ca75ebce";
-          # Update deprecated `appcast` method - generated with:
-          # `git -C $(brew --repository homebrew/cask) diff --unified=2`
-          postCheckout = let
-            patch = pkgs.writeText "brew-cask-mollyguard.patch" ''
-              diff --git a/Casks/mollyguard.rb b/Casks/mollyguard.rb
-              --- a/Casks/mollyguard.rb
-              +++ b/Casks/mollyguard.rb
-              @@ -5,5 +5,8 @@ cask 'mollyguard' do
-                 # dl.dropboxusercontent.com/s/j9kx9ufk74wtpm9 was verified as official when first introduced to the cask
-                 url 'https://dl.dropboxusercontent.com/s/j9kx9ufk74wtpm9/MollyGuard.zip?dl=1'
-              -  appcast 'https://dl.dropboxusercontent.com/s/sno9l4q8ncogz27/MGUpdate.xml'
-              +  livecheck do
-              +    url 'https://dl.dropboxusercontent.com/s/sno9l4q8ncogz27/MGUpdate.xml'
-              +    strategy :sparkle
-              +  end
-                 name 'MollyGuard'
-                 homepage 'http://mollyguard.infinitemonkeytheory.com/'
-            '';
-          in ''
-            echo "Applying patch ${patch}"
-            ${pkgs.git}/bin/git apply ${patch}
-          '';
-          removeQuarantine = true;
-          defaults."com.imt.MollyGuard" = {
-            defaultBehavior = false; # lock keyboard AND mouse
-            displayAlert = true;
-            statusIconSet = 1; # circular icons
-          };
-        }
-      ]
-
-      (mkIf roles.cyberduck ["cyberduck"])
-      (mkIf roles.dropbox ["dropbox"])
-      (mkIf roles.eqmac ["eqmac"])
-      (mkIf roles.gimp ["gimp"])
-      (mkIf roles.inkscape ["inkscape"])
-      (mkIf roles.ngrok ["ngrok"])
-      (mkIf roles.postman ["postman"])
-      (mkIf roles.slack ["slack"])
-      (mkIf roles.sql-clients ["sequel-pro" "tableplus"])
-      (mkIf (!machine.isARM && roles.virtualbox) ["virtualbox" "virtualbox-extension-pack"])
-      (mkIf roles.whatsapp ["whatsapp"])
-      (mkIf roles.zoom ["zoom"])
-    ];
-
-    masApps = mkMerge [
-      {
-        Keynote = 409183694;
-        Numbers = 409203825;
-        Pages = 409201541;
-        "HP Smart" = 1474276998;
-      }
-
-      (mkIf roles.harvest { Harvest = 506189836; })
-    ];
-  };
-
-  config.assertions = mkIf roles.virtualbox [
+  config = mkMerge [
     {
-      assertion = machine.isARM;
-      message = "VirtualBox is not supported on ARM machines";
+      nix-darwin.homebrew.casks = mkMerge [
+        [
+          "1password"
+          "betterzip"
+          "firefox"
+          "google-chrome"
+          "imageoptim"
+          "kdiff3"
+          "keepingyouawake"
+          "superduper"
+          "vlc"
+        ]
+
+        (mkIf roles.cyberduck [ "cyberduck" ])
+        (mkIf roles.dropbox [ "dropbox" ])
+        (mkIf roles.eqmac [ "eqmac" ])
+        (mkIf roles.gimp [ "gimp" ])
+        (mkIf roles.inkscape [ "inkscape" ])
+        (mkIf roles.ngrok [ "ngrok" ])
+        (mkIf roles.postman [ "postman" ])
+        (mkIf roles.slack [ "slack" ])
+        (mkIf roles.sql-clients [ "tableplus" ])
+        (mkIf roles.whatsapp [ "whatsapp" ])
+        (mkIf roles.zoom [ "zoom" ])
+      ];
     }
+
+    (mkIf roles.virtualbox {
+      nix-darwin.homebrew.casks = mkIf (!os.isARM) [ "virtualbox" "virtualbox-extension-pack" ];
+      assertions = [
+        {
+          assertion = os.isARM;
+          message = "VirtualBox is not supported on ARM machines";
+        }
+      ];
+    })
+
+    (mkIf roles.dash {
+      nix-darwin.homebrew.casks = [ "dash" ];
+      targets.darwin.defaults."com.kapeli.dashdoc" = {
+        syncFolderPath = "~/Library/Mobile Documents/com~apple~CloudDocs";
+        shouldSyncBookmarks = true;
+        shouldSyncDocsets = true;
+        shouldSyncGeneral = true;
+        shouldSyncView = true;
+      };
+    })
+
+    {
+      nix-darwin.homebrew.casks = [ "xquartz" ];
+      targets.darwin.defaults."org.xquartz.X11".nolisten_tcp = false; # allow network connections
+    }
+
+    # Quicklook plugins
+    (mkIf (os.olderThan "catalina") {
+      nix-darwin.homebrew.casks = [ "qlcolorcode" ]; # syntax highlighting
+      targets.darwin.defaults."org.n8gray.QLColorCode".pathHL = lib.getExe pkgs.highlight;
+    })
+    (mkIf (os.sameOrNewerThan "catalina") {
+      nix-darwin.homebrew.casks = [
+        { name = "syntax-highlight"; args.no_quarantine = true; }
+      ];
+    })
+
+    {
+      nix-darwin.homebrew.casks = [
+        # markdown files
+        (mkIf (os.olderThan "catalina") {
+          name = "qlcommonmark"; args.no_quarantine = true;
+        })
+        (mkIf (os.sameOrNewerThan "catalina") {
+          name = "qlmarkdown"; args.no_quarantine = true;
+        })
+
+        { name = "qlstephen"; args.no_quarantine = true; } # files without extensions
+        { name = "quicklook-json"; args.no_quarantine = true; }
+        { name = "quicklook-csv"; args.no_quarantine = true; }
+      ];
+    }
+
+    # TODO
+    # masApps = mkMerge [
+    #   {
+    #     Keynote = 409183694;
+    #     Numbers = 409203825;
+    #     Pages = 409201541;
+    #     "HP Smart" = 1474276998;
+    #   }
+
+    #   (mkIf roles.harvest { Harvest = 506189836; })
+    # ];
   ];
 }

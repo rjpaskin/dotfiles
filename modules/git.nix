@@ -116,6 +116,7 @@ in {
     }
 
     {
+      nix-darwin.homebrew.casks = [ "sourcetree" ];
       targets.darwin.defaults."com.torusknot.SourceTreeNotMAS" = {
         agreedToUpdateConfig = false; # don't touch Git global config
         bookmarksClosedOnStartup = true;
