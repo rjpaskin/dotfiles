@@ -45,6 +45,7 @@
         enable = true;
         enableZshIntegration = true;
         nix-direnv.enable = true;
+        # ${PWD##*/} == basename
         stdlib = ''
           # https://github.com/nix-community/nix-direnv/tree/b54e2f2#storing-direnv-outside-the-project-directory
           : ''${XDG_CACHE_HOME:=$HOME/.cache}
@@ -54,6 +55,7 @@
             echo "''${direnv_layout_dirs[$PWD]:=$(
               mkdir -p "$XDG_CACHE_HOME/direnv/layouts"
               echo -n "$XDG_CACHE_HOME/direnv/layouts/"
+              echo -n "''${PWD##*/}--"
               echo -n "$PWD" | shasum | cut -d ' ' -f 1
             )}"
           }
