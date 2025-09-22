@@ -78,6 +78,7 @@ in {
         awscli
         ssm-session-manager-plugin
         aws-vault
+        git-remote-codecommit
       ];
       programs.zsh = {
         sessionVariables.AWS_VAULT_KEYCHAIN_NAME = "login";
