@@ -72,6 +72,16 @@ RSpec.describe "Bootstrap" do
     end
   end
 
+  describe shell_variable("TERMINFO_DIRS") do
+    let(:ghostty_terminfo) { directory("/Applications/Ghostty.app/Contents/Resources/terminfo") }
+
+    before do
+      expect(ghostty_terminfo).to exist.and(be_a_directory)
+    end
+
+    its(:search_path) { should include(ghostty_terminfo) }
+  end
+
   context "Finder" do
     describe home_path("Library"), pending: "TODO" do
       it { should_not be_hidden }

@@ -31,7 +31,7 @@
     ./modules/git.nix
     ./modules/ruby.nix
     ./modules/docker
-    ./modules/iterm.nix
+    ./modules/terminal.nix
     ./modules/javascript.nix
     ./modules/misc.nix
     ./modules/pkgs.nix

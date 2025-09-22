@@ -18,7 +18,10 @@
   # Allows 1Password CLI to be used
   nixpkgs.config.allowUnfree = true;
 
-  environment.variables.EDITOR = "nvim"; # override default of `nano`
+  environment.variables = {
+    EDITOR = "nvim"; # override default of `nano`
+    TERMINFO_DIRS = [ "/Applications/Ghostty.app/Contents/Resources/terminfo" ];
+  };
 
   # These settings have shorthands in nix-darwin, but require `nix.enable`
   # so we have to reimplement them here instead

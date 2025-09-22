@@ -43,6 +43,8 @@ module ShellLib
       SearchPath.parse(line)
     end
 
+    alias_method :search_path, :as_search_path
+
     def as_json
       JSON.parse(self, symbolize_names: true)
     end

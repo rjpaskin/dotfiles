@@ -3,3 +3,6 @@
 # Created by SourceTree, but interferes with our XDG config files
 /.gitconfig
 /.gitignore_global
+
+# Default Ghostty file, clashes with our XDG config file
+Library/Application Support/com.mitchellh.ghostty/config
