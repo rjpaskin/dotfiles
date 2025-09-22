@@ -121,70 +121,101 @@ RSpec.describe "Git", role: "git" do
   end
 
   describe program("merge-rails-schema") do
-    def schema_content(timestamp:)
-      <<~RUBY
-        # This file is auto-generated from the current state of the database. Instead
-        # of editing this file, please use the migrations feature of Active Record to
-        # incrementally modify your database, and then regenerate this schema definition.
-        #
-        # Note that this schema.rb definition is the authoritative source for your
-        # database schema. If you need to create the application database on another
-        # system, you should be using db:schema:load, not running all the migrations
-        # from scratch. The latter is a flawed and unsustainable approach (the more migrations
-        # you'll amass, the slower it'll run and the greater likelihood for issues).
-        #
-        # It's strongly recommended that you check this file into your version control system.
+    context 'derivation' do
+      using_tmpdir do |tmp|
+        tmp.join("bin/git-test-script").write(<<~SHELL).mk_executable
+          #!/usr/bin/env sh
+          set -euo pipefail
 
-        ActiveRecord::Schema.define(version: #{timestamp}) do
+          which merge-rails-schema
+        SHELL
+      end
 
-          create_table "some_table" do
+      let(:script_path) do
+        shell_command!(%[env PATH="#{tmpdir}/bin:$PATH" git test-script]).as_path
+      end
+
+      it "has patched shebang" do
+        expect(script_path.shebang.interpreter).to have_attributes(
+          name: "ruby",
+          in_nix_store?: true
+        )
+      end
+
+      it "uses same ruby as Nix profile" do
+        profile_ruby = ShellLib::Program.new(profile_bin("ruby"))
+
+        expect(script_path.shebang.interpreter.cmds["--version"].line)
+          .to eq(profile_ruby.cmds["--version"].line)
+      end
+    end
+
+    context 'functionality' do
+      def schema_content(timestamp:)
+        <<~RUBY
+          # This file is auto-generated from the current state of the database. Instead
+          # of editing this file, please use the migrations feature of Active Record to
+          # incrementally modify your database, and then regenerate this schema definition.
+          #
+          # Note that this schema.rb definition is the authoritative source for your
+          # database schema. If you need to create the application database on another
+          # system, you should be using db:schema:load, not running all the migrations
+          # from scratch. The latter is a flawed and unsustainable approach (the more migrations
+          # you'll amass, the slower it'll run and the greater likelihood for issues).
+          #
+          # It's strongly recommended that you check this file into your version control system.
+
+          ActiveRecord::Schema.define(version: #{timestamp}) do
+
+            create_table "some_table" do
+            end
           end
-        end
-      RUBY
-    end
+        RUBY
+      end
 
-    def git(*args)
-      command("git -C '#{tmpdir}' #{args.join(" ")}")
-    end
+      def git(*args)
+        command("git -C '#{tmpdir}' #{args.join(" ")}")
+      end
 
-    def git!(*args)
-      git(*args).check!
-    end
+      def git!(*args)
+        git(*args).check!
+      end
 
-    def create_merge_conflict(digit_separator:)
-      timestamp_base = %w[2023 01 02].join(digit_separator) + digit_separator
+      def create_merge_conflict(digit_separator:)
+        timestamp_base = %w[2023 01 02].join(digit_separator) + digit_separator
 
-      schema_file.write schema_content(timestamp: "#{timestamp_base}091011")
-      git!("add .")
-      git!("commit -m 'init'")
+        schema_file.write schema_content(timestamp: "#{timestamp_base}091011")
+        git!("add .")
+        git!("commit -m 'init'")
 
-      main_branch = git("symbolic-ref --short HEAD").stdout
+        main_branch = git("symbolic-ref --short HEAD").stdout
 
-      git!("checkout -b other")
-      schema_file.write schema_content(timestamp: "#{timestamp_base}091012")
-      git!("commit -a -m 'init'")
+        git!("checkout -b other")
+        schema_file.write schema_content(timestamp: "#{timestamp_base}091012")
+        git!("commit -a -m 'init'")
 
-      git!("checkout #{main_branch}")
-      schema_file.write schema_content(timestamp: "#{timestamp_base}091019")
-      git!("commit -a -m 'change'")
-    end
+        git!("checkout #{main_branch}")
+        schema_file.write schema_content(timestamp: "#{timestamp_base}091019")
+        git!("commit -a -m 'change'")
+      end
 
-    using_tmpdir do |tmp|
-      command!("git init '#{tmp}'")
-    end
+      using_tmpdir do |tmp|
+        command!("git init '#{tmp}'")
+      end
 
-    let(:schema_file) { tmpdir.join("db/schema.rb") }
+      let(:schema_file) { tmpdir.join("db/schema.rb") }
 
-    it "automatically resolves conflicts for schema files" do
-      create_merge_conflict(digit_separator: "")
+      it "automatically resolves conflicts for schema files" do
+        create_merge_conflict(digit_separator: "")
 
-      expect(git "merge other").to be_success
-    end
+        expect(git "merge other").to be_success
+      end
 
-    it "handles underscored timestamps in schema files" do
-      create_merge_conflict(digit_separator: "_")
+      it "handles underscored timestamps in schema files" do
+        create_merge_conflict(digit_separator: "_")
 
-      expect(git "merge other").to be_success
+        expect(git "merge other").to be_success
+      end
     end
   end
 

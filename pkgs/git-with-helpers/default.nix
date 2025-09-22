@@ -2,15 +2,11 @@
   stdenv, lib,
   buildEnv, makeWrapper, runCommandLocal,
   git,
-  fetchFromGitHub, fzf, ruby, writeShellScriptBin
-}:
+  fetchFromGitHub, fzf, ruby, writeShellScriptBin, writeTextFile
+}@args:
 
 let
-  helpersPath = lib.makeBinPath (
-    builtins.attrValues (import ./helpers.nix {
-      inherit stdenv lib fetchFromGitHub fzf ruby writeShellScriptBin;
-    })
-  );
+  helpersPath = lib.makeBinPath (builtins.attrValues (import ./helpers.nix args));
 
   # We don't output a `git` file to avoid collisions with
   # the main `git` package - we could use `ignoreCollisions`

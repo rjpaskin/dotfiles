@@ -1,13 +1,25 @@
+require "Forwardable"
+
 module ShellLib
   class Program
+    extend Forwardable
+
     attr_reader :name, :cmds
 
     MACH_MIME_TYPE = "application/x-mach-binary".freeze
 
+    def_delegators :path, :dirname, :content, :in_nix_store?
+
+    alias_method :location, :dirname
+
     def initialize(name)
-      @name = name
+      @name = File.basename(name.to_s)
+
+      @has_full_path = name.to_s.start_with?("/")
+      @path = Path.new(name) if @has_full_path
+
       @cmds = Hash.new do |cache, cmd|
-        cache[cmd] = Runner.current.run_in_shell!("command #{name} #{cmd}")
+        cache[cmd] = Runner.current.run_in_shell!("command #{@path || name} #{cmd}")
       end
     end
 
@@ -15,23 +27,17 @@ module ShellLib
       @path ||= Runner.current.which(name)
     end
 
-    def location
-      path.dirname
-    end
-
     def running?
-      Runner.current.command("/usr/bin/pgrep -q #{name}").success?
+      Runner.current.command(
+        "/usr/bin/pgrep -xq #{@has_full_path ? "-f #{@path}" : name}"
+      ).success?
     end
 
     def inspect
-      "#<Program #{name}>"
+      "#<Program #{@has_full_path ? @path : name}>"
     end
 
     alias_method :to_s, :inspect
-
-    def content
-      path.content
-    end
 
     def method_missing(method, *args, &block)
       if method.to_s.start_with?("--")

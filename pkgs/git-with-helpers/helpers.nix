@@ -1,7 +1,8 @@
 {
   stdenv, lib,
-  fetchFromGitHub, writeShellScriptBin,
-  fzf, ruby
+  fetchFromGitHub, writeShellScriptBin, writeTextFile,
+  fzf, ruby,
+  ...
 }:
 
 let
@@ -72,11 +73,19 @@ in {
     };
   };
 
-  merge-rails-schema = mkBinPackage {
+  merge-rails-schema = stdenv.mkDerivation {
     name = "merge-rails-schema";
+    src = builtins.readFile ./merge-rails-schema;
+    phases = [ "buildPhase" "fixupPhase" ];
     buildInputs = [ ruby ];
-    dontUnpack = true;
-    src = toString ./.;
+    dontStrip = true;
+    buildPhase = ''
+      mkdir -p $out/bin
+      echo "$src" > $out/bin/$name
+
+      chmod +x $out/bin/$name
+      patchShebangs --build $out/bin
+    '';
   };
 
   oldest-ancestor = writeShellScriptBin "git-oldest-ancestor" ''

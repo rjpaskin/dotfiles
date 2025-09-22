@@ -1,5 +1,6 @@
 require "forwardable"
 require "pathname"
+require "shellwords"
 require "uri"
 require "yaml"
 
@@ -175,6 +176,30 @@ module ShellLib
 
     def in_nix_store?
       inside?(NIX_STORE_PATH) || (symlink? && realpath.inside?(NIX_STORE_PATH))
+    end
+
+    Shebang = Struct.new(:command, :args) do
+      ENV = Path.new("/usr/bin/env").freeze
+
+      def self.from(raw)
+        command, *args = Shellwords.split(raw)
+
+        new(Path.new(command), args)
+      end
+
+      def env?
+        command == ENV
+      end
+
+      def interpreter
+        @interpreter ||= Program.new(env? ? args.first : command)
+      end
+    end
+
+    def shebang
+      Shebang.from(
+        (lines.first[/^#! *(.+)$/, 1] or raise ArgumentError, "#{to_s} has no shebang")
+      )
     end
 
     def becomes(klass)
