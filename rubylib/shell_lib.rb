@@ -28,6 +28,7 @@ module ShellLib
 
   autoload :MacOSVersion, "shell_lib/macos_version"
 
+  autoload :INI, "shell_lib/ini"
   autoload :Plist, "shell_lib/plist"
   autoload :StrictHash, "shell_lib/strict_hash"
 

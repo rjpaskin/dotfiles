@@ -132,7 +132,7 @@ RSpec.describe "Packages" do
     its(:location) { should eq profile_bin }
   end
 
-  context 'AWS CLI' do
+  context 'AWS CLI', role: "aws" do
     describe program("aws") do
       its(:location) { should eq profile_bin }
       its("--version") { should be_success }
@@ -143,6 +143,56 @@ RSpec.describe "Packages" do
 
       describe zsh_completion("aws") do
         it { should eq("_bash_complete -C aws_completer") }
+      end
+    end
+
+    describe home_path(".aws/config") do
+      let(:aws_vault_cmd) do
+        %r{^#{profile_bin("aws-vault")} export --format json (?<profile>.+)$}
+      end
+
+      let(:profile_heading) do
+        /^(?:profile )?(?<name>(?:default|.+))$/
+      end
+
+      its(:ini_content) do
+        should include(a_string_matching(profile_heading)).and all(
+          match(
+            [
+              a_string_matching(profile_heading),
+              "region" => a_string_matching(/^[a-z]{2}-[a-z]+-\d+$/),
+              "mfa_serial" => a_string_matching(%r{^arn:aws:iam::\d+:mfa/.+$}),
+              "credential_process" => a_string_matching(aws_vault_cmd),
+              "mfa_process" => a_string_matching(
+                %r{^#{profile_bin("op")} item get \S+ --otp$}
+              )
+            ]
+          )
+        )
+      end
+
+      it "uses correct profile for credential_process" do
+        profiles = subject.ini_content.each_with_object({}) do |(section, config), out|
+          profile = section[profile_heading, :name]
+          next unless profile
+
+          out[profile] = config
+        end
+
+        correct_profiles = profiles.select do |profile, config|
+          mfa_profile = config["credential_process"].to_s[aws_vault_cmd, :profile]
+
+          profile == mfa_profile
+        end
+
+        expect(profiles).not_to be_empty
+        expect(correct_profiles).to eq(profiles)
+      end
+
+      it "is managed by chezmoi" do
+        managed_files = command!("chezmoi managed").lines
+
+        expect(managed_files).to include(".aws/config")
       end
     end
 
@@ -158,14 +208,14 @@ RSpec.describe "Packages" do
         end
       end
     end
-  end
 
-  describe program("aws-vault") do
-    its(:location) { should eq profile_bin }
-    its("--version") { should be_success }
+    describe program("aws-vault") do
+      its(:location) { should eq profile_bin }
+      its("--version") { should be_success }
 
-    describe shell_variable("AWS_VAULT_KEYCHAIN_NAME") do
-      it { should eq("login") }
+      describe shell_variable("AWS_VAULT_KEYCHAIN_NAME") do
+        it { should eq("login") }
+      end
     end
   end
 end

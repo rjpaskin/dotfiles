@@ -165,6 +165,12 @@ module ShellLib
 
     alias_method :yaml_content, :as_yaml
 
+    def as_ini
+      @ini ||= INI.load_file(pathname)
+    end
+
+    alias_method :ini_content, :as_ini
+
     NIX_STORE_PATH = "/nix/store/".freeze
 
     def in_nix_store?

@@ -40,6 +40,16 @@
     };
     version = "1.2.7";
   };
+  inih = {
+    groups = ["default"];
+    platforms = [];
+    source = {
+      remotes = ["https://rubygems.org"];
+      sha256 = "0s4x1gkmry75pk9ajikqdw2b925i1pgay9m60gidg3ghz2bni218";
+      type = "gem";
+    };
+    version = "2.0.1";
+  };
   nkf = {
     groups = ["default"];
     platforms = [];

@@ -1,0 +1,11 @@
+{{- /* vim: set ft=config: */ -}}
+{{ $nix_profile_bin := printf "/etc/profiles/per-user/%s/bin" .chezmoi.username }}
+
+{{- range .aws.profiles -}}
+[{{ if (ne .name "default") }}profile {{ end }}{{ .name }}]
+region={{ .default_region }}
+mfa_serial=arn:aws:iam::{{ .account }}:mfa/{{ .mfa_name }}
+credential_process={{ $nix_profile_bin }}/aws-vault export --format json {{ .name }}
+mfa_process={{ $nix_profile_bin }}/op item get {{ ._1password_uuid }} --otp
+
+{{ end -}}
