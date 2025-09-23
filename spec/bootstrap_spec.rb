@@ -87,6 +87,25 @@ RSpec.describe "Bootstrap" do
     its(:search_path) { should include(ghostty_terminfo) }
   end
 
+  describe file("/etc/pam.d/sudo_local") do
+    let(:parsed_content) { subject.lines.map {|line| line.split(/\s+/) } }
+
+    it 'has TouchID and reattach plugins' do
+      expect(parsed_content).to include(
+        # TouchID
+        ["auth", "sufficient", "pam_tid.so"],
+        # reattach
+        [
+          "auth",
+          "optional",
+          a_string_ending_with("/pam_reattach.so")
+          .and(start_with "/nix/store")
+          .and(satisfy {|path| File.file?(path) && ShellLib::Path.new(path).mach_binary? })
+        ]
+      )
+    end
+  end
+
   context "Finder" do
     describe home_path("Library"), pending: "TODO" do
       it { should_not be_hidden }

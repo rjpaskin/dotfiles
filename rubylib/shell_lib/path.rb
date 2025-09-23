@@ -178,6 +178,10 @@ module ShellLib
       inside?(NIX_STORE_PATH) || (symlink? && realpath.inside?(NIX_STORE_PATH))
     end
 
+    def mach_binary?
+      Runner.current.mime_type(self) == Program::MACH_MIME_TYPE
+    end
+
     Shebang = Struct.new(:command, :args) do
       ENV = Path.new("/usr/bin/env").freeze
 

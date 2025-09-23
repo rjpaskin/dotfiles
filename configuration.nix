@@ -15,6 +15,12 @@
     global.brewfile = true;
   };
 
+  security.pam.services.sudo_local = {
+    enable = true;
+    touchIdAuth = true; # Use TouchID for sudo
+    reattach = true; # Fix TouchID for sudo not working in tmux
+  };
+
   # Allows 1Password CLI to be used
   nixpkgs.config.allowUnfree = true;
 
