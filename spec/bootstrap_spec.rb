@@ -14,16 +14,12 @@ RSpec.describe "Bootstrap" do
       it { should be_running }
     end
 
-    describe nix_profiles_path, pending: "Needed?" do
+    describe directory("/nix/var/nix/profiles/per-user") do
       it { should be_a_directory.and be_readable }
     end
 
-    describe nix_profiles_path(xdg: true) do
+    describe xdg_state_path("nix/profiles") do
       it { should be_a_directory.and be_readable }
-    end
-
-    describe nix_profiles_path("profile"), pending: "Needed?" do
-      it { should be_a_directory.and be_in_nix_store }
     end
 
     describe shell_command!("nix-channel --list") do
@@ -41,7 +37,7 @@ RSpec.describe "Bootstrap" do
     end
 
     context "home-manager", pending: "Adapt to nix-darwin" do
-      describe nix_profiles_path("home-manager", xdg: true) do
+      describe xdg_state_path("nix/profiles/home-manager") do
         it { should be_a_directory.and be_in_nix_store }
 
         it "links to a valid generation" do

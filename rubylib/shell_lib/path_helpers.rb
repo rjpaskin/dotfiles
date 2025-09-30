@@ -45,18 +45,6 @@ module ShellLib
       DOTFILES.join(path.to_s)
     end
 
-    NIX_PROFILES = Path.new(
-      "/nix/var/nix/profiles/per-user"
-    ).freeze
-
-    def nix_profiles_path(path = nil, user: ENV["USER"], xdg: false)
-      if xdg
-        file("~#{user}/.local/state/nix/profiles").join(path.to_s)
-      else
-        NIX_PROFILES.join(user, path.to_s)
-      end
-    end
-
     NIX_DARWIN_SYSTEM = Path.new("/run/current-system/sw")
 
     def nix_darwin_system_path(path = nil)
