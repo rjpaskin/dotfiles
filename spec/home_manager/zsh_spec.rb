@@ -11,13 +11,17 @@ RSpec.describe "ZSH" do
     it "runs ok" do
       expect(run_in_shell("exit").stderr.gsub(" > ", "")).to be_empty
     end
+
+    it "uses the same package for both home-manager and nix-darwin" do
+      expect(profile_bin("zsh").realpath).to eq(nix_darwin_bin("zsh").realpath)
+    end
   end
 
   describe oh_my_zsh_plugins do
     it { should include("macos", "history-substring-search") }
   end
 
-  context "setup", pending: "TODO" do
+  context "setup" do
     let(:shell_path) { profile_bin("zsh") }
 
     it "sets user shell to ZSH" do
@@ -30,6 +34,7 @@ RSpec.describe "ZSH" do
 
     describe file("/etc/shells") do
       it { should include(/^#{shell_path}$/) }
+      it { should include(/^#{nix_darwin_bin("zsh")}$/) }
     end
   end
 

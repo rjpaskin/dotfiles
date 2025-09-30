@@ -57,6 +57,16 @@ module ShellLib
       end
     end
 
+    NIX_DARWIN_SYSTEM = Path.new("/run/current-system/sw")
+
+    def nix_darwin_system_path(path = nil)
+      NIX_DARWIN_SYSTEM.join(path.to_s)
+    end
+
+    def nix_darwin_bin(path = nil)
+      nix_darwin_system_path.join("bin", path.to_s)
+    end
+
     ICLOUD = HOME.join("Library/Mobile Documents/com~apple~CloudDocs")
 
     def icloud_path(path = nil)

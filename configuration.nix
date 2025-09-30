@@ -21,6 +21,11 @@
     reattach = true; # Fix TouchID for sudo not working in tmux
   };
 
+  environment.shells = [
+    "/run/current-system/sw/bin/zsh" # backup, just in case we bork user profile
+    "/etc/profiles/per-user/${config.system.primaryUser}/bin/zsh"
+  ];
+
   # Allows 1Password CLI to be used
   nixpkgs.config.allowUnfree = true;
 
