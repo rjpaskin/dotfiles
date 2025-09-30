@@ -46,9 +46,11 @@
         eval "$(PATH="" /usr/libexec/path_helper -s)"
       fi
 
-      # Run before sourcing Nix profile.d to ensure programs from
-      # Nix profile appear first in $PATH
       [ -d /opt/homebrew ] && eval "$(/opt/homebrew/bin/brew shellenv)"
+
+      # Ensure programs from Nix profile appear first in $PATH
+      path[$path[(i)*per-user/$USER*]]=() # remove profile from $PATH
+      path=(/etc/profiles/per-user/$USER/bin $path)
     '';
   };
 

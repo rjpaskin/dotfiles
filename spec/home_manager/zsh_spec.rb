@@ -79,7 +79,7 @@ RSpec.describe "ZSH" do
       it { should be_present }
       it { should be_before path_entry("/usr/local/bin") }
 
-      context "on ARM", :arm, pending: "FIXME" do
+      context "on ARM", :arm do
         it { should be_before path_entry(homebrew_path "bin") }
         it { should be_before path_entry(homebrew_path "sbin") }
       end
@@ -87,7 +87,7 @@ RSpec.describe "ZSH" do
 
     describe manpath_entry(profile_path "share/man") do
       it { should be_present }
-      it('', pending: "FIXME") { should be_before(manpath[homebrew_path "share/man"]) }
+      it { should be_before(manpath[homebrew_path "share/man"]) }
       it { should be_before(manpath["/usr/share/man"]) }
     end
 
