@@ -82,6 +82,7 @@ in {
 
       home.packages = with pkgs.gitAndTools; [
         git-filter-repo
+        git-standup
         git-when-merged
       ];
 
@@ -139,10 +140,6 @@ in {
         oh-my-zsh.plugins = [ "git-flow" ];
         shellAliases.gf = "git-flow"; # restore now-removed shortcut
       };
-    })
-
-    (lib.mkIf config.roles.git-standup {
-      home.packages = [ pkgs.gitAndTools.git-standup ];
     })
   ]);
 }

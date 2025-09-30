@@ -103,7 +103,6 @@
         dash = true;
         docker = true;
         git = true;
-        git-standup = true;
         javascript = true;
         ngrok = true;
         ruby = true;

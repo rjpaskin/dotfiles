@@ -39,11 +39,7 @@ in {
           "vlc"
         ]
 
-        (mkIf roles.cyberduck [ "cyberduck" ])
         (mkIf roles.dropbox [ "dropbox" ])
-        (mkIf roles.eqmac [ "eqmac" ])
-        (mkIf roles.gimp [ "gimp" ])
-        (mkIf roles.inkscape [ "inkscape" ])
         (mkIf roles.ngrok [ "ngrok" ])
         (mkIf roles.postman [ "postman" ])
         (mkIf roles.slack [ "slack" ])
@@ -114,8 +110,6 @@ in {
     #     Pages = 409201541;
     #     "HP Smart" = 1474276998;
     #   }
-
-    #   (mkIf roles.harvest { Harvest = 506189836; })
     # ];
   ];
 }

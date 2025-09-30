@@ -237,7 +237,7 @@ RSpec.describe "Git", role: "git" do
     end
   end
 
-  context "git-standup", role: "git-standup" do
+  context "git-standup" do
     describe program("git-standup") do
       its(:location) { should eq nix_profile_bin }
     end

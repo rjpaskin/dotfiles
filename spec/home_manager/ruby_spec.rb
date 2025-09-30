@@ -64,10 +64,6 @@ RSpec.describe "Ruby", role: "ruby" do
     it { should be_a_file }
   end
 
-  describe program("mailcatcher"), role: "mailcatcher" do
-    its(:location) { should eq nix_profile_bin }
-  end
-
   describe program("rubocop"), role: "rubocop" do
     its(:location) { should eq nix_profile_bin }
     its("--version") { should be_success }

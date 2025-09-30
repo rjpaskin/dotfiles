@@ -86,9 +86,5 @@ in {
     (mkIf config.roles.rubocop {
       home.packages = [ config.programs.rubocop.package ];
     })
-
-    (mkIf config.roles.mailcatcher {
-      home.packages = [ pkgs.mailcatcher ];
-    })
   ];
 }
