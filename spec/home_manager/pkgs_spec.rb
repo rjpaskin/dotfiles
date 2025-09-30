@@ -103,6 +103,12 @@ RSpec.describe "Packages" do
     end
   end
 
+  describe program("sd") do
+    its(:location) { should eq nix_profile_bin }
+    its(:manpage) { should be_inside nix_profile_manpath }
+    its("--version") { should be_success }
+  end
+
   describe program("shellcheck") do
     its(:location) { should eq nix_profile_bin }
     its(:manpage) { should be_inside nix_profile_manpath }

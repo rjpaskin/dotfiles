@@ -24,7 +24,7 @@ module ShellLib
     end
 
     def path
-      @path ||= Runner.current.which(name)
+      @path ||= Runner.current.which(name) or raise Errno::ENOENT, name
     end
 
     def running?

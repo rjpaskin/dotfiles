@@ -25,6 +25,7 @@ in {
         chezmoi
         fzf
         jq-with-all-outputs
+        sd # `sed` replacement
         shellcheck
       ];
     }
