@@ -61,10 +61,10 @@ module ShellLib
       self
     end
 
-    def method_missing(name, *args, &block)
+    def method_missing(name, *args, **kwargs, &block)
       return super unless stdout.respond_to?(name)
 
-      stdout.send(name, *args, &block)
+      stdout.send(name, *args, **kwargs, &block)
     end
 
     def respond_to_missing?(name, include_all = false)
