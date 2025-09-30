@@ -33,10 +33,14 @@ in {
   co = writeShellScriptBin "git-co" ''
     if [ "$#" -gt 0 ]; then exec git checkout "$@"; fi
 
+    fzf="fzf"
+
+    command -v tmux > /dev/null && fzf="fzf-tmux"
+
     ref="$(
       git show-ref |
       sed -e "s|.* refs/||" -e "s|heads/||" |
-      ${fzf}/bin/fzf-tmux |
+      "${fzf}/bin/$fzf" |
       sed -e "s|remotes/origin/||" -e "s|tags/||"
     )"
 
