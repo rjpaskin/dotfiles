@@ -1,6 +1,6 @@
 RSpec.describe "Misc" do
   describe program("direnv") do
-    its(:location) { should eq profile_bin }
+    its(:location) { should eq nix_profile_bin }
     its("--version") { should be_success }
 
     it "is integrated into ZSH" do

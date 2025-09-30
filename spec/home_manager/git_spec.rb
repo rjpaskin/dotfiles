@@ -143,7 +143,7 @@ RSpec.describe "Git", role: "git" do
       end
 
       it "uses same ruby as Nix profile" do
-        profile_ruby = ShellLib::Program.new(profile_bin("ruby"))
+        profile_ruby = ShellLib::Program.new(nix_profile_bin("ruby"))
 
         expect(script_path.shebang.interpreter.cmds["--version"].line)
           .to eq(profile_ruby.cmds["--version"].line)
@@ -220,12 +220,12 @@ RSpec.describe "Git", role: "git" do
   end
 
   describe program("git-when-merged") do
-    its(:location) { should eq profile_bin }
+    its(:location) { should eq nix_profile_bin }
   end
 
   context "git-flow", role: "git-flow" do
     describe program("git-flow") do
-      its(:location) { should eq profile_bin }
+      its(:location) { should eq nix_profile_bin }
     end
 
     describe oh_my_zsh_plugins do
@@ -239,7 +239,7 @@ RSpec.describe "Git", role: "git" do
 
   context "git-standup", role: "git-standup" do
     describe program("git-standup") do
-      its(:location) { should eq profile_bin }
+      its(:location) { should eq nix_profile_bin }
     end
   end
 end

@@ -1,10 +1,10 @@
 RSpec.describe "Neovim" do
-  describe profile_bin("nvim") do
+  describe nix_profile_bin("nvim") do
     it { should be_an_executable }
   end
 
   describe program("nvim") do
-    its(:location) { should eq profile_bin }
+    its(:location) { should eq nix_profile_bin }
     its(:archs, arm: true) { should include("arm64") }
   end
 

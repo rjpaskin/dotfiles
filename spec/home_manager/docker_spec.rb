@@ -21,7 +21,7 @@ RSpec.describe "Docker", role: "docker" do
   end
 
   describe program("hadolint") do
-    its(:location) { should eq profile_bin }
+    its(:location) { should eq nix_profile_bin }
     its("--version") { should be_success }
 
     it "runs without errors" do

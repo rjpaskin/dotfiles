@@ -1,8 +1,8 @@
 RSpec.describe "Tmux" do
   context "when enabled", role: "tmux" do
     describe program("tmux") do
-      its(:location) { should eq profile_bin }
-      its(:manpage) { should be_inside profile_path("share/man") }
+      its(:location) { should eq nix_profile_bin }
+      its(:manpage) { should be_inside nix_profile_path("share/man") }
 
       it "runs without errors" do
         result = run_in_shell("tmux list-commands")
@@ -16,7 +16,7 @@ RSpec.describe "Tmux" do
     end
 
     describe program("reattach-to-user-namespace") do
-      its(:location) { should eq profile_bin }
+      its(:location) { should eq nix_profile_bin }
 
       it "runs without errors" do
         result = command("reattach-to-user-namespace -l zsh -c 'echo hello'")
@@ -37,7 +37,7 @@ RSpec.describe "Tmux" do
 
   context "tmate", role: "tmate" do
     describe program("tmate") do
-      its(:location) { should eq profile_bin }
+      its(:location) { should eq nix_profile_bin }
     end
   end
 end

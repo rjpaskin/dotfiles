@@ -1,11 +1,11 @@
 RSpec.describe "ZSH" do
-  describe profile_bin("zsh") do
+  describe nix_profile_bin("zsh") do
     it { should be_an_executable }
   end
 
   describe program("zsh") do
-    its(:location) { should eq profile_bin }
-    its(:manpage) { should be_inside profile_path("share/man") }
+    its(:location) { should eq nix_profile_bin }
+    its(:manpage) { should be_inside nix_profile_path("share/man") }
     its(:archs, arm: true) { should include("arm64") }
 
     it "runs ok" do
@@ -13,7 +13,7 @@ RSpec.describe "ZSH" do
     end
 
     it "uses the same package for both home-manager and nix-darwin" do
-      expect(profile_bin("zsh").realpath).to eq(nix_darwin_bin("zsh").realpath)
+      expect(nix_profile_bin("zsh").realpath).to eq(nix_darwin_bin("zsh").realpath)
     end
   end
 
@@ -22,7 +22,7 @@ RSpec.describe "ZSH" do
   end
 
   context "setup" do
-    let(:shell_path) { profile_bin("zsh") }
+    let(:shell_path) { nix_profile_bin("zsh") }
 
     it "sets user shell to ZSH" do
       user_config = command!(%W[dscl . read #{home} UserShell]).as_vars(
@@ -80,7 +80,7 @@ RSpec.describe "ZSH" do
       end
     end
 
-    describe path_entry(profile_path "bin") do
+    describe path_entry(nix_profile_path "bin") do
       it { should be_present }
       it { should be_before path_entry("/usr/local/bin") }
 
@@ -90,7 +90,7 @@ RSpec.describe "ZSH" do
       end
     end
 
-    describe manpath_entry(profile_path "share/man") do
+    describe manpath_entry(nix_profile_path "share/man") do
       it { should be_present }
       it { should be_before(manpath[homebrew_path "share/man"]) }
       it { should be_before(manpath["/usr/share/man"]) }

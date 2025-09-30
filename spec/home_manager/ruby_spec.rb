@@ -1,20 +1,20 @@
 RSpec.describe "Ruby", role: "ruby" do
   describe program("ruby") do
-    its(:location) { should eq profile_bin }
+    its(:location) { should eq nix_profile_bin }
     its(:archs, arm: true) { should include("arm64") }
   end
 
   describe program("irb") do
-    its(:location) { should eq profile_bin }
+    its(:location) { should eq nix_profile_bin }
   end
 
   describe program("gem") do
-    its(:location) { should eq profile_bin }
+    its(:location) { should eq nix_profile_bin }
   end
 
   describe "gem `byebug`" do
     it "is installed with default Ruby package" do
-      result = run_in_shell("#{profile_bin "ruby"} -rbyebug -e exit")
+      result = run_in_shell("#{nix_profile_bin "ruby"} -rbyebug -e exit")
 
       aggregate_failures do
         expect(result).to be_success
@@ -65,11 +65,11 @@ RSpec.describe "Ruby", role: "ruby" do
   end
 
   describe program("mailcatcher"), role: "mailcatcher" do
-    its(:location) { should eq profile_bin }
+    its(:location) { should eq nix_profile_bin }
   end
 
   describe program("rubocop"), role: "rubocop" do
-    its(:location) { should eq profile_bin }
+    its(:location) { should eq nix_profile_bin }
     its("--version") { should be_success }
   end
 end

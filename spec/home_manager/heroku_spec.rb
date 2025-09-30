@@ -4,7 +4,7 @@ RSpec.describe "Heroku", role: "heroku" do
   end
 
   describe program("heroku") do
-    its(:location) { should eq profile_bin }
+    its(:location) { should eq nix_profile_bin }
     its("--version") { should be_success.and include("heroku") }
   end
 
@@ -56,7 +56,7 @@ RSpec.describe "Heroku", role: "heroku" do
   end
 
   context "disabling updates" do
-    let(:package_directory) { profile_bin("heroku").realpath.dirname.join("..") }
+    let(:package_directory) { nix_profile_bin("heroku").realpath.dirname.join("..") }
 
     it "removes `update` command" do
       aggregate_failures do

@@ -9,11 +9,11 @@ module ShellLib
     HOME = Path.new("~").freeze
     NIX_PROFILE = Path.new("/etc/profiles/per-user/#{ENV["USER"]}").freeze
 
-    def profile_path(path)
+    def nix_profile_path(path)
       NIX_PROFILE.join(path)
     end
 
-    def profile_bin(path = nil)
+    def nix_profile_bin(path = nil)
       NIX_PROFILE.join("bin", path.to_s)
     end
 

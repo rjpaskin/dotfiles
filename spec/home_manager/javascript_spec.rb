@@ -1,14 +1,14 @@
 RSpec.describe "Javascript", role: "javascript" do
   describe program("node") do
-    its(:location) { should eq profile_bin }
+    its(:location) { should eq nix_profile_bin }
   end
 
   describe program("npm") do
-    its(:location) { should eq profile_bin }
+    its(:location) { should eq nix_profile_bin }
   end
 
   describe program("yarn") do
-    its(:location) { should eq profile_bin }
+    its(:location) { should eq nix_profile_bin }
   end
 
   describe neovim_packages do

@@ -1,8 +1,8 @@
 RSpec.describe "Packages" do
-  let(:nix_profile_manpath) { profile_path("share/man") }
+  let(:nix_profile_manpath) { nix_profile_path("share/man") }
 
   describe program("ag") do
-    its(:location) { should eq profile_bin }
+    its(:location) { should eq nix_profile_bin }
     its(:manpage) { should be_inside nix_profile_manpath }
 
     let(:needle) { "string for ag to find" }
@@ -24,7 +24,7 @@ RSpec.describe "Packages" do
   end
 
   describe program("chezmoi") do
-    its(:location) { should eq profile_bin }
+    its(:location) { should eq nix_profile_bin }
     its("--version") { should be_success }
 
     describe zsh_completion("chezmoi") do
@@ -46,7 +46,7 @@ RSpec.describe "Packages" do
   end
 
   describe program("ctags") do
-    its(:location) { should eq profile_bin }
+    its(:location) { should eq nix_profile_bin }
     its("--version") { should include(/universal ctags/i) }
     its(:manpage) { should be_inside nix_profile_manpath }
 
@@ -78,23 +78,23 @@ RSpec.describe "Packages" do
   end
 
   describe program("fzf") do
-    its(:location) { should eq profile_bin }
+    its(:location) { should eq nix_profile_bin }
     its(:manpage) { should be_inside nix_profile_manpath }
     its("--version") { should be_success }
   end
 
   describe program("fzf-tmux") do
-    its(:location) { should eq profile_bin }
+    its(:location) { should eq nix_profile_bin }
   end
 
   # 1Password CLI
   describe program("op") do
-    its(:location) { should eq profile_bin }
+    its(:location) { should eq nix_profile_bin }
     its("--version") { should be_success }
   end
 
   describe program("jq") do
-    its(:location) { should eq profile_bin }
+    its(:location) { should eq nix_profile_bin }
     its(:manpage) { should be_inside nix_profile_manpath }
     its("--version") { should be_success }
 
@@ -104,7 +104,7 @@ RSpec.describe "Packages" do
   end
 
   describe program("shellcheck") do
-    its(:location) { should eq profile_bin }
+    its(:location) { should eq nix_profile_bin }
     its(:manpage) { should be_inside nix_profile_manpath }
 
     it "runs without errors" do
@@ -118,7 +118,7 @@ RSpec.describe "Packages" do
   end
 
   describe program("ncdu") do
-    its(:location) { should eq profile_bin }
+    its(:location) { should eq nix_profile_bin }
     its(:manpage) { should be_inside nix_profile_manpath }
     its("--version") { should be_success }
 
@@ -129,12 +129,12 @@ RSpec.describe "Packages" do
   end
 
   describe program("autoterm") do
-    its(:location) { should eq profile_bin }
+    its(:location) { should eq nix_profile_bin }
   end
 
   context 'AWS CLI', role: "aws" do
     describe program("aws") do
-      its(:location) { should eq profile_bin }
+      its(:location) { should eq nix_profile_bin }
       its("--version") { should be_success.and start_with("aws-cli/2.") }
 
       describe xdg_config_path("zsh/.zshrc") do
@@ -158,7 +158,7 @@ RSpec.describe "Packages" do
 
     describe home_path(".aws/config") do
       let(:aws_vault_cmd) do
-        %r{^#{profile_bin("aws-vault")} export --format json (?<profile>.+)$}
+        %r{^#{nix_profile_bin("aws-vault")} export --format json (?<profile>.+)$}
       end
 
       let(:profile_heading) do
@@ -174,7 +174,7 @@ RSpec.describe "Packages" do
               "mfa_serial" => a_string_matching(%r{^arn:aws:iam::\d+:mfa/.+$}),
               "credential_process" => a_string_matching(aws_vault_cmd),
               "mfa_process" => a_string_matching(
-                %r{^#{profile_bin("op")} item get \S+ --otp$}
+                %r{^#{nix_profile_bin("op")} item get \S+ --otp$}
               )
             ]
           )
@@ -207,7 +207,7 @@ RSpec.describe "Packages" do
     end
 
     describe program("session-manager-plugin") do
-      its(:location) { should eq profile_bin }
+      its(:location) { should eq nix_profile_bin }
 
       it "runs OK" do
         result = command("session-manager-plugin")
@@ -220,7 +220,7 @@ RSpec.describe "Packages" do
     end
 
     describe program("aws-vault") do
-      its(:location) { should eq profile_bin }
+      its(:location) { should eq nix_profile_bin }
       its("--version") { should be_success }
 
       describe shell_variable("AWS_VAULT_KEYCHAIN_NAME") do

@@ -1,15 +1,15 @@
 RSpec.describe "Clojure", role: "clojure" do
   describe program("clojure") do
-    its(:location) { should eq profile_bin }
-    its(:manpage) { should be_inside profile_path("share/man") }
+    its(:location) { should eq nix_profile_bin }
+    its(:manpage) { should be_inside nix_profile_path("share/man") }
   end
 
   describe program("clj") do
-    its(:location) { should eq profile_bin }
+    its(:location) { should eq nix_profile_bin }
   end
 
   describe program("lein") do
-    its(:location) { should eq profile_bin }
+    its(:location) { should eq nix_profile_bin }
   end
 
   describe neovim_packages do
