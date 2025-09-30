@@ -170,8 +170,8 @@ map <Leader>a :call RunAllSpecs()<CR>
 " From https://github.com/jferris/dotfiles/blob/master/vimrc.local
 function! DockerSetup()
   if filereadable("docker-compose.yml")
-    let g:rspec_command = "Dispatch docker-compose exec app bin/rspec {spec}"
-    let g:dispatch_compilers["docker-compose exec app"] = "rspec"
+    let g:rspec_command = "Dispatch docker compose exec app bin/rspec {spec}"
+    let g:dispatch_compilers["docker compose exec app"] = "rspec"
   endif
 endfunction
 

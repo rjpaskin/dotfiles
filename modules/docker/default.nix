@@ -24,9 +24,9 @@ in {
       oh-my-zsh.plugins = [ "docker" "docker-compose" ];
 
       shellAliases = {
-        dup = "docker-compose up";
-        bdup = "BYEBUG=1 docker-compose up";
-        dkill = "docker-compose kill";
+        dup = "docker compose up";
+        bdup = "BYEBUG=1 docker compose up";
+        dkill = "docker compose kill";
       };
     };
   };

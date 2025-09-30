@@ -9,15 +9,15 @@ RSpec.describe "Docker", role: "docker" do
   end
 
   describe shell_alias("dup") do
-    it { should eq("docker-compose up") }
+    it { should eq("docker compose up") }
   end
 
   describe shell_alias("bdup") do
-    it { should eq("BYEBUG=1 docker-compose up") }
+    it { should eq("BYEBUG=1 docker compose up") }
   end
 
   describe shell_alias("dkill") do
-    it { should eq("docker-compose kill") }
+    it { should eq("docker compose kill") }
   end
 
   describe program("hadolint") do

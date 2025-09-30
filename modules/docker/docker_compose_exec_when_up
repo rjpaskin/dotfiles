@@ -3,7 +3,7 @@ main() {
   local arg="$1"; shift
 
   if [ "$arg" = "kill" ] || [ "$arg" = "stop" ]; then
-    docker-compose "$arg"
+    docker compose "$arg"
     pkill -f "$0"
     exit 0
   fi
@@ -17,7 +17,7 @@ main() {
   trap "exit 0" TERM
 
   while true; do
-    until docker-compose ps "$service" 2> /dev/null | grep -Ei --silent "\b(up|running)\b"; do
+    until docker compose ps "$service" 2> /dev/null | grep -Ei --silent "\b(up|running)\b"; do
       [ "$sleep_time" -eq 0 ] && echo "Waiting for $service service..."
 
       # Fibonacci
@@ -29,7 +29,7 @@ main() {
     done
 
     [ "$sleep_time" -gt 0 ] && echo "Service $service running"
-    docker-compose exec "$service" "$@" <&0 &
+    docker compose exec "$service" "$@" <&0 &
 
     wait "$!"
 
