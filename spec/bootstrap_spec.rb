@@ -57,8 +57,8 @@ RSpec.describe "Bootstrap" do
       its(:realpath) { should eq(dotfiles_path "flake.nix") }
     end
 
-    context "home-manager", pending: "Adapt to nix-darwin" do
-      describe xdg_state_path("nix/profiles/home-manager") do
+    context "home-manager" do
+      describe xdg_state_path("home-manager/gcroots/current-home") do
         it { should be_a_directory.and be_in_nix_store }
 
         it "links to a valid generation" do
