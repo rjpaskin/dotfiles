@@ -9,6 +9,7 @@ module ShellLib
     MACH_MIME_TYPE = "application/x-mach-binary".freeze
 
     def_delegators :path, :dirname, :content, :in_nix_store?
+    def_delegators :cmds, :[]
 
     alias_method :location, :dirname
 

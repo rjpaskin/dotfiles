@@ -6,12 +6,20 @@ RSpec.describe "Bootstrap" do
   end
 
   context "Nix" do
+    describe program("nix") do
+      its("--version") { should be_success.and(include "Determinate Nix") }
+    end
+
     describe directory("/nix/store") do
       it { should be_a_directory.and be_readable }
     end
 
     describe program("nix-daemon") do
       it { should be_running }
+    end
+
+    describe program("determinate-nixd") do
+      its(%i[version]) { should be_success }
     end
 
     describe directory("/nix/var/nix/profiles/per-user") do

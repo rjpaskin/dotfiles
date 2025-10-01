@@ -145,8 +145,8 @@ RSpec.describe "Git", role: "git" do
       it "uses same ruby as Nix profile" do
         profile_ruby = ShellLib::Program.new(nix_profile_bin("ruby"))
 
-        expect(script_path.shebang.interpreter.cmds["--version"].line)
-          .to eq(profile_ruby.cmds["--version"].line)
+        expect(script_path.shebang.interpreter["--version"].line)
+          .to eq(profile_ruby["--version"].line)
       end
     end
 
