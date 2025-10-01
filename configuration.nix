@@ -26,6 +26,11 @@
     "/etc/profiles/per-user/${config.system.primaryUser}/bin/zsh"
   ];
 
+  environment.etc."nix/nix.custom.conf".text = ''
+    # Written by nix-darwin
+    keep-outputs = true
+  '';
+
   # Allows 1Password CLI to be used
   nixpkgs.config.allowUnfree = true;
 

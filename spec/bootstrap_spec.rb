@@ -26,9 +26,22 @@ RSpec.describe "Bootstrap" do
       its(:stdout) { should be_empty }
     end
 
-    describe xdg_config_path("nix/nix.conf"), pending: "Convert to nix.custom.conf" do
-      it { should be_a_symlink }
+    describe file("/etc/nix/nix.custom.conf") do
+      it { should be_a_symlink.and be_in_nix_store }
       it { should be_a_file.and be_readable }
+
+      let(:expected_config) do
+        { "keep-outputs" => true }
+      end
+
+      it "has settings that override defaults" do
+        aggregate_failures do
+          expected_config.each do |key, value|
+            expect(subject.lines).to include("#{key} = #{value}")
+            expect(command!("nix config show #{key}").line).to eq(value.to_s)
+          end
+        end
+      end
     end
 
     describe file("/etc/nix-darwin/flake.nix") do
