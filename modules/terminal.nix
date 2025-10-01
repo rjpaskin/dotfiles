@@ -62,6 +62,8 @@ in lib.mkMerge [
       package = null; # sourced from Homebrew instead
       settings = {
         theme = "iTerm2 Light Background";
+        # Make light yellow (11) same as dark yellow (3) to make it readable
+        palette = [ "11=#c7c400" ];
         font-family = "Monaco";
         font-size = 13;
         unfocused-split-fill = "333333";
