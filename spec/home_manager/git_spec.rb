@@ -101,6 +101,20 @@ RSpec.describe "Git", role: "git" do
     describe xdg_config_path("gh/config.yml") do
       its(:yaml_content) { should include("git_protocol" => "ssh", "editor" => "nvim") }
     end
+
+    it "should not be used as git credential helper" do
+      urls = %w[https://github.com ssh://git@github.com]
+
+      aggregate_failures do
+        urls.each do |url|
+          # `git config` exits with 1 if config value not found
+          config = command("git --no-pager config get --global --includes --url=#{url} credential")
+
+          expect(config.stderr).to be_empty
+          expect(config.lines).to be_empty
+        end
+      end
+    end
   end
 
   describe "SourceTree" do

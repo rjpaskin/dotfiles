@@ -109,6 +109,7 @@ in {
     {
       programs.gh = {
         enable = true;
+        gitCredentialHelper.enable = false; # use SSH
         settings = {
           git_protocol = "ssh";
           editor = "nvim";
