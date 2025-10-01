@@ -25,6 +25,62 @@ RSpec.describe "macOS defaults" do
         it { should include app("Sourcetree") }
       end
     end
+
+    describe "others" do
+      let(:values) do
+        {
+          "arrangement" => [nil, *%i[name dateadded datemodified datecreated kind]],
+          "showas" => %i[auto fan grid list],
+          "displayas" => %i[stack folder]
+        }
+      end
+
+      let(:directory_type) { 2 }
+
+      def dock_item(path, **others)
+        an_object_having_attributes(
+          file_type: directory_type,
+          show_as: :grid,
+          display_as: :folder,
+          path: path,
+          label: path.basename_str,
+          **others
+        )
+      end
+
+      def to_value(config, name)
+        possibles = values.fetch(name)
+        actual = config[name]
+        return "<invalid> (#{actual.inspect})" unless actual.is_a?(Integer)
+
+        possibles[config[name]] || "<unknown> (#{actual})"
+      end
+
+      subject do
+        super()["persistent-others"].map do |config|
+          tile_data = config.fetch("tile-data", {})
+
+          OpenStruct.new(
+            path: ShellLib::Path.from_uri(tile_data.dig("file-data", "_CFURLString")),
+            label: tile_data["file-label"],
+            file_type: tile_data["file-type"],
+            arrangement: to_value(tile_data, "arrangement"),
+            show_as: to_value(tile_data, "showas"),
+            display_as: to_value(tile_data, "displayas")
+          )
+        end
+      end
+
+      let(:expected) do
+        [
+          dock_item(directory("/Applications"), arrangement: :name),
+          dock_item(home_path("Documents"), arrangement: :kind),
+          dock_item(home_path("Downloads"), arrangement: :dateadded)
+        ]
+      end
+
+      it { should match(expected) }
+    end
   end
 
   describe "keyboard mappings" do
