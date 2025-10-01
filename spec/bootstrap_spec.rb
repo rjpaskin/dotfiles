@@ -123,16 +123,6 @@ RSpec.describe "Bootstrap" do
     end
   end
 
-  context "Finder" do
-    describe home_path("Library"), pending: "TODO" do
-      it { should_not be_hidden }
-    end
-
-    describe directory("/Library") do
-      it { should_not be_hidden }
-    end
-  end
-
   context "Firewall" do
     it "is enabled" do
       if ShellLib.macos_version >= :sequoia

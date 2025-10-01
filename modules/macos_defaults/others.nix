@@ -64,16 +64,6 @@ in {
         /usr/bin/killall Finder
       '';
 
-      showHiddenFolders = hm.dag.entryAfter ["installPackages"] ''
-        $DRY_RUN_CMD /usr/bin/chflags nohidden $HOME/Library
-        $DRY_RUN_CMD /usr/bin/xattr -d com.apple.FinderInfo $HOME/Library 2>/dev/null || true
-
-        if [ "$(/usr/bin/stat -f '%Xf' /Volumes)" != "0" ]; then
-          $VERBOSE_ECHO "Unhiding /Volumes"
-          $DRY_RUN_CMD sudo /usr/bin/chflags nohidden /Volumes
-        fi
-      '';
-
       enableFirewall = let
         domain = "/Library/Preferences/com.apple.alf";
       in hm.dag.entryAfter ["installPackages"] ''
