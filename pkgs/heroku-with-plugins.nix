@@ -36,7 +36,7 @@ let
   };
 
   pluginsJSON = builtins.toJSON {
-    pluginsToAdd = (map pluginsAttrs plugins);
+    pluginsToAdd = map pluginsAttrs plugins;
     pluginsToRemove = [
       "@oclif/plugin-warn-if-update-available"
       "@oclif/plugin-update"

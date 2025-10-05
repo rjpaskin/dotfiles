@@ -15,7 +15,7 @@ let
         default = "";
       };
       modifier = mkOption {
-        type = (enum [ "" "bold" ]);
+        type = enum [ "" "bold" ];
         default = "";
       };
     };

@@ -1,6 +1,6 @@
 {
   stdenv, lib,
-  fetchFromGitHub, writeShellScriptBin, writeTextFile,
+  fetchFromGitHub, writeShellScriptBin,
   fzf, ruby,
   ...
 }:
@@ -13,7 +13,7 @@ let
       | xargs git grep "$@"
   '';
 
-  mkBinPackage = { name, src, path ? name, ... }@args: stdenv.mkDerivation ({
+  mkBinPackage = { name, path ? name, ... }@args: stdenv.mkDerivation ({
     phases = [ "unpackPhase" "buildPhase" "fixupPhase" ];
     dontStrip = true;
     buildPhase = ''

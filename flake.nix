@@ -45,8 +45,7 @@
             macOSNameToVersion = name: nixpkgs.lib.attrByPath [ name ] name aliases;
             currentVersion = macOSNameToVersion macOS;
 
-            sameOrNewerThan = version: let
-            in (builtins.compareVersions currentVersion (macOSNameToVersion version)) > -1;
+            sameOrNewerThan = version: (builtins.compareVersions currentVersion (macOSNameToVersion version)) > -1;
           in {
             inherit sameOrNewerThan;
             isARM = system == "aarch64-darwin";
@@ -62,7 +61,7 @@
         ./modules/roles.nix
         home-manager.darwinModules.home-manager
         dotfilesModule
-        ({ modulesPath, config, options, lib, ... }: {
+        ({ config, options, ... }: {
           _file = ./flake.nix;
 
           inherit (config.home-manager.users.${user}.nix-darwin) homebrew;
@@ -110,9 +109,9 @@
       };
     };
 
-    packages = forAllSystemsWithPkgs (system: pkgs: filterDerivations (pkgs.callPackage ./pkgs/vim-plugins.nix {}));
+    packages = forAllSystemsWithPkgs (_: pkgs: filterDerivations (pkgs.callPackage ./pkgs/vim-plugins.nix {}));
 
-    apps = forAllSystemsWithPkgs (system: pkgs: {
+    apps = forAllSystemsWithPkgs (_: pkgs: {
       tests = let
         inherit (pkgs) bundlerEnv ruby_3_1 buildEnv;
 

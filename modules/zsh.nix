@@ -1,4 +1,4 @@
-{ config, lib, modulesPath, pkgs, dotfiles, ... }:
+{ config, lib, dotfiles, ... }:
 
 {
   programs.zsh = {

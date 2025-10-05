@@ -1,4 +1,4 @@
-{ config, lib, pkgs, flakeRepos, ... }:
+{ config, lib, pkgs, ... }:
 
 let
   jq-with-all-outputs = pkgs.jq.overrideAttrs (attrs: {

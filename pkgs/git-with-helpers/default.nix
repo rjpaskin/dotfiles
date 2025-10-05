@@ -1,7 +1,9 @@
 {
+  # deadnix: skip
   stdenv, lib,
   buildEnv, makeWrapper, runCommandLocal,
   git,
+  # deadnix: skip
   fetchFromGitHub, fzf, ruby, writeShellScriptBin, writeTextFile
 }@args:
 
