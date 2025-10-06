@@ -21,6 +21,8 @@
 
     filterDerivations = nixpkgs.lib.filterAttrs (_: value: nixpkgs.lib.isDerivation value);
 
+    inherit (import ./lib.nix inputs) mkMacOS;
+
     mkDarwinSystem = {
       macOS,
       system ? "aarch64-darwin",
@@ -32,25 +34,7 @@
         config._module.args.dotfiles = {
           inputPaths = builtins.mapAttrs (_: input: input.outPath) inputs;
           packages = self.packages.${system};
-          os = let
-            aliases = {
-              mojave = "10.14";
-              catalina = "10.15";
-              big_sur = "11";
-              monterey = "12";
-              ventura = "13";
-              sonoma = "14";
-              sequoia = "15";
-            };
-            macOSNameToVersion = name: nixpkgs.lib.attrByPath [ name ] name aliases;
-            currentVersion = macOSNameToVersion macOS;
-
-            sameOrNewerThan = version: (builtins.compareVersions currentVersion (macOSNameToVersion version)) > -1;
-          in {
-            inherit sameOrNewerThan;
-            isARM = system == "aarch64-darwin";
-            olderThan = version: ! sameOrNewerThan version;
-          };
+          os = (mkMacOS macOS) // { isARM = system == "aarch64-darwin"; };
         };
       };
     in nix-darwin.lib.darwinSystem {

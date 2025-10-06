@@ -76,11 +76,11 @@ in {
     }
 
     # Quicklook plugins
-    (mkIf (os.olderThan "catalina") {
+    (mkIf (os.versionOlderThan "catalina") {
       nix-darwin.homebrew.casks = [ "qlcolorcode" ]; # syntax highlighting
       targets.darwin.defaults."org.n8gray.QLColorCode".pathHL = lib.getExe pkgs.highlight;
     })
-    (mkIf (os.sameOrNewerThan "catalina") {
+    (mkIf (os.versionAtLeast "catalina") {
       nix-darwin.homebrew.casks = [
         { name = "syntax-highlight"; args.no_quarantine = true; }
       ];
@@ -89,10 +89,10 @@ in {
     {
       nix-darwin.homebrew.casks = [
         # markdown files
-        (mkIf (os.olderThan "catalina") {
+        (mkIf (os.versionOlderThan "catalina") {
           name = "qlcommonmark"; args.no_quarantine = true;
         })
-        (mkIf (os.sameOrNewerThan "catalina") {
+        (mkIf (os.versionAtLeast "catalina") {
           name = "qlmarkdown"; args.no_quarantine = true;
         })
 
