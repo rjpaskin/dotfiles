@@ -1,9 +1,7 @@
-/scratch/
-
-/*.old
-/.*.local
-/modules/*/*.local
-
 /tmp/
+
+# nix build outputs
+result
+result-*
 
 /hosts/chezmoi/*
