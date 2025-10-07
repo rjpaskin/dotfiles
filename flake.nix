@@ -25,7 +25,6 @@
 
     shimModule = { config, system, ... }@toplevel: {
       darwin = { config, ... }: {
-        imports = [ ./configuration.nix ];
         config = {
           inherit (config.home-manager.users.${toplevel.config.user}.nix-darwin) homebrew;
         };
@@ -35,7 +34,6 @@
         imports = [
           ./modules/roles.nix
 
-          ./modules/neovim
           ./modules/git.nix
           ./modules/ruby.nix
           ./modules/docker
@@ -69,6 +67,7 @@
         shimModule
         ./modules/homebrew.nix
         ./modules/init.nix
+        ./modules/neovim
         ./modules/nix_and_nixpkgs.nix
         ./modules/terminal.nix
         ./modules/user.nix
