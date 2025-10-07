@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, ... }:
 
 let
   extraConfig = {
@@ -6,7 +6,6 @@ let
       quotepath = false;
       autocrlf = "input";
       editor = "nvim";
-      excludesFile = "${config.xdg.configHome}/git/ignore";
     };
     color = {
       ui = true;
@@ -66,36 +65,42 @@ in {
 
   config = lib.mkIf config.roles.git (lib.mkMerge [
     {
-      programs.git = let
-        domain = "gmail.com";
-        variant = "git";
-        username = "rjpaskin";
-      in {
-        inherit aliases extraConfig ignores;
-        enable = true;
-        package = pkgs.callPackage ../pkgs/git-with-helpers {
-          ruby = config.programs.ruby.defaultPackage;
+      hm = { config, pkgs, ... }: {
+        programs.git = let
+          domain = "gmail.com";
+          variant = "git";
+          username = "rjpaskin";
+        in {
+          inherit aliases ignores;
+          extraConfig = lib.mkMerge [
+            extraConfig
+            { core.excludesFile = "${config.xdg.configHome}/git/ignore"; }
+          ];
+          enable = true;
+          package = pkgs.callPackage ../pkgs/git-with-helpers {
+            ruby = config.programs.ruby.defaultPackage;
+          };
+          userEmail = "${username}+${variant}@${domain}";
+          userName = "Rob Paskin";
         };
-        userEmail = "${username}+${variant}@${domain}";
-        userName = "Rob Paskin";
+
+        home.packages = with pkgs.gitAndTools; [
+          git-filter-repo
+          git-standup
+          git-when-merged
+        ];
+
+        programs.neovim.plugins = with pkgs.vimPlugins; [
+          vim-fugitive
+          vim-rhubarb
+        ];
+
+        programs.zsh.oh-my-zsh.plugins = [ "git" ];
       };
-
-      home.packages = with pkgs.gitAndTools; [
-        git-filter-repo
-        git-standup
-        git-when-merged
-      ];
-
-      programs.neovim.plugins = with pkgs.vimPlugins; [
-        vim-fugitive
-        vim-rhubarb
-      ];
-
-      programs.zsh.oh-my-zsh.plugins = [ "git" ];
     }
 
     {
-      programs.git = let
+      hm.programs.git = let
         id = "railsschema";
       in {
         extraConfig.merge.${id} = {
@@ -107,7 +112,7 @@ in {
     }
 
     {
-      programs.gh = {
+      hm.programs.gh = {
         enable = true;
         gitCredentialHelper.enable = false; # use SSH
         settings = {
@@ -118,8 +123,8 @@ in {
     }
 
     {
-      nix-darwin.homebrew.casks = [ "sourcetree" ];
-      targets.darwin.defaults."com.torusknot.SourceTreeNotMAS" = {
+      darwin.homebrew.casks = [ "sourcetree" ];
+      hm.targets.darwin.defaults."com.torusknot.SourceTreeNotMAS" = {
         agreedToUpdateConfig = false; # don't touch Git global config
         bookmarksClosedOnStartup = true;
         checkRemoteStatus = false; # don't run `git fetch` in background
@@ -135,11 +140,13 @@ in {
     }
 
     (lib.mkIf config.roles.git-flow {
-      home.packages = [ pkgs.gitAndTools.gitflow ];
+      hm = { pkgs, ... }: {
+        home.packages = [ pkgs.gitAndTools.gitflow ];
 
-      programs.zsh = {
-        oh-my-zsh.plugins = [ "git-flow" ];
-        shellAliases.gf = "git-flow"; # restore now-removed shortcut
+        programs.zsh = {
+          oh-my-zsh.plugins = [ "git-flow" ];
+          shellAliases.gf = "git-flow"; # restore now-removed shortcut
+        };
       };
     })
   ]);

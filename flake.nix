@@ -34,7 +34,6 @@
         imports = [
           ./modules/roles.nix
 
-          ./modules/git.nix
           ./modules/ruby.nix
           ./modules/docker
           ./modules/javascript.nix
@@ -65,6 +64,7 @@
     in dotfilesLib.mkDarwinSystem (defaults // args // {
       modules = [
         shimModule
+        ./modules/git.nix
         ./modules/homebrew.nix
         ./modules/init.nix
         ./modules/neovim
@@ -82,6 +82,7 @@
 
       roles = {
         dash = true;
+        git = true;
         ngrok = true;
         sql-clients = true;
       };
@@ -89,7 +90,6 @@
       hm.roles = {
         aws = true;
         docker = true;
-        git = true;
         javascript = true;
         ruby = true;
       };
