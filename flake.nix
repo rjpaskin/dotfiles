@@ -23,7 +23,7 @@
 
     dotfilesLib = import ./lib.nix inputs;
 
-    shimModule = { config, inputs, system, ... }@toplevel: {
+    shimModule = { config, system, ... }@toplevel: {
       darwin = { config, ... }: {
         imports = [ ./configuration.nix ];
         config = {
@@ -35,7 +35,6 @@
         imports = [
           ./modules/roles.nix
 
-          ./modules/zsh.nix
           ./modules/neovim
           ./modules/git.nix
           ./modules/ruby.nix
@@ -53,7 +52,6 @@
 
         config = {
           _module.args.dotfiles = {
-            inputPaths = builtins.mapAttrs (_: input: input.outPath) inputs;
             packages = self.packages.${system};
           };
         };
@@ -74,6 +72,7 @@
         ./modules/nix_and_nixpkgs.nix
         ./modules/terminal.nix
         ./modules/user.nix
+        ./modules/zsh.nix
       ] ++ (args.modules or []);
     });
 
