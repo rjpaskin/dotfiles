@@ -15,7 +15,7 @@ let
 in lib.mkMerge [
   {
     # https://iterm2.com/documentation-dynamic-profiles.html
-    home.file."Library/Application Support/iTerm2/DynamicProfiles/rjp.json".text = builtins.toJSON {
+    hm.home.file."Library/Application Support/iTerm2/DynamicProfiles/rjp.json".text = builtins.toJSON {
       Profiles = [
         {
           Name = "RJP";
@@ -37,9 +37,9 @@ in lib.mkMerge [
       ];
     };
 
-    nix-darwin.homebrew.casks = [ "iterm2" ];
+    darwin.homebrew.casks = [ "iterm2" ];
 
-    targets.darwin.defaults."com.googlecode.iterm2" = {
+    hm.targets.darwin.defaults."com.googlecode.iterm2" = {
       AlternateMouseScroll = true;
       "Default Bookmark Guid" = profileUUID;
       EnableAPIServer = true; # enable Python API
@@ -56,8 +56,11 @@ in lib.mkMerge [
   }
 
   {
-    nix-darwin.homebrew.casks = [ "ghostty" ];
-    programs.ghostty = {
+    darwin = {
+      homebrew.casks = [ "ghostty" ];
+      environment.variables.TERMINFO_DIRS = [ "/Applications/Ghostty.app/Contents/Resources/terminfo" ];
+    };
+    hm.programs.ghostty = {
       enable = true;
       package = null; # sourced from Homebrew instead
       settings = {

@@ -14,6 +14,5 @@
 
   environment.variables = {
     EDITOR = "nvim"; # override default of `nano`
-    TERMINFO_DIRS = [ "/Applications/Ghostty.app/Contents/Resources/terminfo" ];
   };
 }

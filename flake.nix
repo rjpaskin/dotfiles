@@ -40,7 +40,6 @@
           ./modules/git.nix
           ./modules/ruby.nix
           ./modules/docker
-          ./modules/terminal.nix
           ./modules/javascript.nix
           ./modules/misc.nix
           ./modules/pkgs.nix
@@ -74,6 +73,7 @@
         shimModule
         ./modules/init.nix
         ./modules/nix_and_nixpkgs.nix
+        ./modules/terminal.nix
         ./modules/user.nix
       ] ++ (args.modules or []);
     });
