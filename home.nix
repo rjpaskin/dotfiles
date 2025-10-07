@@ -1,13 +1,6 @@
-{ config, lib, ... }:
+_:
 
 {
-  config = {
-    home.homeDirectory = lib.mkForce "/Users/${config.home.username}";
-
-    # Record the roles that were used
-    xdg.configFile."dotfiles/roles.json".text = builtins.toJSON config.roles;
-  };
-
   imports = [
     ./modules/roles.nix
 

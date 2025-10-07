@@ -28,10 +28,6 @@
         imports = [ ./configuration.nix ];
         config = {
           inherit (config.home-manager.users.${toplevel.config.user}.nix-darwin) homebrew;
-
-          system = {
-            primaryUser = toplevel.config.user;
-          };
         };
       };
 
@@ -63,6 +59,7 @@
         shimModule
         ./modules/init.nix
         ./modules/nix_and_nixpkgs.nix
+        ./modules/user.nix
       ] ++ (args.modules or []);
     });
 
