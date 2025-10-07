@@ -33,4 +33,15 @@ RSpec.describe "Docker", role: "docker" do
       end
     end
   end
+
+  describe program("docker_compose_exec_when_up") do
+    its(:location) { should eq nix_profile_bin }
+
+    it "has patched shebang" do
+      expect(subject.shebang.interpreter).to have_attributes(
+        name: "bash",
+        in_nix_store?: true
+      )
+    end
+  end
 end

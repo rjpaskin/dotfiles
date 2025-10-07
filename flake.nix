@@ -15,6 +15,7 @@
     };
   };
 
+  # deadnix: skip
   outputs = { self, nixpkgs, home-manager, nix-darwin }@inputs: let
     forAllSystems = nixpkgs.lib.genAttrs [ "x86_64-darwin" "aarch64-darwin" ];
     forAllSystemsWithPkgs = fn: forAllSystems (system: fn system nixpkgs.legacyPackages.${system});
@@ -23,29 +24,17 @@
 
     dotfilesLib = import ./lib.nix inputs;
 
-    shimModule = toplevel: {
-      darwin = { config, ... }: {
-        config = {
-          inherit (config.home-manager.users.${toplevel.config.user}.nix-darwin) homebrew;
-        };
-      };
+    shimModule = _: {
+      hm.imports = [
+        ./modules/roles.nix
 
-      hm = { lib, ... }: {
-        imports = [
-          ./modules/roles.nix
+        ./modules/javascript.nix
+        ./modules/misc.nix
+        ./modules/pkgs.nix
+        ./modules/ssh.nix
+        ./modules/macos_defaults
+      ];
 
-          ./modules/docker
-          ./modules/javascript.nix
-          ./modules/misc.nix
-          ./modules/pkgs.nix
-          ./modules/ssh.nix
-          ./modules/macos_defaults
-        ];
-
-        options.nix-darwin.homebrew.casks = lib.mkOption {
-          type = lib.types.listOf lib.types.anything;
-        };
-      };
     };
 
     mkDarwinSystem = args: let
@@ -57,6 +46,7 @@
     in dotfilesLib.mkDarwinSystem (defaults // args // {
       modules = [
         shimModule
+        ./modules/docker
         ./modules/git.nix
         ./modules/homebrew.nix
         ./modules/init.nix
@@ -76,6 +66,7 @@
 
       roles = {
         dash = true;
+        docker = true;
         git = true;
         ngrok = true;
         ruby = true;
@@ -84,7 +75,6 @@
 
       hm.roles = {
         aws = true;
-        docker = true;
         javascript = true;
       };
     };
