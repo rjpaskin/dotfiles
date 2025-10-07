@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, ... }@toplevel:
 
 lib.mkMerge [
   {
@@ -16,7 +16,7 @@ lib.mkMerge [
     # Record the roles that were used
     # TODO: convert to use top-level roles
     hm = { config, ... }: {
-      xdg.configFile."dotfiles/roles.json".text = builtins.toJSON config.roles;
+      xdg.configFile."dotfiles/roles.json".text = builtins.toJSON (config.roles // toplevel.config.roles);
     };
   }
 ]

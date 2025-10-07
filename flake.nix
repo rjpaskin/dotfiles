@@ -23,7 +23,7 @@
 
     dotfilesLib = import ./lib.nix inputs;
 
-    shimModule = { config, inputs, system, os, ... }@toplevel: {
+    shimModule = { config, inputs, system, ... }@toplevel: {
       darwin = { config, ... }: {
         imports = [ ./configuration.nix ];
         config = {
@@ -45,7 +45,6 @@
           ./modules/pkgs.nix
           ./modules/ssh.nix
           ./modules/macos_defaults
-          ./modules/homebrew.nix
         ];
 
         options.nix-darwin.homebrew.casks = lib.mkOption {
@@ -54,7 +53,6 @@
 
         config = {
           _module.args.dotfiles = {
-            inherit os;
             inputPaths = builtins.mapAttrs (_: input: input.outPath) inputs;
             packages = self.packages.${system};
           };
@@ -71,6 +69,7 @@
     in dotfilesLib.mkDarwinSystem (defaults // args // {
       modules = [
         shimModule
+        ./modules/homebrew.nix
         ./modules/init.nix
         ./modules/nix_and_nixpkgs.nix
         ./modules/terminal.nix
@@ -83,15 +82,18 @@
       user = "rpaskin";
       macosVersion = "sequoia";
 
+      roles = {
+        dash = true;
+        ngrok = true;
+        sql-clients = true;
+      };
+
       hm.roles = {
         aws = true;
-        dash = true;
         docker = true;
         git = true;
         javascript = true;
-        ngrok = true;
         ruby = true;
-        sql-clients = true;
       };
     };
 

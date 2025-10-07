@@ -1,9 +1,8 @@
-{ config, lib, pkgs, dotfiles, ... }:
+{ config, lib, os, ... }:
 
 let
   inherit (config) roles;
   inherit (lib) mkIf mkMerge;
-  inherit (dotfiles) os;
 
 in {
   options.roles = with config.lib.roles; {
@@ -25,8 +24,16 @@ in {
   };
 
   config = mkMerge [
+    # Global Homebrew settings
     {
-      nix-darwin.homebrew.casks = mkMerge [
+      darwin.homebrew = {
+        enable = true;
+        global.brewfile = true;
+      };
+    }
+
+    {
+      darwin.homebrew.casks = mkMerge [
         [
           "1password"
           "betterzip"
@@ -50,8 +57,8 @@ in {
     }
 
     (mkIf roles.virtualbox {
-      nix-darwin.homebrew.casks = mkIf (!os.isARM) [ "virtualbox" "virtualbox-extension-pack" ];
-      assertions = [
+      darwin.homebrew.casks = mkIf (!os.isARM) [ "virtualbox" "virtualbox-extension-pack" ];
+      darwin.assertions = [
         {
           assertion = os.isARM;
           message = "VirtualBox is not supported on ARM machines";
@@ -60,8 +67,8 @@ in {
     })
 
     (mkIf roles.dash {
-      nix-darwin.homebrew.casks = [ "dash" ];
-      targets.darwin.defaults."com.kapeli.dashdoc" = {
+      darwin.homebrew.casks = [ "dash" ];
+      hm.targets.darwin.defaults."com.kapeli.dashdoc" = {
         syncFolderPath = "~/Library/Mobile Documents/com~apple~CloudDocs";
         shouldSyncBookmarks = true;
         shouldSyncDocsets = true;
@@ -71,23 +78,25 @@ in {
     })
 
     {
-      nix-darwin.homebrew.casks = [ "xquartz" ];
-      targets.darwin.defaults."org.xquartz.X11".nolisten_tcp = false; # allow network connections
+      darwin.homebrew.casks = [ "xquartz" ];
+      hm.targets.darwin.defaults."org.xquartz.X11".nolisten_tcp = false; # allow network connections
     }
 
     # Quicklook plugins
     (mkIf (os.versionOlderThan "catalina") {
-      nix-darwin.homebrew.casks = [ "qlcolorcode" ]; # syntax highlighting
-      targets.darwin.defaults."org.n8gray.QLColorCode".pathHL = lib.getExe pkgs.highlight;
+      darwin.homebrew.casks = [ "qlcolorcode" ]; # syntax highlighting
+      hm = { pkgs, ... }: {
+        targets.darwin.defaults."org.n8gray.QLColorCode".pathHL = lib.getExe pkgs.highlight;
+      };
     })
     (mkIf (os.versionAtLeast "catalina") {
-      nix-darwin.homebrew.casks = [
+      darwin.homebrew.casks = [
         { name = "syntax-highlight"; args.no_quarantine = true; }
       ];
     })
 
     {
-      nix-darwin.homebrew.casks = [
+      darwin.homebrew.casks = [
         # markdown files
         (mkIf (os.versionOlderThan "catalina") {
           name = "qlcommonmark"; args.no_quarantine = true;
