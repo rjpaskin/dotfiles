@@ -29,14 +29,9 @@
         config = {
           inherit (config.home-manager.users.${toplevel.config.user}.nix-darwin) homebrew;
 
-          nixpkgs.hostPlatform = system;
-
           system = {
-            configurationRevision = self.rev or self.dirtyRev or null;
             primaryUser = toplevel.config.user;
           };
-
-          home-manager.verbose = true;
         };
       };
 
@@ -64,7 +59,11 @@
         system = "aarch64-darwin";
       };
     in dotfilesLib.mkDarwinSystem (defaults // args // {
-      modules = [ shimModule ] ++ (args.modules or []);
+      modules = [
+        shimModule
+        ./modules/init.nix
+        ./modules/nix_and_nixpkgs.nix
+      ] ++ (args.modules or []);
     });
 
   in {
