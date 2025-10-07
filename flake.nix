@@ -23,7 +23,7 @@
 
     dotfilesLib = import ./lib.nix inputs;
 
-    shimModule = { config, system, ... }@toplevel: {
+    shimModule = toplevel: {
       darwin = { config, ... }: {
         config = {
           inherit (config.home-manager.users.${toplevel.config.user}.nix-darwin) homebrew;
@@ -34,7 +34,6 @@
         imports = [
           ./modules/roles.nix
 
-          ./modules/ruby.nix
           ./modules/docker
           ./modules/javascript.nix
           ./modules/misc.nix
@@ -45,12 +44,6 @@
 
         options.nix-darwin.homebrew.casks = lib.mkOption {
           type = lib.types.listOf lib.types.anything;
-        };
-
-        config = {
-          _module.args.dotfiles = {
-            packages = self.packages.${system};
-          };
         };
       };
     };
@@ -69,6 +62,7 @@
         ./modules/init.nix
         ./modules/neovim
         ./modules/nix_and_nixpkgs.nix
+        ./modules/ruby.nix
         ./modules/terminal.nix
         ./modules/user.nix
         ./modules/zsh.nix
@@ -84,6 +78,7 @@
         dash = true;
         git = true;
         ngrok = true;
+        ruby = true;
         sql-clients = true;
       };
 
@@ -91,7 +86,6 @@
         aws = true;
         docker = true;
         javascript = true;
-        ruby = true;
       };
     };
 

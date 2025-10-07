@@ -1,90 +1,95 @@
-{ config, lib, pkgs, dotfiles, ... }:
-
-with lib;
+{ config, inputs, system, ... }:
 
 let
-  cfg = config.programs.ruby;
-
-  gemsFunctionType = mkOptionType {
-    name = "gems";
-    description = "gems to install";
-    check = x: if isFunction x then isList (x pkgs.ruby.packages) else false;
-    merge = mergeOneOption;
-  };
+  inherit (config) roles;
 
 in {
-  options = {
-    roles = with config.lib.roles; {
-      ruby = mkOptionalRole "Ruby dev";
+  options.roles = with config.lib.roles; {
+    ruby = mkOptionalRole "Ruby dev";
 
-      mailcatcher = mkOptionalRole "MailCatcher";
-      rubocop = mkOptionalRole "RuboCop";
-    };
-
-    programs.ruby = {
-      defaultPackage = mkOption {
-        type = types.package;
-        description = "Package to use as `ruby` as default";
-        default = pkgs.ruby_3_1;
-      };
-
-      defaultGems = mkOption {
-        type = gemsFunctionType;
-        description = "Gems to install with default ruby";
-        default = gems: [ gems.byebug ];
-      };
-    };
-
-    programs.rubocop = {
-      package = mkOption {
-        type = types.package;
-        description = "RuboCop package to install into profile";
-        default = pkgs.rubocop.override { ruby = cfg.defaultPackage; };
-      };
-    };
+    mailcatcher = mkOptionalRole "MailCatcher";
+    rubocop = mkOptionalRole "RuboCop";
   };
 
-  config = mkMerge [
-    (mkIf config.roles.ruby {
-      home.packages = [
-        (cfg.defaultPackage.withPackages cfg.defaultGems)
-      ];
+  config.hm = { config, lib, pkgs, ... }: let
+    inherit (lib) isFunction isList mergeOneOption mkIf mkMerge mkOption mkOptionType types;
 
-      programs.neovim.plugins = with pkgs.vimPlugins; [
-        splitjoin-vim
-        vim-endwise
-        vim-rails
-        vim-ruby
-      ] ++ (with dotfiles.packages; [
-        vim-bundler
-        vim-rspec
-        vim-ruby-refactoring
-        vim-rubyhash
-        vim-textobj-rubyblock
-        vim-yaml-helper # Pretty much only used for i18n YAML files
-      ]);
+    cfg = config.programs.ruby;
 
-      programs.zsh = {
-        oh-my-zsh.plugins = [ "gem" "rails" ];
+    gemsFunctionType = mkOptionType {
+      name = "gems";
+      description = "gems to install";
+      check = x: if isFunction x then isList (x pkgs.ruby.packages) else false;
+      merge = mergeOneOption;
+    };
 
-        initContent = lib.mkOrder 550 ''
-          # Load completions for Bundler
-          fpath+=(${pkgs.oh-my-zsh}/share/oh-my-zsh/plugins/bundler)
-        '';
+  in {
+    options = {
+      programs.ruby = {
+        defaultPackage = mkOption {
+          type = types.package;
+          description = "Package to use as `ruby` as default";
+          default = pkgs.ruby_3_1;
+        };
+
+        defaultGems = mkOption {
+          type = gemsFunctionType;
+          description = "Gems to install with default ruby";
+          default = gems: [ gems.byebug ];
+        };
       };
 
-      home.file.".gemrc".text = ''
-        gem: --no-ri --no-rdoc --no-document
-      '';
+      programs.rubocop = {
+        package = mkOption {
+          type = types.package;
+          description = "RuboCop package to install into profile";
+          default = pkgs.rubocop.override { ruby = cfg.defaultPackage; };
+        };
+      };
+    };
 
-      # Ensure IRB history directory exists
-      xdg.dataFile."irb/.keep".text = "";
+    config = mkMerge [
+      (mkIf roles.ruby {
+        home.packages = [
+          (cfg.defaultPackage.withPackages cfg.defaultGems)
+        ];
 
-      home.file.".irbrc".source = ./ruby/irbrc;
-    })
+        programs.neovim.plugins = with pkgs.vimPlugins; [
+          splitjoin-vim
+          vim-endwise
+          vim-rails
+          vim-ruby
+        ] ++ (with inputs.self.packages.${system}; [
+          vim-bundler
+          vim-rspec
+          vim-ruby-refactoring
+          vim-rubyhash
+          vim-textobj-rubyblock
+          vim-yaml-helper # Pretty much only used for i18n YAML files
+        ]);
 
-    (mkIf config.roles.rubocop {
-      home.packages = [ config.programs.rubocop.package ];
-    })
-  ];
-}
+        programs.zsh = {
+          oh-my-zsh.plugins = [ "gem" "rails" ];
+
+          initContent = lib.mkOrder 550 ''
+              # Load completions for Bundler
+              fpath+=(${pkgs.oh-my-zsh}/share/oh-my-zsh/plugins/bundler)
+          '';
+        };
+
+        home.file.".gemrc".text = ''
+          gem: --no-ri --no-rdoc --no-document
+        '';
+
+          # Ensure IRB history directory exists
+          xdg.dataFile."irb/.keep".text = "";
+
+          home.file.".irbrc".source = ./ruby/irbrc;
+        })
+
+        (mkIf roles.rubocop {
+          home.packages = [ config.programs.rubocop.package ];
+        })
+      ];
+    };
+  }
