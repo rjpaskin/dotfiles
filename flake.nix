@@ -21,67 +21,58 @@
 
     filterDerivations = nixpkgs.lib.filterAttrs (_: value: nixpkgs.lib.isDerivation value);
 
-    inherit (import ./lib.nix inputs) mkMacOS;
+    dotfilesLib = import ./lib.nix inputs;
 
-    mkDarwinSystem = {
-      macOS,
-      system ? "aarch64-darwin",
-      user ? "rob",
-      roles
-    }: let
-      dotfilesModule = {
-        _file = ./flake.nix;
-        config._module.args.dotfiles = {
-          inputPaths = builtins.mapAttrs (_: input: input.outPath) inputs;
-          packages = self.packages.${system};
-          os = (mkMacOS macOS) // { isARM = system == "aarch64-darwin"; };
-        };
-      };
-    in nix-darwin.lib.darwinSystem {
-      inherit system;
-
-      modules = [
-        ./configuration.nix
-        ./modules/roles.nix
-        home-manager.darwinModules.home-manager
-        dotfilesModule
-        ({ config, options, ... }: {
-          _file = ./flake.nix;
-
-          inherit (config.home-manager.users.${user}.nix-darwin) homebrew;
+    shimModule = { config, inputs, system, os, ... }@toplevel: {
+      darwin = { config, ... }: {
+        imports = [ ./configuration.nix ];
+        config = {
+          inherit (config.home-manager.users.${toplevel.config.user}.nix-darwin) homebrew;
 
           nixpkgs.hostPlatform = system;
 
           system = {
-            # Set Git commit hash for darwin-version.
             configurationRevision = self.rev or self.dirtyRev or null;
-            primaryUser = user;
+            primaryUser = toplevel.config.user;
           };
 
-          # Use home-manager as a submodule of nix-darwin
-          home-manager = {
-            useGlobalPkgs = true;
-            useUserPackages = true;
-            verbose = true;
-            users.${user} = { lib, ... }: {
-              imports = [ ./home.nix dotfilesModule ];
-              config = { inherit roles; };
+          home-manager.verbose = true;
+        };
+      };
 
-              options.nix-darwin.homebrew.casks = lib.mkOption {
-                type = lib.types.listOf lib.types.anything;
-              };
-            };
+      hm = { lib, ... }: {
+        imports = [ ./home.nix ];
+
+        options.nix-darwin.homebrew.casks = lib.mkOption {
+          type = lib.types.listOf lib.types.anything;
+        };
+
+        config = {
+          _module.args.dotfiles = {
+            inherit os;
+            inputPaths = builtins.mapAttrs (_: input: input.outPath) inputs;
+            packages = self.packages.${system};
           };
-        })
-      ];
+        };
+      };
     };
+
+    mkDarwinSystem = args: let
+      defaults = {
+        inherit inputs;
+        user = "rob";
+        system = "aarch64-darwin";
+      };
+    in dotfilesLib.mkDarwinSystem (defaults // args // {
+      modules = [ shimModule ] ++ (args.modules or []);
+    });
 
   in {
     darwinConfigurations."360inmac-51320" = mkDarwinSystem {
       user = "rpaskin";
-      macOS = "sequoia";
+      macosVersion = "sequoia";
 
-      roles = {
+      hm.roles = {
         aws = true;
         dash = true;
         docker = true;
@@ -92,6 +83,8 @@
         sql-clients = true;
       };
     };
+
+    lib = dotfilesLib;
 
     packages = forAllSystemsWithPkgs (_: pkgs: filterDerivations (pkgs.callPackage ./pkgs/vim-plugins.nix {}));
 
