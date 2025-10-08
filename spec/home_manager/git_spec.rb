@@ -150,7 +150,8 @@ RSpec.describe "Git", role: "git" do
       end
 
       it "has patched shebang" do
-        expect(script_path.shebang.interpreter).to have_attributes(
+        expect(script_path.shebang).to have_attributes(
+          env?: false,
           name: "ruby",
           in_nix_store?: true
         )
@@ -159,7 +160,7 @@ RSpec.describe "Git", role: "git" do
       it "uses same ruby as Nix profile" do
         profile_ruby = ShellLib::Program.new(nix_profile_bin("ruby"))
 
-        expect(script_path.shebang.interpreter["--version"].line)
+        expect(script_path.shebang["--version"].line)
           .to eq(profile_ruby["--version"].line)
       end
     end

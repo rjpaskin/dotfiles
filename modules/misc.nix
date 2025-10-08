@@ -1,51 +1,54 @@
-{ config, lib, ... }:
+{ lib, ... }:
 
 {
   config = lib.mkMerge [
     {
-      programs.bash = {
-        enable = true;
-        historyFile = "${config.xdg.dataHome}/bash/history";
-        # don't put duplicates lines or empty spaces in history
-        historyControl = [ "ignorespace" "ignoredups" ];
-        shellOptions = [
-          "cdspell"      # correct typos in `cd`
-          "checkwinsize" # resize out to fit window
-          "cmdhist"      # combine multiline commands in history
-          "histappend"   # merge session histories
-        ];
-        sessionVariables = {
-          CLICOLOR = "1";
-          LSCOLORS = "Gxfxcxdxbxegedabagacad";
-          GREP_OPTIONS = "--color=auto";
-          IGNOREEOF = "1"; # Ctrl+D must be pressed twice to exit shell
+      hm = { config, ... }: {
+        programs.bash = {
+          enable = true;
+          historyFile = "${config.xdg.dataHome}/bash/history";
+          # don't put duplicates lines or empty spaces in history
+          historyControl = [ "ignorespace" "ignoredups" ];
+          shellOptions = [
+            "cdspell"      # correct typos in `cd`
+            "checkwinsize" # resize out to fit window
+            "cmdhist"      # combine multiline commands in history
+            "histappend"   # merge session histories
+          ];
+          sessionVariables = {
+            CLICOLOR = "1";
+            LSCOLORS = "Gxfxcxdxbxegedabagacad";
+            GREP_OPTIONS = "--color=auto";
+            IGNOREEOF = "1"; # Ctrl+D must be pressed twice to exit shell
 
-          # Disable per-tab history from macOS' `/etc` config files
-          SHELL_SESSION_HISTORY = 0;
-        };
-        shellAliases = {
-          ".." = "cd ..";
+            # Disable per-tab history from macOS' `/etc` config files
+            SHELL_SESSION_HISTORY = 0;
+          };
+          shellAliases = {
+            ".." = "cd ..";
 
-          # list files...
-          "la"  = "ls -alh";  # list all files, incl. hidden
-          "ld"  = "ls -d */"; # list directories within current directory
-          "ll"  = "ls -lh";   # ...in long format w/ human-readable filesizes
-          "lt"  = "ls -lht";  # ...sorted by time modified
-          "lfs" = "ls -lhS";  # ...sorted by size
-          "lr"  = "ls -lhR";  # ...recursively
-          "l1"  = "ls -1";    # ...forcing 1 entry per line
+            # list files...
+            "la"  = "ls -alh";  # list all files, incl. hidden
+            "ld"  = "ls -d */"; # list directories within current directory
+            "ll"  = "ls -lh";   # ...in long format w/ human-readable filesizes
+            "lt"  = "ls -lht";  # ...sorted by time modified
+            "lfs" = "ls -lhS";  # ...sorted by size
+            "lr"  = "ls -lhR";  # ...recursively
+            "l1"  = "ls -1";    # ...forcing 1 entry per line
+          };
         };
+        xdg.dataFile."bash/.keep".text = ""; # ensure Bash has directory to write to
+        home.file.".bash_sessions_disable".text = ""; # disable per-tab history from macOS' `/etc` config files
       };
-      xdg.dataFile."bash/.keep".text = ""; # ensure Bash has directory to write to
-      home.file.".bash_sessions_disable".text = ""; # disable per-tab history from macOS' `/etc` config files
     }
 
     {
-      programs.direnv = {
+      hm.programs.direnv = {
         enable = true;
         enableZshIntegration = true;
         nix-direnv.enable = true;
-        # ${PWD##*/} == basename
+
+        # `${PWD##*/}` == basename
         stdlib = ''
           # https://github.com/nix-community/nix-direnv/tree/b54e2f2#storing-direnv-outside-the-project-directory
           : ''${XDG_CACHE_HOME:=$HOME/.cache}
@@ -64,7 +67,7 @@
     }
 
     {
-      programs.readline = {
+      hm.programs.readline = {
         enable = true;
         includeSystemConfig = false; # doesn't exist on macOS
         variables = {
@@ -75,7 +78,7 @@
     }
 
     {
-      editorconfig = {
+      hm.editorconfig = {
         enable = true;
         settings = {
           "*" = {

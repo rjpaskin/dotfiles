@@ -24,19 +24,6 @@
 
     dotfilesLib = import ./lib.nix inputs;
 
-    shimModule = _: {
-      hm.imports = [
-        ./modules/roles.nix
-
-        ./modules/javascript.nix
-        ./modules/misc.nix
-        ./modules/pkgs.nix
-        ./modules/ssh.nix
-        ./modules/macos_defaults
-      ];
-
-    };
-
     mkDarwinSystem = args: let
       defaults = {
         inherit inputs;
@@ -45,14 +32,18 @@
       };
     in dotfilesLib.mkDarwinSystem (defaults // args // {
       modules = [
-        shimModule
         ./modules/docker
         ./modules/git.nix
         ./modules/homebrew.nix
         ./modules/init.nix
+        ./modules/javascript.nix
+        ./modules/macos_defaults
+        ./modules/misc.nix
         ./modules/neovim
         ./modules/nix_and_nixpkgs.nix
+        ./modules/pkgs.nix
         ./modules/ruby.nix
+        ./modules/ssh.nix
         ./modules/terminal.nix
         ./modules/user.nix
         ./modules/zsh.nix
@@ -65,17 +56,14 @@
       macosVersion = "sequoia";
 
       roles = {
+        aws = true;
         dash = true;
         docker = true;
         git = true;
+        javascript = true;
         ngrok = true;
         ruby = true;
         sql-clients = true;
-      };
-
-      hm.roles = {
-        aws = true;
-        javascript = true;
       };
     };
 

@@ -1,3 +1,4 @@
+require "delegate"
 require "forwardable"
 require "pathname"
 require "shellwords"
@@ -182,8 +183,10 @@ module ShellLib
       Runner.current.mime_type(self) == Program::MACH_MIME_TYPE
     end
 
-    Shebang = Struct.new(:command, :args) do
+    class Shebang < SimpleDelegator
       ENV = Path.new("/usr/bin/env").freeze
+
+      attr_reader :command, :args
 
       def self.from(raw)
         command, *args = Shellwords.split(raw)
@@ -191,12 +194,19 @@ module ShellLib
         new(Path.new(command), args)
       end
 
+      def initialize(command, args)
+        @command = command
+        @args = args
+
+        super(Program.new(env? ? args.first : command))
+      end
+
       def env?
         command == ENV
       end
 
-      def interpreter
-        @interpreter ||= Program.new(env? ? args.first : command)
+      def inspect
+        "#<#{self.class} #{__getobj__.inspect}>"
       end
     end
 

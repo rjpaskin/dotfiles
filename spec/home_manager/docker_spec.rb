@@ -38,7 +38,8 @@ RSpec.describe "Docker", role: "docker" do
     its(:location) { should eq nix_profile_bin }
 
     it "has patched shebang" do
-      expect(subject.shebang.interpreter).to have_attributes(
+      expect(subject.shebang).to have_attributes(
+        env?: false,
         name: "bash",
         in_nix_store?: true
       )
