@@ -32,6 +32,7 @@
       };
     in dotfilesLib.mkDarwinSystem (defaults // args // {
       modules = [
+        ./modules/clojure
         ./modules/docker
         ./modules/git.nix
         ./modules/homebrew.nix
