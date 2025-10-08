@@ -46,6 +46,7 @@
         ./modules/ruby.nix
         ./modules/ssh.nix
         ./modules/terminal.nix
+        ./modules/tmux
         ./modules/user.nix
         ./modules/zsh.nix
       ] ++ (args.modules or []);

@@ -1,6 +1,4 @@
-{ config, pkgs, lib, ... }:
-
-with lib;
+{ config, ... }:
 
 {
   options.roles = with config.lib.roles; {
@@ -8,8 +6,8 @@ with lib;
     tmate = mkOptionalRole "Tmate";
   };
 
-  config = mkMerge [
-    (mkIf config.roles.tmux {
+  config.hm = { lib, pkgs, ... }: lib.mkMerge [
+    (lib.mkIf config.roles.tmux {
       home.packages = with pkgs; [
         reattach-to-user-namespace
         tmux
@@ -18,7 +16,7 @@ with lib;
       home.file.".tmux.conf".source = ./tmux.conf;
     })
 
-    (mkIf config.roles.tmate {
+    (lib.mkIf config.roles.tmate {
       home.packages = [ pkgs.tmate ];
     })
   ];
