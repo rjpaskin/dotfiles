@@ -12,6 +12,8 @@ let
 
   profileUUID = "A00868BC-8749-41C1-8B9E-B92BDA34E275";
 
+  megabytes_to_bytes = mb: mb * 1024 * 1024;
+
 in lib.mkMerge [
   {
     # https://iterm2.com/documentation-dynamic-profiles.html
@@ -72,6 +74,7 @@ in lib.mkMerge [
         unfocused-split-fill = "333333";
         focus-follows-mouse = true;
         shell-integration-features = "no-cursor";
+        scrollback-limit = megabytes_to_bytes 500;
         cursor-style-blink = false;
         macos-titlebar-proxy-icon = "hidden";
         window-padding-x = 4;
