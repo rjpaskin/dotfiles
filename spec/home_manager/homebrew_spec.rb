@@ -32,7 +32,7 @@ RSpec.describe "Homebrew" do
       its(:archs, arm: true) { should include("arm64") }
     end
 
-    describe app("zoom.us") do
+    describe app("zoom.us"), role: "zoom" do
       it { should exist }
       its(:archs, arm: true) { should include("arm64") }
     end
