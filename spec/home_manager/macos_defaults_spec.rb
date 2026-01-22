@@ -17,13 +17,16 @@ RSpec.describe "macOS defaults" do
 
       it { should include app("Launchpad") }
       it { should include app("Google Chrome") }
-      it { should include app("Utilities/Activity Monitor") }
-      it { should include app("iTerm") }
-      it { should include app("System #{preferences_name}") }
 
       context "with git role", role: "git" do
         it { should include app("Sourcetree") }
       end
+
+      it { should include(app "iTerm").or include app("Ghostty") }
+      it { should include app("Utilities/Activity Monitor") }
+      it { should include app("Pages"), app("Numbers"), app("Keynote") }
+      it { should include app("System #{preferences_name}") }
+
     end
 
     describe "others" do
