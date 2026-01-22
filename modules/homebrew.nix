@@ -106,7 +106,7 @@ in {
         })
 
         { name = "qlstephen"; args.no_quarantine = true; } # files without extensions
-        { name = "quicklook-json"; args.no_quarantine = true; }
+        { name = "quickjson"; args.no_quarantine = true; }
         { name = "quicklook-csv"; args.no_quarantine = true; }
       ];
     }

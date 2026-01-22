@@ -48,7 +48,7 @@ RSpec.describe "Homebrew" do
     it { should_not be_quarantined }
   end
 
-  describe quicklook_generator("QuickLookJSON") do
+  describe quicklook_generator("QuickJSON") do
     it { should exist }
     it { should_not be_quarantined }
   end
