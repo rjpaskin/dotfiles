@@ -3,15 +3,17 @@ RSpec.describe "SSH" do
     it { should be_a_file.and be_readable }
     it { should include(/^\s+UseKeychain\s+yes/) }
 
-    it "specifies file added by bootstrap" do
-      key_file = file(subject.content[/\s+IdentityFile (.+)/, 1])
+    it "specifies a key to use" do
+      key_file = file(subject.content[%r{\s+IdentityFile\s+(~/\.ssh/id_\S+)}, 1])
       raise "No key file found" unless key_file
 
       expect(key_file).to exist
     end
+
+    it { should include(%r{\s+IdentityFile\s+~/\.ssh/%h/id_}) }
   end
 
-  it "has a key present" do
+  it "has a key present on disk" do
     expect(
       home_path(".ssh").children.map(&:basename_str)
     ).to include(/^id_(rsa|ed25519)$/)

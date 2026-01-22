@@ -14,6 +14,9 @@
          AddKeysToAgent yes
          UseKeychain yes
          IgnoreUnknown UseKeychain
+         # Use host-specific key if it exists
+         IdentityFile ~/.ssh/%h/id_${config.sshKeyType}
+         # Fall back to generic key
          IdentityFile ~/.ssh/id_${config.sshKeyType}
       '';
     };
