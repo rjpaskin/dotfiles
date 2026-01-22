@@ -71,7 +71,10 @@
 
     lib = dotfilesLib;
 
-    packages = forAllSystemsWithPkgs (_: pkgs: filterDerivations (pkgs.callPackage ./pkgs/vim-plugins.nix {}));
+    packages = forAllSystemsWithPkgs (system: pkgs:
+      (filterDerivations (pkgs.callPackage ./pkgs/vim-plugins.nix {}))
+      // { rebuild = nix-darwin.packages.${system}.darwin-rebuild; }
+    );
 
     apps = forAllSystemsWithPkgs (_: pkgs: {
       tests = let
