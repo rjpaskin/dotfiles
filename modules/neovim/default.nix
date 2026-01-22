@@ -168,6 +168,27 @@ in {
                   preset = "enter",
                   ["<Tab>"] = { "select_next", "fallback" },
                   ["<S-Tab>"] = { "select_prev", "fallback" }
+                },
+
+                sources = {
+                  providers = {
+                    buffer = {
+                      opts = {
+                        get_bufnrs = function()
+                          -- https://github.com/saghen/blink.cmp/issues/433
+                          local open_buffers = vim.fn.getbufinfo { buflisted = 1, bufloaded = 1 }
+                          local is_normal_buffer = function(buf)
+                            return vim.bo[buf.bufnr].buftype == ""
+                          end
+
+                          return vim.iter(open_buffers)
+                            :filter(is_normal_buffer)
+                            :map(function(buf) return buf.bufnr end)
+                            :totable()
+                        end
+                      }
+                    }
+                  }
                 }
               })
             '';
