@@ -71,10 +71,21 @@ in {
         programs.zsh = {
           oh-my-zsh.plugins = [ "gem" "rails" ];
 
-          initContent = lib.mkOrder 550 ''
-              # Load completions for Bundler
-              fpath+=(${pkgs.oh-my-zsh}/share/oh-my-zsh/plugins/bundler)
-          '';
+          initContent = lib.mkMerge [
+            (lib.mkOrder 550 ''
+                # Load completions for Bundler
+                fpath+=(${pkgs.oh-my-zsh}/share/oh-my-zsh/plugins/bundler)
+            '')
+
+            # Return all keys (`(k)`) starting with (`(R)`) "ruby script/"
+            # in the "$aliases" associative array
+            (lib.mkAfter ''
+              # Remove aliases for ancient versions of Rails
+              for alias_name in "''${(@k)aliases[(R)ruby script/*]}"; do
+                unalias "$alias_name"
+              done
+            '')
+          ];
         };
 
         home.file.".gemrc".text = ''

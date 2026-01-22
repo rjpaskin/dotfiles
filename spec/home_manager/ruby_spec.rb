@@ -41,6 +41,14 @@ RSpec.describe "Ruby", role: "ruby" do
   describe oh_my_zsh_plugins do
     it { should include("gem", "rails") }
     it { should_not include("bundler") }
+
+    it "does not use outdated shell aliases" do
+      outdated = shell_aliases.select do |_, content|
+        content.start_with?("ruby script/")
+      end
+
+      expect(outdated).to be_empty
+    end
   end
 
   describe shell_variable("FPATH") do
