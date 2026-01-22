@@ -69,6 +69,18 @@
       };
     };
 
+    darwinConfigurations."rjp-m1" = mkDarwinSystem {
+      macosVersion = "sequoia";
+
+      roles = {
+        git = true;
+        javascript = true;
+        ngrok = true;
+        ruby = true;
+        sql-clients = true;
+      };
+    };
+
     lib = dotfilesLib;
 
     packages = forAllSystemsWithPkgs (system: pkgs:
