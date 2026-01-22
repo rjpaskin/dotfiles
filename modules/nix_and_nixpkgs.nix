@@ -14,6 +14,7 @@ lib.mkMerge [
         # Written by nix-darwin
         keep-outputs = true
         use-xdg-base-directories = true
+        warn-dirty = false
       '';
 
       # `NIX_PATH` and `registry.json` have shorthands in nix-darwin, but require
