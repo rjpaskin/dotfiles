@@ -19,6 +19,16 @@ RSpec.describe "SSH" do
     ).to include(/^id_(rsa|ed25519)$/)
   end
 
+  let(:user_rw_only) { ShellLib::Path.mode(0600) }
+
+  it "has all keys with correct file permissions" do
+    private_keys = home_path(".ssh")
+      .glob("**/id_*")
+      .reject {|path| path.extname == ".pub" }
+
+    expect(private_keys).to all have_attributes(mode: user_rw_only)
+  end
+
   it "has a key loaded in the SSH agent" do
     expect(
       command!("/usr/bin/ssh-add -L").lines

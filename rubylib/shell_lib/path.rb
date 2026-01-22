@@ -18,6 +18,51 @@ module ShellLib
 
     alias_method :exists?, :exist?
 
+    class Mode
+      include Comparable
+
+      attr_reader :int, :octal
+
+      MASK = 07777
+      PERMISSIONS = %w[r w x].freeze
+
+      def initialize(int)
+        @int = int & MASK
+        @octal = format("%03o", @int)
+      end
+
+      def <=>(other)
+        case other
+        when self.class
+          int <=> other.int
+        when /^[0-7]{3}$/
+          octal <=> other
+        when Integer
+          int <=> other
+        else
+          raise ArgumentError, "Can't compare #{self.class} with #{other.inspect}"
+        end
+      end
+
+      def long_format
+        @long_format ||= String.new.tap do |out|
+          9.times do |index|
+            mask = 1 << (8 - index)
+
+            out << (int.anybits?(mask) ? PERMISSIONS[index % 3] : "-")
+          end
+        end
+      end
+
+      def inspect
+        "#<#{self.class} #{octal} (#{long_format})>"
+      end
+    end
+
+    def self.mode(int)
+      Mode.new(int)
+    end
+
     def self.from_uri(uri)
       new(CGI.unescape URI.parse(uri.to_s).path)
     end
@@ -214,6 +259,10 @@ module ShellLib
       Shebang.from(
         (lines.first[/^#! *(.+)$/, 1] or raise ArgumentError, "#{to_s} has no shebang")
       )
+    end
+
+    def mode
+      @mode ||= Mode.new(pathname.stat.mode)
     end
 
     def becomes(klass)
