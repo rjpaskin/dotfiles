@@ -30,9 +30,17 @@ in {
           chezmoi
           fzf
           jq-with-all-outputs
-          sd # `sed` replacement
           shellcheck
         ];
+      }
+
+      # `sed` replacement
+      {
+        home.packages = [ pkgs.sd ];
+        programs.zsh.initContent = lib.mkAfter ''
+          # Remove alias for old version of Rails that clashes with `sd` program
+          unalias sd
+        '';
       }
 
       {

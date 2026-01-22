@@ -107,6 +107,10 @@ RSpec.describe "Packages" do
     its(:location) { should eq nix_profile_bin }
     its(:manpage) { should be_inside nix_profile_manpath }
     its("--version") { should be_success }
+
+    describe shell_alias("sd") do
+      it { should eq(nil) } # can't use `be_nil` as value wrapped in ShellLib::Resource
+    end
   end
 
   describe program("shellcheck") do
