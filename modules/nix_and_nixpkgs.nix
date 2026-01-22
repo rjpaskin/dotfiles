@@ -13,6 +13,7 @@ lib.mkMerge [
       environment.etc."nix/nix.custom.conf".text = ''
         # Written by nix-darwin
         keep-outputs = true
+        use-xdg-base-directories = true
       '';
 
       # `NIX_PATH` and `registry.json` have shorthands in nix-darwin, but require

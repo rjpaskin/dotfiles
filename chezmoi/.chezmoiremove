@@ -6,3 +6,10 @@
 
 # Default Ghostty file, clashes with our XDG config file
 Library/Application Support/com.mitchellh.ghostty/config
+
+# Only used for channels, which we don't use
+/.nix-defexpr
+
+# Not used, home-manager/nix-darwin installs packages to
+# `/etc/profiles/per-user/$USER`
+/.nix-profile

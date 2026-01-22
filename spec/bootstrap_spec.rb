@@ -30,10 +30,6 @@ RSpec.describe "Bootstrap" do
       it { should be_a_directory.and be_readable }
     end
 
-    describe shell_command!("nix-channel --list") do
-      its(:stdout) { should be_empty }
-    end
-
     describe file("/etc/nix/nix.custom.conf") do
       it { should be_a_symlink.and be_in_nix_store }
       it { should be_a_file.and be_readable }
@@ -84,6 +80,22 @@ RSpec.describe "Bootstrap" do
           from: { type: "indirect", id: "nixpkgs" },
           to: { type: "path", path: nixpkgs_path }
         )
+      end
+    end
+
+    context "legacy" do
+      describe shell_command!("nix-channel --list") do
+        its(:stdout) { should be_empty }
+      end
+
+      describe home_path(".nix-profile") do
+        it { should_not exist }
+        it { should_not be_a_symlink }
+      end
+
+      describe home_path(".nix-defexpr") do
+        it { should_not exist }
+        it { should_not be_a_symlink }
       end
     end
 
