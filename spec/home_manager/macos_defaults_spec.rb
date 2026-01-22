@@ -89,19 +89,25 @@ RSpec.describe "macOS defaults" do
   describe "keyboard mappings" do
     subject do
       defaults(current_host: "NSGlobalDomain").each_pair.with_object([]) do |(key, value), out|
-        next unless /^com\.apple\.keyboard\.modifiermapping\.\d+-\d+-0/.match?(key.to_s)
+        next unless key.to_s.start_with?("com.apple.keyboard.modifiermapping.")
 
-        out << value.map {|mapping| mapping.transform_keys(&:to_sym) }
+        device_id = key[/(\d+-\d+)-0/, 1]
+        next if device_id == "6010-38461" # not actually a keyboard
+
+        out << value.map do |mapping|
+          # Add device ID for debugging failures
+          mapping.transform_keys(&:to_sym).merge(__device_id: device_id)
+        end
       end
     end
 
     let(:base_mask) { 0x700000000 }
 
     let(:map_caps_lock_to_right_ctrl) do
-      {
+      a_hash_including(
         HIDKeyboardModifierMappingDst: base_mask | 0xE4,
         HIDKeyboardModifierMappingSrc: base_mask | 0x39
-      }
+      )
     end
 
     it { should all include(map_caps_lock_to_right_ctrl) }
