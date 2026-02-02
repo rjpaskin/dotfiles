@@ -1,4 +1,4 @@
-RSpec.describe "script/bootstrap", :mock_executables do
+RSpec.describe "script/bootstrap", :mock_executables, os: %i[< tahoe] do
   subject { dotfiles_path("script/bootstrap") }
 
   let(:outputs) { tmpdir.join("__outputs").mkpath }

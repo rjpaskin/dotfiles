@@ -55,10 +55,11 @@ RSpec.configure do |config|
     skip("not on an ARM system") unless ShellLib.arm?
   end
 
-  config.before(:each, :min_os) do |example|
-    version = example.metadata[:min_os]
+  config.before(:each, :os) do |example|
+    version, operator = Array(example.metadata[:min_os]).reverse
+    operator ||= :==
 
-    if ShellLib.macos_version > version
+    if ShellLib.macos_version.public_send(operator, version)
       name = version.to_s.split("_").map(&:capitalize).join(" ")
       skip("only run on #{name} or newer")
     end
