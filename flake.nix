@@ -81,6 +81,18 @@
       };
     };
 
+    darwinConfigurations."rjp-alg" = mkDarwinSystem {
+      macosVersion = "tahoe";
+
+      roles = {
+        git = true;
+        javascript = true;
+        ngrok = true;
+        ruby = true;
+        sql-clients = true;
+      };
+    };
+
     lib = dotfilesLib;
 
     packages = forAllSystemsWithPkgs (system: pkgs:
