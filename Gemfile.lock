@@ -10,7 +10,7 @@ GEM
     eventmachine (1.2.7)
     inih (2.0.1)
     nkf (0.2.0)
-    rexml (3.4.1)
+    rexml (3.4.4)
     rspec (3.13.1)
       rspec-core (~> 3.13.0)
       rspec-expectations (~> 3.13.0)
