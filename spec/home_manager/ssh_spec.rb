@@ -9,7 +9,9 @@ RSpec.describe "SSH" do
 
       expect(key_file).to exist
     end
+  end
 
+  describe file("/etc/ssh/ssh_config.d/100-nix-darwin.conf") do
     it { should include(%r{\s+IdentityFile\s+~/\.ssh/%h/id_}) }
   end
 

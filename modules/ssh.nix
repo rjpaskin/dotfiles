@@ -14,11 +14,19 @@
          AddKeysToAgent yes
          UseKeychain yes
          IgnoreUnknown UseKeychain
-         # Use host-specific key if it exists
-         IdentityFile ~/.ssh/%h/id_${config.sshKeyType}
-         # Fall back to generic key
          IdentityFile ~/.ssh/id_${config.sshKeyType}
       '';
     };
   };
+
+  # SSH doesn't log an error if these key files don't exist
+  # *when* the config is 'global' (i.e. in `/etc`) but *does* log
+  # if these lines are in `~/.ssh/config`
+  # (See: https://serverfault.com/a/582989)
+  darwin.config.programs.ssh.extraConfig = ''
+    Host *
+     # Use host-specific key if it exists
+     IdentityFile ~/.ssh/%h/id_ed25519
+     IdentityFile ~/.ssh/%h/id_rsa
+  '';
 }
