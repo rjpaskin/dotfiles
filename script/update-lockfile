@@ -28,8 +28,6 @@ class UpdateNixLockfile < ShellLib::Task
     end
   end
 
-  NIX_VERSION_REGEXP = /^(NIX_VERSION=['"])([^'"]+)(['"])/m
-
   def run
     Dir.chdir(DOTFILES) do
       diff do
@@ -38,19 +36,6 @@ class UpdateNixLockfile < ShellLib::Task
           (inputs.any? ? "lock" : "update"),
           *inputs.map {|input| "--update-input #{input}" }
         )
-      end
-
-      update_bootstrap_nix_version if inputs.empty? || inputs.include?("nixpkgs")
-    end
-  end
-
-  def update_bootstrap_nix_version
-    dotfiles_path("script/bootstrap").editable.edit do |content|
-      content.gsub(NIX_VERSION_REGEXP) do
-        start_quote, old_version, end_quote = Regexp.last_match.captures
-        puts "Nix: #{old_version} -> #{nix_version}" if old_version != nix_version
-
-        "#{start_quote}#{nix_version}#{end_quote}"
       end
     end
   end
