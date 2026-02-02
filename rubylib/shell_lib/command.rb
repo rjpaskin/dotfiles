@@ -61,11 +61,13 @@ module ShellLib
       self
     end
 
-    def method_missing(name, *args, **kwargs, &block)
+    def method_missing(name, *args, &block)
       return super unless stdout.respond_to?(name)
 
-      stdout.send(name, *args, **kwargs, &block)
+      stdout.send(name, *args, &block)
     end
+
+    ruby2_keywords :method_missing if respond_to?(:ruby2_keywords, true)
 
     def respond_to_missing?(name, include_all = false)
       stdout.respond_to?(name, include_all)
