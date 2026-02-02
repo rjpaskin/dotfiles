@@ -1,7 +1,11 @@
 { config, lib, ... }:
 
 let
-  extraConfig = {
+  settings = let
+    domain = "gmail.com";
+    variant = "git";
+    username = "rjpaskin";
+  in {
     core = {
       quotepath = false;
       autocrlf = "input";
@@ -20,6 +24,10 @@ let
     rerere = {
       enabled = true; # record resolutions of merge conflicts
       autoupdate = true; # state rerere-resolved conflicts automatically
+    };
+    user = {
+      email = "${username}+${variant}@${domain}";
+      name = "Rob Paskin";
     };
     diff.colorMoved = "zebra";
     init.defaultBranch = "main";
@@ -71,17 +79,16 @@ in {
           variant = "git";
           username = "rjpaskin";
         in {
-          inherit aliases ignores;
-          extraConfig = lib.mkMerge [
-            extraConfig
+          inherit ignores;
+          settings = lib.mkMerge [
+            settings
             { core.excludesFile = "${config.xdg.configHome}/git/ignore"; }
+            { alias = aliases; }
           ];
           enable = true;
           package = pkgs.callPackage ../pkgs/git-with-helpers {
             ruby = config.programs.ruby.defaultPackage;
           };
-          userEmail = "${username}+${variant}@${domain}";
-          userName = "Rob Paskin";
         };
 
         home.packages = with pkgs; [
@@ -103,7 +110,7 @@ in {
       hm.programs.git = let
         id = "railsschema";
       in {
-        extraConfig.merge.${id} = {
+        settings.merge.${id} = {
           name = "newer Rails schema version";
           driver = "merge-rails-schema %O %A %B %L";
         };
