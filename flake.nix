@@ -90,10 +90,10 @@
 
     apps = forAllSystemsWithPkgs (_: pkgs: {
       tests = let
-        inherit (pkgs) bundlerEnv ruby_3_1 buildEnv;
+        inherit (pkgs) bundlerEnv ruby_3_4 buildEnv;
 
         gems = bundlerEnv {
-          ruby = ruby_3_1;
+          ruby = ruby_3_4;
           name = "dotfiles-specs";
           gemdir = ./.;
           postBuild = ''

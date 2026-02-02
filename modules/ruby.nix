@@ -29,7 +29,7 @@ in {
         defaultPackage = mkOption {
           type = types.package;
           description = "Package to use as `ruby` as default";
-          default = pkgs.ruby_3_1;
+          default = pkgs.ruby_3_4;
         };
 
         defaultGems = mkOption {
