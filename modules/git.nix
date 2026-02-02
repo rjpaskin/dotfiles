@@ -84,7 +84,7 @@ in {
           userName = "Rob Paskin";
         };
 
-        home.packages = with pkgs.gitAndTools; [
+        home.packages = with pkgs; [
           git-filter-repo
           git-standup
           git-when-merged
@@ -141,7 +141,7 @@ in {
 
     (lib.mkIf config.roles.git-flow {
       hm = { pkgs, ... }: {
-        home.packages = [ pkgs.gitAndTools.gitflow ];
+        home.packages = [ pkgs.gitflow ];
 
         programs.zsh = {
           oh-my-zsh.plugins = [ "git-flow" ];
