@@ -1,17 +1,13 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{ config, lib, ... }:
 
 {
-  options = with config.lib.roles; {
-    roles.heroku = mkOptionalRole "Heroku tools";
-  };
+  options.roles.heroku = config.lib.roles.mkOptionalRole "Heroku tools";
 
-  config = mkIf config.roles.heroku {
+  config.hm = lib.mkIf config.roles.heroku ({ pkgs, ... }: {
     home.packages = [
       pkgs.heroku
     ];
 
-    programs.zsh.oh-my-zsh.plugins = ["heroku"];
-  };
+    programs.zsh.oh-my-zsh.plugins = [ "heroku" ];
+  });
 }

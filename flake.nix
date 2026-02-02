@@ -35,6 +35,7 @@
         ./modules/clojure
         ./modules/docker
         ./modules/git.nix
+        ./modules/heroku.nix
         ./modules/homebrew.nix
         ./modules/init.nix
         ./modules/javascript.nix
