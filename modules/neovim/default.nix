@@ -115,7 +115,9 @@ in {
 
           # Project navigation
           {
-            plugin = telescope-nvim;
+            plugin = telescope-nvim.overrideAttrs {
+              dependencies = [ plenary-nvim ]; # FIXME: revert when nixpkgs updated
+            };
             type = "lua";
             config = ''
               require"telescope".setup({
