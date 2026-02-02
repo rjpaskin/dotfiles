@@ -11,7 +11,7 @@
   # You can update Home Manager without changing this value. See
   # the Home Manager release notes for a list of state version
   # changes in each release.
-  hm.home.stateVersion = "25.05";
+  hm.home.stateVersion = "25.11";
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
