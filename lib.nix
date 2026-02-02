@@ -65,6 +65,7 @@ in rec {
       ventura = "13";
       sonoma = "14";
       sequoia = "15";
+      tahoe = "26";
     };
 
     versionToName = mapAttrs' (name: version: nameValuePair version name) nameToVersion;

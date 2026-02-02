@@ -5,6 +5,7 @@ module ShellLib
     include Comparable
 
     VERSIONS = {
+      tahoe:    "26",
       sequoia:  "15",
       sonoma:   "14",
       ventura:  "13",

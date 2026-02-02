@@ -15,7 +15,11 @@ RSpec.describe "macOS defaults" do
         ShellLib.macos_version >= :ventura ? "Settings" : "Preferences"
       end
 
-      it { should include app("Launchpad") }
+      let(:launchpad_name) do
+        ShellLib.macos_version >= :tahoe ? "Apps" : "Launchpad"
+      end
+
+      it { should include app(launchpad_name) }
       it { should include app("Google Chrome") }
 
       context "with git role", role: "git" do
