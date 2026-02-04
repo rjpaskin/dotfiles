@@ -88,6 +88,7 @@
       roles = {
         git = true;
         javascript = true;
+        heroku = true;
         ngrok = true;
         ruby = true;
         sql-clients = true;
