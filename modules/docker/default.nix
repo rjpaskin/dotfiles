@@ -1,7 +1,14 @@
 { config, lib, ... }:
 
 {
-  options.roles.docker = config.lib.roles.mkOptionalRole "Docker tools";
+  options = {
+    roles.docker = config.lib.roles.mkOptionalRole "Docker tools";
+    docker.cask = lib.mkOption {
+      type = lib.types.enum [ "docker-desktop" "orbstack" ];
+      description = "Homebrew cask to install for Docker";
+      default = "docker-desktop";
+    };
+  };
 
   config = lib.mkIf config.roles.docker {
     hm = { pkgs, ... }:
@@ -37,6 +44,6 @@
       };
     };
 
-    darwin.homebrew.casks = [ "docker-desktop" ];
+    darwin.homebrew.casks = [ config.docker.cask ];
   };
 }

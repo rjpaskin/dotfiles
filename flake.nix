@@ -80,6 +80,8 @@
         ruby = true;
         sql-clients = true;
       };
+
+      docker.cask = "orbstack";
     };
 
     darwinConfigurations."rjp-alg" = mkDarwinSystem {
@@ -93,6 +95,8 @@
         ruby = true;
         sql-clients = true;
       };
+
+      docker.cask = "orbstack";
     };
 
     lib = dotfilesLib;
